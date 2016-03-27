@@ -1,0 +1,119 @@
+/******************************************************************************
+ * Copyright (c) 2014 Fred Laderoute.
+ * All rights reserved. This program and the accompanying
+ * materials are made available under the terms of the GNU
+ * Public License v3.0 which accompanies this distribution,
+ * and is available at http://www.gnu.org/licenses/gpl.html
+ *
+ * Contributors:
+ *      Fred Laderoute - initial API and implementation
+ ******************************************************************************/
+package com.onyx.quadcopter.main;
+
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.onyx.quadcopter.tasks.PowerOnSelfTest;
+import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.StartupState;
+
+/**
+ * Application start.
+ *
+ * @author fred
+ *
+ */
+public final class AppStart extends Thread {
+
+    /**
+     * Logger.
+     */
+    public static final Logger LOGGER = LoggerFactory.getLogger(AppStart.class);
+
+    /**
+     * Controller object.
+     */
+    private static Controller controller = new Controller();
+
+    /**
+     * Get GUI instance.
+     *
+     * @return an instance of the gui.
+     */
+    public static Controller getController() {
+        return controller;
+    }
+
+    /**
+     * Initialize the application.
+     *
+     * @return sucess or fail.
+     */
+    public StartupState init() {
+        LOGGER.info("Begin Init.");
+        return powerOnSelfTest();
+    }
+
+    /**
+     * Perform pre flight checks.
+     *
+     * @return machine state, SUCCESSFUL or UNSUCCESSFUL
+     */
+    private StartupState powerOnSelfTest() {
+        final PowerOnSelfTest startTest = new PowerOnSelfTest(controller);
+        return startTest.test();
+    }
+
+    @Override
+    public void run() {
+        final StartupState state = init();
+        if (state == null) {
+            return;
+        }
+        checkExitState(state);
+        switchState(state);
+    }
+
+    /**
+     * Check if the state is the exit state.
+     *
+     * @param state
+     *            the startup state.
+     */
+    private void checkExitState(final StartupState state) {
+        if (state == StartupState.EXIT) {
+            StateMonitor.shutdownState();
+        }
+    }
+
+    /**
+     * Switch on state.
+     *
+     * @param state
+     *            the startup state.
+     */
+    private void switchState(final StartupState state) {
+        switch (state) {
+        case SUCCESSFUL:
+            successState();
+            break;
+        case UNSUCCESSFUL:
+            StateMonitor.errorState();
+            break;
+        default:
+            break;
+        }
+    }
+
+    /**
+     * Success state.
+     */
+    private void successState() {
+        Main.COORDINATOR.scheduleWithFixedDelay(controller, 0, Constants.CONTROLLER_PERIOD, TimeUnit.MICROSECONDS);
+        controller.start();
+        LOGGER.info("Controller start successful.");
+        StateMonitor.landedState();
+    }
+}
