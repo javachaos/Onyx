@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
-import com.onyx.quadcopter.utils.Blackboard;
 import com.onyx.quadcopter.utils.Constants;
 
 public abstract class Device implements Runnable {
@@ -13,7 +12,7 @@ public abstract class Device implements Runnable {
     /**
      * Logger.
      */
-    public static final Logger LOGGER = LoggerFactory.getLogger(Device.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(Device.class);
 
     /**
      * Controller reference.
@@ -59,7 +58,7 @@ public abstract class Device implements Runnable {
      *            Reference to the blackboard.
      *
      */
-    protected abstract void update(final Blackboard b);
+    protected abstract void update();
 
     @Override
     public void run() {
@@ -67,7 +66,7 @@ public abstract class Device implements Runnable {
             init();
             initialized = true;
         }
-        update(controller.getBlackboard());
+        update();
         runCounter++;
         if (runCounter == Constants.ALTERNATE_SPEED) {
             runCounter = 0;
@@ -132,5 +131,9 @@ public abstract class Device implements Runnable {
 
     private String getName() {
         return name;
+    }
+
+    protected Controller getController() {
+        return controller;
     }
 }

@@ -2,8 +2,9 @@ package com.onyx.quadcopter.utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.main.Controller;
+import com.onyx.quadcopter.messaging.ACLMessage;
+import com.onyx.quadcopter.messaging.ActionId;
+import com.onyx.quadcopter.messaging.MessageType;
 
 /**
  * Blackboard message class.
@@ -35,6 +39,14 @@ public class Blackboard extends Device {
      */
     private static volatile Connection memconn;
 
+    /**
+     * Prepared statements.
+     */
+    private static PreparedStatement addMessageStmt;
+    private static PreparedStatement restoreBlackboardStmt;
+    private static PreparedStatement backupBlackboardStmt;
+    private static PreparedStatement createTablesStmt;
+    private static PreparedStatement getMessageStmt;
     /**
      * True when the database is loaded.
      */
@@ -87,10 +99,10 @@ public class Blackboard extends Device {
      */
     private static synchronized void createTables() {
         getConnection();
+
         try {
-            final Statement stat = memconn.createStatement();
-            stat.addBatch(Constants.DATABASE_CREATE);
-            stat.executeBatch();
+            final PreparedStatement p = createTablesStmt;
+            p.execute();
         } catch (final SQLException e) {
             ExceptionUtils.fatalError(Blackboard.class, e);
         }
@@ -103,8 +115,8 @@ public class Blackboard extends Device {
         LOGGER.debug("Backing up database.");
         getConnection();
         try {
-            final Statement stat = memconn.createStatement();
-            stat.executeUpdate("backup to " + Constants.DATABASE_FILE.getAbsolutePath());
+            final PreparedStatement p = backupBlackboardStmt;
+            p.execute();
         } catch (final SQLException e) {
             ExceptionUtils.fatalError(Blackboard.class, e);
         }
@@ -117,8 +129,8 @@ public class Blackboard extends Device {
         LOGGER.debug("Restoring database.");
         getConnection();
         try {
-            final Statement stat = memconn.createStatement();
-            stat.executeUpdate("restore from " + Constants.DATABASE_FILE.getAbsolutePath());
+            final PreparedStatement p = restoreBlackboardStmt;
+            p.execute();
         } catch (final SQLException e) {
             ExceptionUtils.fatalError(Blackboard.class, e);
         }
@@ -167,12 +179,25 @@ public class Blackboard extends Device {
     }
 
     @Override
-    protected void update(final Blackboard b) {
+    protected void update() {
     }
 
     @Override
     protected void init() {
         loadDriver();
+        try {// Setup prepared statments.
+            addMessageStmt = getConnection().prepareStatement(Constants.ADD_MESSAGE_STATEMENT);
+            restoreBlackboardStmt = getConnection()
+                    .prepareStatement("restore from " + Constants.DATABASE_FILE.getAbsolutePath());
+            backupBlackboardStmt = getConnection()
+                    .prepareStatement("backup to " + Constants.DATABASE_FILE.getAbsolutePath());
+            getMessageStmt = getConnection().prepareStatement(Constants.GET_MESSAGE_STATEMENT);
+            createTablesStmt = getConnection().prepareStatement(Constants.DATABASE_CREATE);
+
+        } catch (final SQLException e) {
+            e.printStackTrace();
+            LOGGER.error(e.getMessage());
+        }
     }
 
     @Override
@@ -186,6 +211,62 @@ public class Blackboard extends Device {
         // TODO implement
         loadDriver();
         return isLoaded;
+    }
+
+    /**
+     * Add a message to the blackboard.
+     *
+     * @param aclMessage
+     */
+    public static void addMessage(final ACLMessage aclMessage) {
+        getConnection();
+        try {
+            final PreparedStatement p = addMessageStmt;
+            p.setInt(1, DeviceID.getId(aclMessage.getReciever()));
+            p.setInt(2, DeviceID.getId(aclMessage.getSender()));
+            p.setInt(3, ActionId.getId(aclMessage.getActionID()));
+            p.setInt(4, MessageType.getId(aclMessage.getMessageType()));
+            p.setString(5, aclMessage.getContent());
+            p.setDouble(6, aclMessage.getValue());
+            p.executeUpdate();
+        } catch (final SQLException e) {
+            ExceptionUtils.fatalError(Blackboard.class, e);
+        }
+    }
+
+    /**
+     * Get a message for Device device. Searches the database for all messages
+     * which are destined to device returning the first occurence.
+     *
+     * @param device
+     *            the device to find messages for
+     *
+     * @return the first ACLMessage found within the blackboard
+     *
+     */
+    public static ACLMessage getMessage(final Device device) {
+        getConnection();
+        ACLMessage m = new ACLMessage(MessageType.EMPTY);
+        try {
+            final PreparedStatement preparedStatement = getMessageStmt;
+            preparedStatement.setInt(1, DeviceID.getId(device.getId()));
+            final ResultSet rs = preparedStatement.executeQuery();
+            final int to = rs.getInt(0);
+            final int from = rs.getInt(1);
+            final int actionid = rs.getInt(2);
+            final int msgType = rs.getInt(3);
+            final String content = rs.getString(4);
+            final double value = rs.getDouble(5);
+            m = new ACLMessage(MessageType.values()[msgType]);
+            m.setReciever(DeviceID.values()[to]);
+            m.setSender(DeviceID.values()[from]);
+            m.setActionID(ActionId.values()[actionid]);
+            m.setContent(content);
+            m.setValue(value);
+        } catch (final SQLException e) {
+            ExceptionUtils.fatalError(Blackboard.class, e);
+        }
+        return m;
     }
 
 }

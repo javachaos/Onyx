@@ -1,46 +1,37 @@
 package com.onyx.quadcopter.communication;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.devices.CommDevice;
+import com.onyx.quadcopter.devices.Device;
+import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
+import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.Blackboard;
 import com.onyx.quadcopter.utils.Constants;
 
-public class DataReciever extends CommDevice implements MqttCallback {
+public class DataReciever extends Device {
 
+    private CommAsyncCallback callback;
     /**
-     * Connection options.
+     * Logger.
      */
-    private MqttConnectOptions connOpt;
+    public static final Logger LOGGER = LoggerFactory.getLogger(DataReciever.class);
 
     public DataReciever(final Controller c) throws OnyxException {
-        super(c);
+        super(c, DeviceID.DATA_RECIEVER);
     }
 
     @Override
-    protected void update(final Blackboard b) {
-        MqttClient client = null;
-        // Connect to Broker
+    protected void update() {
+        final ACLMessage msg = Blackboard.getMessage(this);
         try {
-            client = new MqttClient(Constants.BROKER_URL, Constants.MQTT_THING);
-            client.setCallback(this);
-            client.connect(connOpt);
-        } catch (final MqttException e) {
-            e.printStackTrace();
-            LOGGER.error(e.getMessage());
-        }
-        try {
-            final int subQoS = 2;
-            final String topic = "RECV";
-            client.subscribe(topic, subQoS);
-        } catch (final Exception e) {
+            if (!msg.isEmpty() && msg.isValid()) {
+                callback.subscribe(msg.getMessageType().toString(), Constants.TRANSMIT_QOS);
+            }
+        } catch (final Throwable e) {
             e.printStackTrace();
             LOGGER.error(e.getMessage());
         }
@@ -48,46 +39,28 @@ public class DataReciever extends CommDevice implements MqttCallback {
 
     @Override
     protected void init() {
-        connOpt.setCleanSession(true);
-        connOpt.setKeepAliveInterval(Constants.MQTT_KEEPALIVE);
-        connOpt.setUserName(Constants.MQTT_USERNAME);
-        connOpt.setPassword(Constants.MQTT_PASSWORD_MD5.toCharArray());
+        try {
+            callback = new CommAsyncCallback(Constants.BROKER_URL, Constants.MQTT_THING, true, Constants.MQTT_QUIET,
+                    Constants.MQTT_USERNAME, Constants.MQTT_PASSWORD_MD5);
+        } catch (final MqttException e) {
+            e.printStackTrace();
+            LOGGER.error(e.getMessage());
+        }
     }
 
     @Override
     public void shutdown() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     protected void alternate() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public boolean selfTest() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public void connectionLost(final Throwable arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void deliveryComplete(final IMqttDeliveryToken arg0) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void messageArrived(final String arg0, final MqttMessage arg1) throws Exception {
-        // TODO Auto-generated method stub
-
+        return true;// TODO Complete DataReciever selfTest.
     }
 
 }

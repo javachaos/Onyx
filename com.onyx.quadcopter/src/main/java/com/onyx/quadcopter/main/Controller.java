@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
+import com.onyx.quadcopter.devices.Motor;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.utils.Blackboard;
 import com.onyx.quadcopter.utils.Cleaner;
@@ -54,6 +55,10 @@ public class Controller implements Runnable {
     private void init() {
         cleaner = new Cleaner();
         addDevice(blackboard);
+        addDevice(new Motor(this, DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
+        addDevice(new Motor(this, DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
+        addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
+        addDevice(new Motor(this, DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
         LOGGER.debug("Controller Initialized.");
     }
 
@@ -133,5 +138,14 @@ public class Controller implements Runnable {
         if (isRunning) {
             update();
         }
+    }
+
+    /**
+     * Return the state of this controller.
+     *
+     * @return
+     */
+    public boolean isRunning() {
+        return isRunning;
     }
 }

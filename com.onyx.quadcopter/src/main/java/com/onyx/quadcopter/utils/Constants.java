@@ -168,7 +168,8 @@ public final class Constants {
      * Database create statement.
      */
     public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS blackboard ("
-            + "ID INTEGER PRIMARY KEY AUTOINCREMENT, TO_DEVICE_ID INTEGER, FROM_DEVICE_ID INTEGER, CONTENT VARCHAR(32), TOPIC VARCHAR(32), VALUE REAL)";
+            + "ID INTEGER PRIMARY KEY AUTOINCREMENT, TO_DEVICE_ID INTEGER, FROM_DEVICE_ID INTEGER,"
+            + "ACTION_ID INTEGER, MSG_TYPE INTEGER, CONTENT VARCHAR(32), VALUE REAL)";
 
     /**
      * Controller update frequency in microseconds.
@@ -205,4 +206,31 @@ public final class Constants {
      * MQTT Keep alive value
      */
     public static final int MQTT_KEEPALIVE = 30;
+
+    /**
+     * MQTT logging mode, true for quiet i.e no logging, false for full logging.
+     */
+    public static final boolean MQTT_QUIET = PROPERTIES.getBooleanProperty("com.onyx.quadcopter.mqtt.quiet", false);
+
+    public static final String ADD_MESSAGE_STATEMENT = "INSERT INTO blackboard (TO_DEVICE_ID, FROM_DEVICE_ID, "
+            + "ACTION_ID, MSG_TYPE, CONTENT, VALUE) VALUES (?,?,?,?,?,?)";
+    public static final String GET_MESSAGE_STATEMENT = "SELECT * FROM blackboard WHERE TO_DEVICE_ID=?";
+
+    /**
+     * Transmission QoS value.
+     */
+    public static final int TRANSMIT_QOS = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.comms.transmit.qos", 2);
+
+    /**
+     * Timeout value for MQTT Async listener.
+     */
+    public static final int STATE_CHANGE_TIMEOUT = 10000;
+
+    public static final int GPIO_MAX = 40;
+    public static final int GPIO_MIN = 0;
+
+    public static final int GPIO_MOTOR1 = 0;
+    public static final int GPIO_MOTOR2 = 1;
+    public static final int GPIO_MOTOR3 = 2;
+    public static final int GPIO_MOTOR4 = 3;
 }
