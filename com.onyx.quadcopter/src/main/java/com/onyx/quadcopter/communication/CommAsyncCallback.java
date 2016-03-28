@@ -1,8 +1,5 @@
 package com.onyx.quadcopter.communication;
 
-import java.sql.Timestamp;
-import java.util.Arrays;
-
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -15,6 +12,10 @@ import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.onyx.quadcopter.communication.CommAsyncCallback.Disconnector;
+import com.onyx.quadcopter.communication.CommAsyncCallback.MqttConnector;
+import com.onyx.quadcopter.communication.CommAsyncCallback.Publisher;
+import com.onyx.quadcopter.communication.CommAsyncCallback.Subscriber;
 import com.onyx.quadcopter.utils.Constants;
 
 public class CommAsyncCallback implements MqttCallback {
@@ -67,11 +68,11 @@ public class CommAsyncCallback implements MqttCallback {
      */
     public CommAsyncCallback(final String brokerUrl, final String clientId, final boolean cleanSession,
             final boolean quietMode, final String userName, final String password) throws MqttException {
-        this.brokerUrl = brokerUrl;
-        this.quietMode = quietMode;
+        brokerUrl = brokerUrl;
+        quietMode = quietMode;
         clean = cleanSession;
-        this.password = password;
-        this.userName = userName;
+        password = password;
+        userName = userName;
         final String tmpDir = Constants.APPLICATION_DIR + "\tmp";
         final MqttDefaultFilePersistence dataStore = new MqttDefaultFilePersistence(tmpDir);
 
@@ -79,14 +80,14 @@ public class CommAsyncCallback implements MqttCallback {
             conOpt = new MqttConnectOptions();
             conOpt.setCleanSession(clean);
             if (password != null) {
-                conOpt.setPassword(this.password.toCharArray());
+                conOpt.setPassword(password.toCharArray());
             }
             if (userName != null) {
-                conOpt.setUserName(this.userName);
+                conOpt.setUserName(userName);
             }
 
             // Construct the MqttClient instance
-            client = new MqttAsyncClient(this.brokerUrl, clientId, dataStore);
+            client = new MqttAsyncClient(brokerUrl, clientId, dataStore);
 
             // Set this wrapper as the callback handler
             client.setCallback(this);

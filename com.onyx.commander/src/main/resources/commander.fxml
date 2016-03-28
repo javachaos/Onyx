@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root fx:id="mainPane" animated="false" minHeight="400.0" minWidth="600.0" prefHeight="500.0" prefWidth="800.0" text="Commander" type="TitledPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.onyx.commander.gui.GuiController">
+  <content>
+    <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="402.0" prefWidth="723.0">
+         <children>
+            <TabPane layoutX="14.0" layoutY="14.0" prefHeight="371.0" prefWidth="749.0" rotateGraphic="true" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <tabs>
+                <Tab text="Control View">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <HBox layoutX="11.0" layoutY="264.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                                 <children>
+                                    <Button fx:id="connectButton" mnemonicParsing="false" text="Connect">
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Label fx:id="connStatusLbl" text="Connection Status:">
+                                       <padding>
+                                          <Insets top="5.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <VBox layoutX="11.0" layoutY="178.0" prefHeight="78.0" prefWidth="188.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0">
+                                 <children>
+                                    <Label text="Device Status: Pending..." />
+                                    <TextField fx:id="usernameField" promptText="Username" text="fred" />
+                                    <PasswordField fx:id="passField" promptText="Password" />
+                                    <TextField fx:id="ipField" promptText="IP Address" />
+                                 </children>
+                              </VBox>
+                              <TitledPane fx:id="cameraTitledPane" layoutX="206.0" layoutY="13.0" prefHeight="250.0" prefWidth="522.0" text="Camera Snapshot" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="13.0">
+                                 <content>
+                                    <ImageView fx:id="cameraImageview" fitHeight="200.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+                                 </content>
+                              </TitledPane>
+                              <VBox layoutX="14.0" layoutY="14.0" prefHeight="85.0" prefWidth="180.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
+                                 <children>
+                                    <Label fx:id="orientationLbl" text="Orientation: ">
+                                       <padding>
+                                          <Insets bottom="10.0" />
+                                       </padding>
+                                    </Label>
+                                    <Label fx:id="hspeedLbl" text="HSpeed:">
+                                       <padding>
+                                          <Insets bottom="10.0" />
+                                       </padding>
+                                    </Label>
+                                    <Label fx:id="vspeedLbl" text="VSpeed:">
+                                       <padding>
+                                          <Insets bottom="10.0" />
+                                       </padding>
+                                    </Label>
+                                 </children>
+                              </VBox>
+                           </children></AnchorPane>
+                  </content>
+                </Tab>
+                  <Tab text="Log View">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <ScrollPane fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <content>
+                                    <TextArea fx:id="logTextArea" editable="false" />
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
+                <Tab text="Command View">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="167.0" prefWidth="283.0">
+                           <children>
+                              <HBox AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                                 <children>
+                                    <Button fx:id="enterCommandButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="126.0" text="Enter" />
+                                    <TextField fx:id="commandTextField" prefHeight="26.0" prefWidth="596.0" />
+                                 </children>
+                              </HBox>
+                              <TextArea fx:id="commandOutputTextArea" editable="false" layoutX="1.0" layoutY="2.0" prefHeight="239.0" prefWidth="511.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="FreeMono" size="13.0" />
+                                 </font>
+                              </TextArea>
+                           </children></AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+         </children>
+      </AnchorPane>
+  </content>
+</fx:root>
