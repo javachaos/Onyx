@@ -9,7 +9,6 @@ import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
-import com.onyx.quadcopter.utils.Blackboard;
 import com.onyx.quadcopter.utils.Constants;
 
 public class DataTransmitter extends Device {
@@ -26,7 +25,7 @@ public class DataTransmitter extends Device {
 
     @Override
     protected void update() {
-        final ACLMessage msg = Blackboard.getMessage(this);
+        final ACLMessage msg = getController().getBlackboard().getMessage(this);
         try {
             if (!msg.isEmpty() && msg.isValid()) {
                 callback.publish(msg.getMessageType().toString(), Constants.TRANSMIT_QOS, msg.getContent().getBytes());

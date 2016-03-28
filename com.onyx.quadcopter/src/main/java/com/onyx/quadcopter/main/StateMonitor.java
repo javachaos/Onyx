@@ -57,9 +57,17 @@ public final class StateMonitor implements Runnable {
     private volatile boolean isRunning = false;
 
     /**
+     * Controller instance.
+     */
+    private Controller controller;
+
+    /**
      * State monitor constructor.
      */
-    public StateMonitor() {
+    public StateMonitor(final Controller c) {
+        if (c != null) {
+            controller = c;
+        }
         init();
     }
 
@@ -220,7 +228,7 @@ public final class StateMonitor implements Runnable {
         switch (previousState) {
         case AIRBORNE:
             if (state == OnyxState.LANDED) {
-                AppStart.getController().stop();
+                controller.stop();
                 exit();
             }
             break;
@@ -229,13 +237,13 @@ public final class StateMonitor implements Runnable {
             break;
         case LANDED:
             if (state == previousState) {
-                AppStart.getController().stop();
+                controller.stop();
                 exit();
             }
             break;
         case LANDING:
             if (state == OnyxState.LANDED) {
-                AppStart.getController().stop();
+                controller.stop();
                 exit();
             }
             break;
@@ -243,7 +251,7 @@ public final class StateMonitor implements Runnable {
             break;
         case SHUTDOWN:
             if (state == previousState) {
-                AppStart.getController().stop();
+                controller.stop();
                 exit();
             }
             break;
@@ -286,7 +294,7 @@ public final class StateMonitor implements Runnable {
      */
     private void doStartup() {
         if (isStateChanged()) {
-            Main.appStart();
+            Main.appStart(controller);
         }
     }
 

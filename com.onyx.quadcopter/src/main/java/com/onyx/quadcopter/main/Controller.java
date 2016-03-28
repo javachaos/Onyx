@@ -1,8 +1,10 @@
 package com.onyx.quadcopter.main;
 
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,7 @@ public class Controller implements Runnable {
     /**
      * Devices array.
      */
-    private final HashMap<DeviceID, Device> devices;
+    private final ConcurrentMap<DeviceID, Device> devices;
 
     /**
      * Number of devices.
@@ -44,15 +46,19 @@ public class Controller implements Runnable {
     private final Blackboard blackboard;
 
     private Cleaner cleaner;
-    private volatile boolean isRunning = false;
+
+    private boolean isRunning = false;
+
+    private volatile boolean initialized = false;
 
     public Controller() {
-        devices = new HashMap<DeviceID, Device>(Constants.MAX_DEVICES);
+        devices = new ConcurrentHashMap<DeviceID, Device>(Constants.MAX_DEVICES);
         blackboard = new Blackboard(this);
         init();
     }
 
     private void init() {
+        LOGGER.debug("Initializing Controller...");
         cleaner = new Cleaner();
         addDevice(blackboard);
         addDevice(new Motor(this, DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
@@ -60,6 +66,7 @@ public class Controller implements Runnable {
         addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
         addDevice(new Motor(this, DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
         LOGGER.debug("Controller Initialized.");
+        initialized = true;
     }
 
     private void shutdown() {
@@ -114,17 +121,20 @@ public class Controller implements Runnable {
     }
 
     private void update() {
-        for (final Entry<DeviceID, Device> d : devices.entrySet()) {
-            d.getValue().run();
+        final Iterator<Entry<DeviceID, Device>> it = devices.entrySet().iterator();
+        while (it.hasNext()) {
+            it.next().getValue().execute();
         }
     }
 
-    public void start() {
-        init();
+    public synchronized void start() {
+        if (!initialized) {
+            init();
+        }
         isRunning = true;
     }
 
-    public void stop() {
+    public synchronized void stop() {
         isRunning = false;
         shutdown();
     }
@@ -135,7 +145,7 @@ public class Controller implements Runnable {
 
     @Override
     public void run() {
-        if (isRunning) {
+        if (isRunning() && initialized) {
             update();
         }
     }
@@ -145,7 +155,7 @@ public class Controller implements Runnable {
      *
      * @return
      */
-    public boolean isRunning() {
+    public synchronized boolean isRunning() {
         return isRunning;
     }
 }

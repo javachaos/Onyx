@@ -10,13 +10,10 @@
  ******************************************************************************/
 package com.onyx.quadcopter.main;
 
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.tasks.PowerOnSelfTest;
-import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.StartupState;
 
 /**
@@ -35,14 +32,20 @@ public final class AppStart extends Thread {
     /**
      * Controller object.
      */
-    private static Controller controller = new Controller();
+    private Controller controller;
+
+    public AppStart(final Controller c) {
+        if (c != null) {
+            controller = c;
+        }
+    }
 
     /**
-     * Get GUI instance.
+     * Get Controller instance.
      *
      * @return an instance of the gui.
      */
-    public static Controller getController() {
+    public Controller getController() {
         return controller;
     }
 
@@ -111,7 +114,6 @@ public final class AppStart extends Thread {
      * Success state.
      */
     private void successState() {
-        Main.COORDINATOR.scheduleWithFixedDelay(controller, 0, Constants.CONTROLLER_PERIOD, TimeUnit.MICROSECONDS);
         controller.start();
         LOGGER.info("Controller start successful.");
         StateMonitor.landedState();

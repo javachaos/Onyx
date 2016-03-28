@@ -7,7 +7,7 @@ import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
 
-public abstract class Device implements Runnable {
+public abstract class Device implements Executable {
 
     /**
      * Logger.
@@ -28,7 +28,7 @@ public abstract class Device implements Runnable {
     /**
      * True when the device has been initialized.
      */
-    private boolean initialized = false;
+    protected boolean initialized = false;
 
     /**
      * The human readable name for this device.
@@ -61,7 +61,7 @@ public abstract class Device implements Runnable {
     protected abstract void update();
 
     @Override
-    public void run() {
+    public void execute() {
         if (!isInitialized()) {
             init();
             initialized = true;
@@ -70,8 +70,8 @@ public abstract class Device implements Runnable {
         runCounter++;
         if (runCounter == Constants.ALTERNATE_SPEED) {
             runCounter = 0;
-            alternate();
             LOGGER.debug("Device heartbeat: " + getName() + ".");
+            alternate();
         }
     }
 

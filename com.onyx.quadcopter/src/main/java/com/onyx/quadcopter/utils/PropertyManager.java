@@ -245,10 +245,10 @@ public final class PropertyManager {
 
     /**
      * Return the property as a boolean value.
-     * 
+     *
      * @param key
      *            the key of the property
-     * 
+     *
      * @param defaultValue
      *            the default value for the property.
      * @return the property if it exists as a boolean or if it does not exist
@@ -256,7 +256,7 @@ public final class PropertyManager {
      */
     public boolean getBooleanProperty(final String key, final boolean defaultValue) {
         final String s = getStringProperty(key, defaultValue + "");
-        return (Integer.parseInt(s) == 1) || s.equals("true");
+        return (s.equals("1") || s.equals("true"));
     }
 
     /**

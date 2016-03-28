@@ -19,12 +19,15 @@ public class Main {
     /**
      * Thread coordinator.
      */
-    public static final ScheduledExecutorService COORDINATOR = Executors.newSingleThreadScheduledExecutor();
+    public static final ScheduledExecutorService COORDINATOR = Executors.newScheduledThreadPool(Constants.NUM_THREADS);
 
     public static void main(final String[] args) {
-        final StateMonitor monitor = new StateMonitor();
+        final Controller controller = new Controller();
+        final StateMonitor monitor = new StateMonitor(controller);
         Main.COORDINATOR.scheduleAtFixedRate(monitor, Constants.MONITOR_DELAY, Constants.MONITOR_PERIOD,
                 Constants.MONITOR_TIMEUNIT);
+        Main.COORDINATOR.scheduleAtFixedRate(controller, Constants.CONTROLLER_PERIOD, Constants.CONTROLLER_PERIOD,
+                Constants.CONTROLLER_TIMEUNIT);
         addHook();
     }
 
@@ -38,8 +41,8 @@ public class Main {
     /**
      * Start application.
      */
-    public static void appStart() {
-        final AppStart start = new AppStart();
+    public static void appStart(final Controller c) {
+        final AppStart start = new AppStart(c);
         start.start();
     }
 }

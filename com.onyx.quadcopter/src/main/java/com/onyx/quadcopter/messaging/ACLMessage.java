@@ -1,7 +1,6 @@
 package com.onyx.quadcopter.messaging;
 
 import com.onyx.quadcopter.devices.DeviceID;
-import com.onyx.quadcopter.utils.Blackboard;
 
 /**
  * Agent Communication Language Message.
@@ -184,17 +183,6 @@ public final class ACLMessage {
     }
 
     /**
-     * Post this ACL message to the Blackboard.
-     *
-     * @see Blackboard#addMessage(ACLMessage)
-     */
-    public void postMessage() {
-        if (isValid()) {
-            Blackboard.addMessage(this);
-        }
-    }
-
-    /**
      * Validate this ACL message to ensure that it can be sent to the
      * blackboard.
      *
@@ -202,7 +190,7 @@ public final class ACLMessage {
      */
     public boolean isValid() {
         if ((messageType != null) && (sender != null) && (reciever != null) && (actionId != null)) {
-            return true;
+            return !isEmpty();
         }
         return false;
     }

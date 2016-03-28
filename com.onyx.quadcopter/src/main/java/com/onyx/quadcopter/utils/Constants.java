@@ -165,17 +165,15 @@ public final class Constants {
     public static final int MAX_DEVICES = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.max.devices", 256);
 
     /**
-     * Database create statement.
-     */
-    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS blackboard ("
-            + "ID INTEGER PRIMARY KEY AUTOINCREMENT, TO_DEVICE_ID INTEGER, FROM_DEVICE_ID INTEGER,"
-            + "ACTION_ID INTEGER, MSG_TYPE INTEGER, CONTENT VARCHAR(32), VALUE REAL)";
-
-    /**
      * Controller update frequency in microseconds.
      */
     public static final long CONTROLLER_PERIOD = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.controller.period",
-            1500);
+            5000);
+
+    /**
+     * Time unit for controller update period.
+     */
+    public static final TimeUnit CONTROLLER_TIMEUNIT = TimeUnit.MICROSECONDS;
 
     /**
      * MQTT Message broker URL.
@@ -212,9 +210,23 @@ public final class Constants {
      */
     public static final boolean MQTT_QUIET = PROPERTIES.getBooleanProperty("com.onyx.quadcopter.mqtt.quiet", false);
 
+    /**
+     * Database create statement.
+     */
+    public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS blackboard ("
+            + "ID INTEGER PRIMARY KEY AUTOINCREMENT, TO_DEVICE_ID INTEGER, FROM_DEVICE_ID INTEGER,"
+            + "ACTION_ID INTEGER, MSG_TYPE INTEGER, CONTENT VARCHAR(32), VALUE REAL);";
+
+    /**
+     * Create add message statment.
+     */
     public static final String ADD_MESSAGE_STATEMENT = "INSERT INTO blackboard (TO_DEVICE_ID, FROM_DEVICE_ID, "
-            + "ACTION_ID, MSG_TYPE, CONTENT, VALUE) VALUES (?,?,?,?,?,?)";
-    public static final String GET_MESSAGE_STATEMENT = "SELECT * FROM blackboard WHERE TO_DEVICE_ID=?";
+            + "ACTION_ID, MSG_TYPE, CONTENT, VALUE) VALUES (?,?,?,?,?,?);";
+
+    /**
+     * Create get message statement.
+     */
+    public static final String GET_MESSAGE_STATEMENT = "SELECT * FROM blackboard WHERE TO_DEVICE_ID='?';";
 
     /**
      * Transmission QoS value.
@@ -229,8 +241,27 @@ public final class Constants {
     public static final int GPIO_MAX = 40;
     public static final int GPIO_MIN = 0;
 
-    public static final int GPIO_MOTOR1 = 0;
-    public static final int GPIO_MOTOR2 = 1;
-    public static final int GPIO_MOTOR3 = 2;
-    public static final int GPIO_MOTOR4 = 3;
+    /**
+     * PWM GPIO Pins.
+     */
+    public static final int GPIO_MOTOR1 = 22;
+    public static final int GPIO_MOTOR2 = 23;
+    public static final int GPIO_MOTOR3 = 24;
+    public static final int GPIO_MOTOR4 = 26;
+
+    /**
+     * True if this is a simulation run.
+     */
+    public static final boolean SIMULATION = PROPERTIES.getBooleanProperty("com.onyx.quadcopter.simulation", true);
+
+    /**
+     * Number of threads to use.
+     */
+    public static final int NUM_THREADS = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.numthreads", 4);
+
+    /**
+     * Maximum Blackboard size.
+     */
+    public static final int BLACKBOARD_SIZE = 256;
+
 }
