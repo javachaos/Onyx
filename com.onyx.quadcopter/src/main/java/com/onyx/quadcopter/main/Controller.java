@@ -73,11 +73,11 @@ public class Controller implements Runnable {
         LOGGER.debug("Initializing Controller...");
         cleaner = new Cleaner();
         addDevice(blackboard);
+        addDevice(commServer);
         addDevice(new Motor(this, DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
         addDevice(new Motor(this, DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
         addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
         addDevice(new Motor(this, DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
-        addDevice(commServer);
         LOGGER.debug("Controller Initialized.");
         initialized = true;
     }
@@ -125,7 +125,7 @@ public class Controller implements Runnable {
         if (dev != null) {
             return devices.get(d);
         } else {
-            throw new OnyxException("Device not found: " + d);
+            throw new OnyxException("Device not found for DeviceID: " + d);
         }
     }
 
