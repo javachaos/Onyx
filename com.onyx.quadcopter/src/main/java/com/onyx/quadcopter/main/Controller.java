@@ -3,13 +3,13 @@ package com.onyx.quadcopter.main;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.MapMaker;
 import com.onyx.quadcopter.devices.Blackboard;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
@@ -59,7 +59,10 @@ public class Controller implements Runnable {
     private final NettyCommServer commServer;
 
     public Controller() {
-        devices = new ConcurrentHashMap<DeviceID, Device>(Constants.MAX_DEVICES);
+        devices = new MapMaker().concurrencyLevel(Constants.NUM_THREADS).initialCapacity(Constants.MAX_DEVICES)
+                .makeMap();
+        // devices = new ConcurrentHashMap<DeviceID,
+        // Device>(Constants.MAX_DEVICES);
         blackboard = new Blackboard(this);
         commServer = new NettyCommServer(this);
         Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
