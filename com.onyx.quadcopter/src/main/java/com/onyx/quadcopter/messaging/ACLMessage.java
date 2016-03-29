@@ -1,5 +1,7 @@
 package com.onyx.quadcopter.messaging;
 
+import java.io.Serializable;
+
 import com.onyx.quadcopter.devices.DeviceID;
 
 /**
@@ -8,7 +10,12 @@ import com.onyx.quadcopter.devices.DeviceID;
  * @author fredladeroute
  */
 
-public final class ACLMessage {
+public final class ACLMessage implements Serializable {
+
+    /**
+     * Generated UID
+     */
+    private static final long serialVersionUID = 8967159441840581610L;
 
     /**
      * Message type for this ACL Message.

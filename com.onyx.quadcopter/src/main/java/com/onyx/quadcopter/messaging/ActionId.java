@@ -65,9 +65,14 @@ public enum ActionId {
     CHANGE_MOTOR_SPEED(10),
 
     /**
+     * Sent content string to client.
+     */
+    SEND_DATA(11),
+
+    /**
      * No action is performed on the contents of the message.
      */
-    NO_ACTION(11);
+    NO_ACTION(12);
 
     /**
      * The internal ID field.

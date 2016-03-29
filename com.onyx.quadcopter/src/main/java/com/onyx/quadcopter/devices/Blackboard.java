@@ -1,4 +1,4 @@
-package com.onyx.quadcopter.utils;
+package com.onyx.quadcopter.devices;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -6,11 +6,10 @@ import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.devices.Device;
-import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.MessageType;
+import com.onyx.quadcopter.utils.Constants;
 
 /**
  * Blackboard message class.
@@ -93,5 +92,4 @@ public class Blackboard extends Device {
         blackboard.clear();
         blackboard = null;
     }
-
 }

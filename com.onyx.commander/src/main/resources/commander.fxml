@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<fx:root fx:id="mainPane" animated="false" minHeight="400.0" minWidth="600.0" prefHeight="500.0" prefWidth="800.0" text="Commander" type="TitledPane" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.onyx.commander.gui.GuiController">
+<TitledPane fx:id="mainPane" animated="false" minHeight="400.0" minWidth="600.0" prefHeight="500.0" prefWidth="800.0" text="Commander" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.onyx.commander.gui.GuiController">
   <content>
     <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="402.0" prefWidth="723.0">
          <children>
@@ -28,7 +28,7 @@
                            <children>
                               <HBox layoutX="11.0" layoutY="264.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
                                  <children>
-                                    <Button fx:id="connectButton" mnemonicParsing="false" text="Connect">
+                                    <Button fx:id="connectButton" mnemonicParsing="false" onAction="#connect" text="Connect">
                                        <HBox.margin>
                                           <Insets right="10.0" />
                                        </HBox.margin>
@@ -111,4 +111,4 @@
          </children>
       </AnchorPane>
   </content>
-</fx:root>
+</TitledPane>

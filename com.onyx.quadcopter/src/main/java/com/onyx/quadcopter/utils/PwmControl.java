@@ -1,10 +1,9 @@
-package com.onyx.quadcopter.devices;
+package com.onyx.quadcopter.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.exceptions.OnyxException;
-import com.onyx.quadcopter.utils.Constants;
 import com.pi4j.wiringpi.SoftPwm;
 
 public class PwmControl {

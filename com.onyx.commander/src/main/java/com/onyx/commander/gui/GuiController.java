@@ -1,4 +1,8 @@
 package com.onyx.commander.gui;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,6 +14,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 public class GuiController {
+
+    /**
+     * Logger.
+     */
+    public static final Logger LOGGER = LoggerFactory.getLogger(GuiController.class);
 
     @FXML
     private TitledPane mainPane;
@@ -59,7 +68,28 @@ public class GuiController {
     @FXML
     private TextArea commandOutputTextArea;
     
+    /**
+     * IP Regex.
+     */
+    private static final String IPADDRESS_PATTERN = 
+		"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." +
+		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+    
     public GuiController() {
+    }
+    
+    @FXML
+    protected void connect(final ActionEvent event) {
+	//Connect to the Onyx Quadcopter.
+	String ip = ipField.getText();
+	if (ip.matches(IPADDRESS_PATTERN)) {
+	    //TODO Connect
+	    LOGGER.debug("Connecting to "+ ip);
+	} else {
+	    LOGGER.debug("Cannot connect non valid IP address.");
+	}
     }
 
     @FXML

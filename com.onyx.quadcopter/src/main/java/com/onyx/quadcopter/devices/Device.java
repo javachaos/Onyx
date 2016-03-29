@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
+import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.Constants;
 
 public abstract class Device implements Executable {
@@ -29,6 +30,11 @@ public abstract class Device implements Executable {
      * True when the device has been initialized.
      */
     protected boolean initialized = false;
+
+    /**
+     * The last message posted to the black board for this agent.
+     */
+    protected ACLMessage lastMessage;
 
     /**
      * The human readable name for this device.
@@ -66,6 +72,7 @@ public abstract class Device implements Executable {
             init();
             initialized = true;
         }
+        lastMessage = getController().getBlackboard().getMessage(this);
         update();
         runCounter++;
         if (runCounter == Constants.ALTERNATE_SPEED) {
@@ -73,6 +80,15 @@ public abstract class Device implements Executable {
             LOGGER.debug("Device heartbeat: " + getName() + ".");
             alternate();
         }
+    }
+
+    /**
+     * Return the most recent ACL message.
+     *
+     * @return the most recent ACL message.
+     */
+    public ACLMessage getLastACLMessage() {
+        return lastMessage;
     }
 
     /**

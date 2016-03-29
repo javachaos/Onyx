@@ -264,4 +264,15 @@ public final class Constants {
      */
     public static final int BLACKBOARD_SIZE = 256;
 
+    /**
+     * Onyx Natty server port.
+     */
+    public static final int PORT = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.port", 8888);
+
+    /**
+     * Send and recieve buffer size.
+     */
+    public static final int NETWORK_BUFFER_SIZE = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.nio.buffer.size",
+            1024);
+
 }
