@@ -2,6 +2,10 @@ package com.onyx.quadcopter.communication;
 
 import java.util.Stack;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 
@@ -14,6 +18,11 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  * Handles a server-side channel.
  */
 public class CommunicationHandler extends ChannelInboundHandlerAdapter {
+
+    /**
+     * Logger.
+     */
+    public static final Logger LOGGER = LoggerFactory.getLogger(CommunicationHandler.class);
 
     /**
      * The stack of data to push out over the wire as bytes.
@@ -49,15 +58,18 @@ public class CommunicationHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        final ChannelFuture f = ctx.writeAndFlush(dataStack.pop());
-        f.addListener(ChannelFutureListener.CLOSE);
+        final ACLMessage msg = dataStack.pop();
+        if (msg != null) {
+            final ChannelFuture f = ctx.writeAndFlush(msg);
+            f.addListener(ChannelFutureListener.CLOSE);
+        }
     }
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
-        // Close the connection when an exception is raised
         cause.printStackTrace();
         ctx.close();
+        throw new OnyxException(cause.getMessage(), LOGGER);
     }
 
     public void addData(final ACLMessage data) {

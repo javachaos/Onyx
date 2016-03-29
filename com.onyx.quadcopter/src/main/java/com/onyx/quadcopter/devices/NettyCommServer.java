@@ -1,8 +1,12 @@
 package com.onyx.quadcopter.devices;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.onyx.quadcopter.communication.ACLDecoder;
 import com.onyx.quadcopter.communication.ACLEncoder;
 import com.onyx.quadcopter.communication.CommunicationHandler;
+import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
 
@@ -17,7 +21,22 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class NettyCommServer extends Device {
 
+    /**
+     * Logger.
+     */
+    public static final Logger LOGGER = LoggerFactory.getLogger(NettyCommServer.class);
+
     static final int PORT = Constants.PORT;
+
+    /**
+     * Boss group.
+     */
+    final EventLoopGroup bossGroup = new NioEventLoopGroup(Constants.NUM_NIO_THREADS);
+
+    /**
+     * Worker group.
+     */
+    final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     /**
      * Communication handler.
@@ -29,10 +48,9 @@ public class NettyCommServer extends Device {
         handler = new CommunicationHandler(getController());
     }
 
-    public void run() throws Exception {
-
-        final EventLoopGroup bossGroup = new NioEventLoopGroup();
-        final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    @Override
+    protected void init() {
+        LOGGER.debug("Initializing CommServer.");
         try {
             final ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
@@ -51,10 +69,13 @@ public class NettyCommServer extends Device {
             // gracefully
             // shut down your server.
             f.channel().closeFuture().sync();
+        } catch (final InterruptedException e) {
+            throw new OnyxException(e.getMessage(), LOGGER);
         } finally {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
+        LOGGER.debug("CommServer initialized.");
     }
 
     @Override
@@ -68,13 +89,11 @@ public class NettyCommServer extends Device {
     }
 
     @Override
-    protected void init() {
-
-    }
-
-    @Override
     public void shutdown() {
-
+        LOGGER.debug("CommServer shutdown initiated.");
+        workerGroup.shutdownGracefully();
+        bossGroup.shutdownGracefully();
+        LOGGER.debug("CommServer shutdown complete.");
     }
 
     @Override
@@ -83,8 +102,7 @@ public class NettyCommServer extends Device {
 
     @Override
     public boolean selfTest() {
-        // TODO Auto-generated method stub
-        return false;
+        return true;// TODO complete NettyCommServer selfTest.
     }
 
 }

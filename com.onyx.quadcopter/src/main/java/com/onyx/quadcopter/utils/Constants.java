@@ -275,4 +275,9 @@ public final class Constants {
     public static final int NETWORK_BUFFER_SIZE = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.nio.buffer.size",
             1024);
 
+    /**
+     * Number of threads to dedicate to network IO.
+     */
+    public static final int NUM_NIO_THREADS = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.nio.threads", 1);
+
 }
