@@ -71,7 +71,7 @@ public class CommunicationHandler extends ChannelInboundHandlerAdapter {
         throw new OnyxException(cause.getMessage(), LOGGER);
     }
 
-    public void addData(final ACLMessage data) {
+    public synchronized void addData(final ACLMessage data) {
         if (data.isValid()) {
             dataStack.push(data);
         }

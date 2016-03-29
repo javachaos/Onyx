@@ -65,6 +65,7 @@ public class NettyCommServer extends Device implements Runnable {
                         }
                     }).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
 
+            LOGGER.debug("CommServer Started.");
             // Bind and start to accept incoming connections.
             final ChannelFuture f = b.bind(PORT).sync();
 
@@ -79,7 +80,6 @@ public class NettyCommServer extends Device implements Runnable {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
-        LOGGER.debug("CommServer Started.");
     }
 
     @Override

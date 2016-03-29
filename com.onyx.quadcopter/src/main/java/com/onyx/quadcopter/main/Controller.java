@@ -118,7 +118,12 @@ public class Controller implements Runnable {
     }
 
     public Device getDevice(final DeviceID d) {
-        return devices.get(d);
+        final Device dev = devices.get(d);
+        if (dev != null) {
+            return devices.get(d);
+        } else {
+            throw new OnyxException("Device not found: " + d);
+        }
     }
 
     public void removeDevice(final DeviceID deviceId) {
@@ -131,9 +136,9 @@ public class Controller implements Runnable {
     }
 
     private void update() {
-        final Iterator<Entry<DeviceID, Device>> it = devices.entrySet().iterator();
+        final Iterator<DeviceID> it = devices.keySet().iterator();
         while (it.hasNext()) {
-            it.next().getValue().execute();
+            getDevice(it.next()).execute();
         }
     }
 
