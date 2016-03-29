@@ -19,7 +19,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
-public class NettyCommServer extends Device {
+public class NettyCommServer extends Device implements Runnable {
 
     /**
      * Logger.
@@ -50,7 +50,11 @@ public class NettyCommServer extends Device {
 
     @Override
     protected void init() {
-        LOGGER.debug("Initializing CommServer.");
+    }
+
+    @Override
+    public void run() {
+        LOGGER.debug("Starting CommServer.");
         try {
             final ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
@@ -75,7 +79,7 @@ public class NettyCommServer extends Device {
             workerGroup.shutdownGracefully();
             bossGroup.shutdownGracefully();
         }
-        LOGGER.debug("CommServer initialized.");
+        LOGGER.debug("CommServer Started.");
     }
 
     @Override

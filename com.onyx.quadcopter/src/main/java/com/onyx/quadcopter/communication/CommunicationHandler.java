@@ -1,13 +1,12 @@
 package com.onyx.quadcopter.communication;
 
-import java.util.Stack;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
+import com.onyx.quadcopter.utils.ConcurrentStack;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -27,7 +26,7 @@ public class CommunicationHandler extends ChannelInboundHandlerAdapter {
     /**
      * The stack of data to push out over the wire as bytes.
      */
-    private final Stack<ACLMessage> dataStack;
+    private final ConcurrentStack<ACLMessage> dataStack;
 
     /**
      * Controller reference.
@@ -42,7 +41,7 @@ public class CommunicationHandler extends ChannelInboundHandlerAdapter {
      */
     public CommunicationHandler(final Controller c) {
         controller = c;
-        dataStack = new Stack<ACLMessage>();
+        dataStack = new ConcurrentStack<ACLMessage>();
     }
 
     @Override

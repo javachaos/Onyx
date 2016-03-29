@@ -5,6 +5,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +53,16 @@ public class Controller implements Runnable {
 
     private volatile boolean initialized = false;
 
+    /**
+     * Communications server reference.
+     */
+    private final NettyCommServer commServer;
+
     public Controller() {
         devices = new ConcurrentHashMap<DeviceID, Device>(Constants.MAX_DEVICES);
         blackboard = new Blackboard(this);
+        commServer = new NettyCommServer(this);
+        Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
         init();
     }
 
@@ -66,7 +74,7 @@ public class Controller implements Runnable {
         addDevice(new Motor(this, DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
         addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
         addDevice(new Motor(this, DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
-        addDevice(new NettyCommServer(this));
+        addDevice(commServer);
         LOGGER.debug("Controller Initialized.");
         initialized = true;
     }

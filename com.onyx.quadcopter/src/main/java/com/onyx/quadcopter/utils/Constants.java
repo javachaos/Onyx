@@ -280,4 +280,10 @@ public final class Constants {
      */
     public static final int NUM_NIO_THREADS = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.nio.threads", 1);
 
+    /**
+     * CommServer initialization delay in Seconds.
+     */
+    public static final long COMM_SERVER_INIT_DELAY = PROPERTIES
+            .getIntegerProperty("com.onyx.quadcopter.nio.commserver.startdelay", 5);
+
 }
