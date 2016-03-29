@@ -8,8 +8,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.utils.Constants;
-
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -20,18 +18,9 @@ public class ACLDecoder extends ByteToMessageDecoder {
      * Logger.
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(ACLDecoder.class);
-
-    final byte[] buffer = new byte[Constants.NETWORK_BUFFER_SIZE];
-    final ByteArrayInputStream inputByteArray = new ByteArrayInputStream(buffer);
     ObjectInputStream ois;
 
     public ACLDecoder() {
-        try {
-            ois = new ObjectInputStream(inputByteArray);
-        } catch (final IOException e) {
-            e.printStackTrace();
-            LOGGER.error(e.getMessage());
-        }
     }
 
     @Override
@@ -47,7 +36,7 @@ public class ACLDecoder extends ByteToMessageDecoder {
         }
 
         try {
-            inputByteArray.read(in.readBytes(msgSize).array());
+            ois = new ObjectInputStream(new ByteArrayInputStream(in.readBytes(msgSize).array()));
             out.add(ois.readObject());
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();

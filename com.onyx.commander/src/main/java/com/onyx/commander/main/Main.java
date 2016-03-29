@@ -1,7 +1,12 @@
 package com.onyx.commander.main;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.onyx.commander.utils.Constants;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +20,11 @@ public class Main extends Application {
      * Logger.
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    
+    /**
+     * Thread coordinator.
+     */
+    public static final ScheduledExecutorService COORDINATOR = Executors.newScheduledThreadPool(Constants.NUM_THREADS);
     
     public static void main(String[] args) {
 	launch(args);

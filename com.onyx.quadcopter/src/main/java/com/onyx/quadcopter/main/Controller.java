@@ -61,8 +61,6 @@ public class Controller implements Runnable {
     public Controller() {
         devices = new MapMaker().concurrencyLevel(Constants.NUM_THREADS).initialCapacity(Constants.MAX_DEVICES)
                 .makeMap();
-        // devices = new ConcurrentHashMap<DeviceID,
-        // Device>(Constants.MAX_DEVICES);
         blackboard = new Blackboard(this);
         commServer = new NettyCommServer(this);
         Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);

@@ -1,6 +1,12 @@
 package com.onyx.commander.gui;
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.onyx.commander.communication.NettyCommClient;
+import com.onyx.commander.main.Main;
+import com.onyx.commander.utils.Constants;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -85,8 +91,9 @@ public class GuiController {
 	//Connect to the Onyx Quadcopter.
 	String ip = ipField.getText();
 	if (ip.matches(IPADDRESS_PATTERN)) {
-	    //TODO Connect
 	    LOGGER.debug("Connecting to "+ ip);
+	    NettyCommClient client = new NettyCommClient(ip, Constants.SERVER_PORT);
+	    Main.COORDINATOR.schedule(client, 1, TimeUnit.SECONDS);
 	} else {
 	    LOGGER.debug("Cannot connect non valid IP address.");
 	}

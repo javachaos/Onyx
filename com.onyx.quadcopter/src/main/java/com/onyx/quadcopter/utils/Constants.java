@@ -257,7 +257,8 @@ public final class Constants {
     /**
      * Number of threads to use.
      */
-    public static final int NUM_THREADS = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.numthreads", 4);
+    public static final int NUM_THREADS = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.numthreads",
+            Runtime.getRuntime().availableProcessors());
 
     /**
      * Maximum Blackboard size.
