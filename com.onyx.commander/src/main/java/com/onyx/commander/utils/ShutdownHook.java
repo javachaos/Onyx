@@ -8,7 +8,7 @@
  * Contributors:
  *      Fred Laderoute - initial API and implementation
  ******************************************************************************/
-package com.onyx.quadcopter.utils;
+package com.onyx.commander.utils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.main.Main;
-import com.onyx.quadcopter.main.StateMonitor;
 
 /**
  * Shutdown hook.
@@ -49,11 +48,10 @@ public class ShutdownHook extends Thread {
     @Override
     public final void run() {
         try {
-            StateMonitor.shutdownState();
             Main.COORDINATOR.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
             mainThread.join();
         } catch (final InterruptedException e) {
-            ExceptionUtils.logError(ShutdownHook.class, e);
+            LOGGER.error(e.getMessage());
         }
     }
 }

@@ -210,4 +210,70 @@ public final class ACLMessage implements Serializable {
         this.value = value;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = (prime * result) + ((actionId == null) ? 0 : actionId.hashCode());
+        result = (prime * result) + ((content == null) ? 0 : content.hashCode());
+        result = (prime * result) + (isEmpty ? 1231 : 1237);
+        result = (prime * result) + ((messageType == null) ? 0 : messageType.hashCode());
+        result = (prime * result) + ((reciever == null) ? 0 : reciever.hashCode());
+        result = (prime * result) + ((sender == null) ? 0 : sender.hashCode());
+        long temp;
+        temp = Double.doubleToLongBits(value);
+        result = (prime * result) + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ACLMessage other = (ACLMessage) obj;
+        if (actionId != other.actionId) {
+            return false;
+        }
+        if (content == null) {
+            if (other.content != null) {
+                return false;
+            }
+        } else if (!content.equals(other.content)) {
+            return false;
+        }
+        if (isEmpty != other.isEmpty) {
+            return false;
+        }
+        if (messageType != other.messageType) {
+            return false;
+        }
+        if (reciever != other.reciever) {
+            return false;
+        }
+        if (sender != other.sender) {
+            return false;
+        }
+        if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value)) {
+            return false;
+        }
+        return true;
+    }
+
 }

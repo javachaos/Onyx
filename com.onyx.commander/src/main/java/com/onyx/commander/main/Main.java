@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.commander.utils.Constants;
+import com.onyx.quadcopter.utils.ShutdownHook;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +29,14 @@ public class Main extends Application {
     
     public static void main(String[] args) {
 	launch(args);
+	addHook();
+    }
+    
+    /**
+     * Shutdown hook.
+     */
+    private static void addHook() {
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook(Thread.currentThread()));
     }
     
     @Override

@@ -34,7 +34,7 @@ public abstract class Device implements Executable {
     /**
      * The last message posted to the black board for this agent.
      */
-    protected ACLMessage lastMessage;
+    protected ACLMessage lastMessage, previousMessage;
 
     /**
      * The human readable name for this device.
@@ -72,6 +72,7 @@ public abstract class Device implements Executable {
             init();
             initialized = true;
         }
+        previousMessage = lastMessage;
         lastMessage = getController().getBlackboard().getMessage(this);
         update();
         runCounter++;
@@ -80,6 +81,10 @@ public abstract class Device implements Executable {
             LOGGER.debug("Device heartbeat: " + getName() + ".");
             alternate();
         }
+    }
+
+    protected boolean isNewMessage() {
+        return !previousMessage.equals(lastMessage);
     }
 
     /**

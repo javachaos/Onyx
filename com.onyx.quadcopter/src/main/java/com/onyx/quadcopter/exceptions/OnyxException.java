@@ -16,6 +16,11 @@ public class OnyxException extends RuntimeException {
         l.error(errorMsg);
     }
 
+    public OnyxException(final Throwable t, final Logger l) {
+        super(t);
+        l.error(t.getMessage());
+    }
+
     public OnyxException(final String errorMsg) {
         this(errorMsg, LOGGER);
     }

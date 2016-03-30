@@ -10,5 +10,6 @@ public final class Constants {
     
     public static final int NUM_THREADS = Runtime.getRuntime().availableProcessors();
     public static final int SERVER_PORT = 8888;
+    public static final long TERMINATION_TIMEOUT = 5;
 
 }

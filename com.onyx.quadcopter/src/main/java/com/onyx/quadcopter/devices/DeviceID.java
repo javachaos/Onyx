@@ -1,7 +1,8 @@
 package com.onyx.quadcopter.devices;
 
 public enum DeviceID {
-    DATA_TRANSMITTER(0), BLACKBOARD(1), DATA_RECIEVER(2), MOTOR1(3), MOTOR2(4), MOTOR3(5), MOTOR4(6), COMM_SERVER(7);
+    DATA_TRANSMITTER(0), BLACKBOARD(1), DATA_RECIEVER(2), MOTOR1(3), MOTOR2(4), MOTOR3(5), MOTOR4(6), COMM_SERVER(
+            7), GYRO_MAG_ACC(8);
 
     /**
      * The internal ID field.

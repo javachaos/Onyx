@@ -287,4 +287,19 @@ public final class Constants {
     public static final long COMM_SERVER_INIT_DELAY = PROPERTIES
             .getIntegerProperty("com.onyx.quadcopter.nio.commserver.startdelay", 5);
 
+    /**
+     * Gyro input device file
+     */
+    public static final String GYRO_DEV_FILE = "/dev/input/event1";
+
+    /**
+     * Accelerometer input device file
+     */
+    public static final String ACC_DEV_FILE = "/dev/input/event2";
+
+    /**
+     * Magnetometer input device file
+     */
+    public static final String MAG_DEV_FILE = "/dev/input/event3";
+
 }
