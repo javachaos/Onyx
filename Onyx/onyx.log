@@ -1,0 +1,172 @@
+854  [main] DEBUG c.o.q.utils.PropertyManager - [PropertyManager.java:77] Properties loaded into memory. 
+866  [main] DEBUG c.o.q.utils.PropertyManager - [PropertyManager.java:78] [] 
+924  [main] DEBUG i.n.u.i.l.InternalLoggerFactory - [Slf4JLogger.java:71] Using SLF4J as the default logging framework 
+929  [main] DEBUG i.n.c.MultithreadEventLoopGroup - [Slf4JLogger.java:76] -Dio.netty.eventLoopThreads: 8 
+958  [main] DEBUG i.n.u.internal.PlatformDependent0 - [Slf4JLogger.java:76] java.nio.Buffer.address: available 
+961  [main] DEBUG i.n.u.internal.PlatformDependent0 - [Slf4JLogger.java:76] sun.misc.Unsafe.theUnsafe: available 
+963  [main] DEBUG i.n.u.internal.PlatformDependent0 - [Slf4JLogger.java:71] sun.misc.Unsafe.copyMemory: available 
+965  [main] DEBUG i.n.u.internal.PlatformDependent0 - [Slf4JLogger.java:76] java.nio.Bits.unaligned: false 
+967  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] Java version: 8 
+968  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] -Dio.netty.noUnsafe: false 
+969  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] sun.misc.Unsafe: available 
+971  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] -Dio.netty.noJavassist: false 
+974  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:71] Javassist: unavailable 
+975  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:71] You don't have Javassist in your class path or you don't have enough permission to load dynamically generated classes.  Please check the configuration for better performance. 
+976  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] -Dio.netty.tmpdir: /tmp (java.io.tmpdir) 
+977  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] -Dio.netty.bitMode: 32 (sun.arch.data.model) 
+978  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] -Dio.netty.noPreferDirect: false 
+1040 [main] DEBUG io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:76] -Dio.netty.noKeySetOptimization: false 
+1041 [main] DEBUG io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:76] -Dio.netty.selectorAutoRebuildThreshold: 512 
+1066 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@1690630 
+1069 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@6776ad 
+1070 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@108b2d7 
+1071 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@154909b 
+1072 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@1f256fa 
+1074 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@cd8737 
+1075 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@f71333 
+1076 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@1969fbe 
+1077 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@aa5eb0 
+1086 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:71] Initializing Controller... 
+1089 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device BLACKBOARD added to controller. 
+1090 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device COMM_SERVER added to controller. 
+1092 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device MOTOR1 added to controller. 
+1093 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device MOTOR2 added to controller. 
+1094 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device MOTOR3 added to controller. 
+1094 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device MOTOR4 added to controller. 
+1095 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:79] Controller Initialized. 
+1301 [pool-1-thread-2] DEBUG c.onyx.quadcopter.main.StateMonitor - [StateMonitor.java:325] Entering STARTUP state. 
+1305 [Thread-1] INFO  com.onyx.quadcopter.main.AppStart - [AppStart.java:58] Begin Init. 
+1309 [Thread-1] DEBUG c.o.quadcopter.devices.Blackboard - [Blackboard.java:57] Running blackboard self test. 
+1311 [Thread-1] DEBUG c.o.q.tasks.PowerOnSelfTest - [PowerOnSelfTest.java:49] Power on self test completed successfully. 
+1314 [Thread-1] INFO  com.onyx.quadcopter.main.AppStart - [AppStart.java:118] Controller start successful. 
+1317 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:71] Initializing MOTOR3... 
+1318 [pool-1-thread-1] DEBUG c.onyx.quadcopter.utils.PwmControl - [PwmControl.java:57] Setup simulation PWM control on pin: 24 
+1319 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:73] Initializing complete for MOTOR3. 
+1325 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:71] Initializing MOTOR4... 
+1326 [pool-1-thread-1] DEBUG c.onyx.quadcopter.utils.PwmControl - [PwmControl.java:57] Setup simulation PWM control on pin: 26 
+1327 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:73] Initializing complete for MOTOR4. 
+1328 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:71] Initializing MOTOR1... 
+1329 [pool-1-thread-1] DEBUG c.onyx.quadcopter.utils.PwmControl - [PwmControl.java:57] Setup simulation PWM control on pin: 22 
+1330 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:73] Initializing complete for MOTOR1. 
+1352 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:71] Initializing MOTOR2... 
+1353 [pool-1-thread-1] DEBUG c.onyx.quadcopter.utils.PwmControl - [PwmControl.java:57] Setup simulation PWM control on pin: 23 
+1353 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:73] Initializing complete for MOTOR2. 
+1550 [pool-1-thread-3] DEBUG c.onyx.quadcopter.main.StateMonitor - [StateMonitor.java:325] Entering LANDED state. 
+6086 [pool-1-thread-4] DEBUG c.o.q.devices.NettyCommServer - [NettyCommServer.java:57] Starting CommServer. 
+6132 [pool-1-thread-4] DEBUG c.o.q.devices.NettyCommServer - [NettyCommServer.java:68] CommServer Started. 
+6241 [pool-1-thread-4] DEBUG i.n.util.internal.ThreadLocalRandom - [Slf4JLogger.java:71] -Dio.netty.initialSeedUniquifier: 0xcf7ee7aac8665f37 (took 42 ms) 
+6339 [pool-1-thread-4] DEBUG io.netty.buffer.ByteBufUtil - [Slf4JLogger.java:76] -Dio.netty.allocator.type: unpooled 
+6341 [pool-1-thread-4] DEBUG io.netty.buffer.ByteBufUtil - [Slf4JLogger.java:76] -Dio.netty.threadLocalDirectBufferSize: 65536 
+6352 [pool-1-thread-4] DEBUG io.netty.util.NetUtil - [Slf4JLogger.java:86] Loopback interface: lo (lo, 0:0:0:0:0:0:0:1%lo) 
+6354 [pool-1-thread-4] DEBUG io.netty.util.NetUtil - [Slf4JLogger.java:81] /proc/sys/net/core/somaxconn: 128 
+6632 [nioEventLoopGroup-2-1] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] UID: 1001 
+51311 [pool-1-thread-2] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: MOTOR3. 
+51313 [pool-1-thread-2] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:85] Current speed of MOTOR3 is: 0%. 
+51314 [pool-1-thread-2] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: BLACKBOARD. 
+51315 [pool-1-thread-2] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: MOTOR4. 
+51316 [pool-1-thread-2] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:85] Current speed of MOTOR4 is: 0%. 
+51317 [pool-1-thread-2] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: MOTOR1. 
+51318 [pool-1-thread-2] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:85] Current speed of MOTOR1 is: 0%. 
+51319 [pool-1-thread-2] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: COMM_SERVER. 
+51320 [pool-1-thread-2] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: MOTOR2. 
+51321 [pool-1-thread-2] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:85] Current speed of MOTOR2 is: 0%. 
+98050 [pool-1-thread-1] DEBUG c.onyx.quadcopter.main.StateMonitor - [StateMonitor.java:325] Entering SHUTDOWN state. 
+98300 [pool-1-thread-3] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:84] Starting Controller shutdown... 
+98302 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:78] Shutting down MOTOR3... 
+98304 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:80] Shutdown complete for MOTOR3. 
+98305 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:78] Shutting down MOTOR4... 
+98306 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:80] Shutdown complete for MOTOR4. 
+98307 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:78] Shutting down MOTOR1... 
+98308 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:80] Shutdown complete for MOTOR1. 
+98310 [pool-1-thread-3] DEBUG c.o.q.devices.NettyCommServer - [NettyCommServer.java:97] CommServer shutdown initiated. 
+98314 [pool-1-thread-3] DEBUG c.o.q.devices.NettyCommServer - [NettyCommServer.java:100] CommServer shutdown complete. 
+98315 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:78] Shutting down MOTOR2... 
+98316 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:80] Shutdown complete for MOTOR2. 
+98395 [pool-1-thread-3] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:91] Controller shutdown complete. 
+98397 [pool-1-thread-3] INFO  c.onyx.quadcopter.main.StateMonitor - [StateMonitor.java:336] Application exiting. 
+866  [main] DEBUG c.o.q.utils.PropertyManager - [PropertyManager.java:77] Properties loaded into memory. 
+879  [main] DEBUG c.o.q.utils.PropertyManager - [PropertyManager.java:78] [] 
+938  [main] DEBUG i.n.u.i.l.InternalLoggerFactory - [Slf4JLogger.java:71] Using SLF4J as the default logging framework 
+943  [main] DEBUG i.n.c.MultithreadEventLoopGroup - [Slf4JLogger.java:76] -Dio.netty.eventLoopThreads: 8 
+973  [main] DEBUG i.n.u.internal.PlatformDependent0 - [Slf4JLogger.java:76] java.nio.Buffer.address: available 
+976  [main] DEBUG i.n.u.internal.PlatformDependent0 - [Slf4JLogger.java:76] sun.misc.Unsafe.theUnsafe: available 
+978  [main] DEBUG i.n.u.internal.PlatformDependent0 - [Slf4JLogger.java:71] sun.misc.Unsafe.copyMemory: available 
+980  [main] DEBUG i.n.u.internal.PlatformDependent0 - [Slf4JLogger.java:76] java.nio.Bits.unaligned: false 
+982  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] Java version: 8 
+983  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] -Dio.netty.noUnsafe: false 
+984  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] sun.misc.Unsafe: available 
+986  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] -Dio.netty.noJavassist: false 
+990  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:71] Javassist: unavailable 
+990  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:71] You don't have Javassist in your class path or you don't have enough permission to load dynamically generated classes.  Please check the configuration for better performance. 
+991  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] -Dio.netty.tmpdir: /tmp (java.io.tmpdir) 
+992  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] -Dio.netty.bitMode: 32 (sun.arch.data.model) 
+994  [main] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] -Dio.netty.noPreferDirect: false 
+1056 [main] DEBUG io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:76] -Dio.netty.noKeySetOptimization: false 
+1057 [main] DEBUG io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:76] -Dio.netty.selectorAutoRebuildThreshold: 512 
+1083 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@1690630 
+1086 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@6776ad 
+1087 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@108b2d7 
+1088 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@154909b 
+1089 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@1f256fa 
+1091 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@cd8737 
+1092 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@f71333 
+1093 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@1969fbe 
+1094 [main] TRACE io.netty.channel.nio.NioEventLoop - [Slf4JLogger.java:46] Instrumented an optimized java.util.Set into: sun.nio.ch.EPollSelectorImpl@aa5eb0 
+1103 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:71] Initializing Controller... 
+1106 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device BLACKBOARD added to controller. 
+1107 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device COMM_SERVER added to controller. 
+1110 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device MOTOR1 added to controller. 
+1110 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device MOTOR2 added to controller. 
+1111 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device MOTOR3 added to controller. 
+1112 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:112] Device MOTOR4 added to controller. 
+1112 [main] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:79] Controller Initialized. 
+1318 [pool-1-thread-4] DEBUG c.onyx.quadcopter.main.StateMonitor - [StateMonitor.java:325] Entering STARTUP state. 
+1322 [Thread-1] INFO  com.onyx.quadcopter.main.AppStart - [AppStart.java:58] Begin Init. 
+1327 [Thread-1] DEBUG c.o.quadcopter.devices.Blackboard - [Blackboard.java:57] Running blackboard self test. 
+1328 [Thread-1] DEBUG c.o.q.tasks.PowerOnSelfTest - [PowerOnSelfTest.java:49] Power on self test completed successfully. 
+1331 [Thread-1] INFO  com.onyx.quadcopter.main.AppStart - [AppStart.java:118] Controller start successful. 
+1334 [pool-1-thread-4] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:71] Initializing MOTOR3... 
+1335 [pool-1-thread-4] DEBUG c.onyx.quadcopter.utils.PwmControl - [PwmControl.java:57] Setup simulation PWM control on pin: 24 
+1336 [pool-1-thread-4] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:73] Initializing complete for MOTOR3. 
+1360 [pool-1-thread-4] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:71] Initializing MOTOR4... 
+1361 [pool-1-thread-4] DEBUG c.onyx.quadcopter.utils.PwmControl - [PwmControl.java:57] Setup simulation PWM control on pin: 26 
+1362 [pool-1-thread-4] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:73] Initializing complete for MOTOR4. 
+1363 [pool-1-thread-4] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:71] Initializing MOTOR1... 
+1364 [pool-1-thread-4] DEBUG c.onyx.quadcopter.utils.PwmControl - [PwmControl.java:57] Setup simulation PWM control on pin: 22 
+1365 [pool-1-thread-4] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:73] Initializing complete for MOTOR1. 
+1368 [pool-1-thread-4] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:71] Initializing MOTOR2... 
+1369 [pool-1-thread-4] DEBUG c.onyx.quadcopter.utils.PwmControl - [PwmControl.java:57] Setup simulation PWM control on pin: 23 
+1370 [pool-1-thread-4] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:73] Initializing complete for MOTOR2. 
+1567 [pool-1-thread-4] DEBUG c.onyx.quadcopter.main.StateMonitor - [StateMonitor.java:325] Entering LANDED state. 
+6102 [pool-1-thread-2] DEBUG c.o.q.devices.NettyCommServer - [NettyCommServer.java:57] Starting CommServer. 
+6134 [pool-1-thread-2] DEBUG c.o.q.devices.NettyCommServer - [NettyCommServer.java:68] CommServer Started. 
+6199 [pool-1-thread-2] DEBUG i.n.util.internal.ThreadLocalRandom - [Slf4JLogger.java:71] -Dio.netty.initialSeedUniquifier: 0xcd6ba46a4ad3ef2b (took 30 ms) 
+6301 [pool-1-thread-2] DEBUG io.netty.buffer.ByteBufUtil - [Slf4JLogger.java:76] -Dio.netty.allocator.type: unpooled 
+6302 [pool-1-thread-2] DEBUG io.netty.buffer.ByteBufUtil - [Slf4JLogger.java:76] -Dio.netty.threadLocalDirectBufferSize: 65536 
+6313 [pool-1-thread-2] DEBUG io.netty.util.NetUtil - [Slf4JLogger.java:86] Loopback interface: lo (lo, 0:0:0:0:0:0:0:1%lo) 
+6315 [pool-1-thread-2] DEBUG io.netty.util.NetUtil - [Slf4JLogger.java:81] /proc/sys/net/core/somaxconn: 128 
+6613 [nioEventLoopGroup-2-1] DEBUG i.n.util.internal.PlatformDependent - [Slf4JLogger.java:76] UID: 1001 
+51329 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: MOTOR3. 
+51330 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:85] Current speed of MOTOR3 is: 0%. 
+51339 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: BLACKBOARD. 
+51341 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: MOTOR4. 
+51342 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:85] Current speed of MOTOR4 is: 0%. 
+51343 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: MOTOR1. 
+51344 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:85] Current speed of MOTOR1 is: 0%. 
+51345 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: COMM_SERVER. 
+51347 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Device.java:80] Device heartbeat: MOTOR2. 
+51348 [pool-1-thread-1] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:85] Current speed of MOTOR2 is: 0%. 
+72568 [pool-1-thread-3] DEBUG c.onyx.quadcopter.main.StateMonitor - [StateMonitor.java:325] Entering SHUTDOWN state. 
+72818 [pool-1-thread-3] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:84] Starting Controller shutdown... 
+72819 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:78] Shutting down MOTOR3... 
+72820 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:80] Shutdown complete for MOTOR3. 
+72821 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:78] Shutting down MOTOR4... 
+72822 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:80] Shutdown complete for MOTOR4. 
+72822 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:78] Shutting down MOTOR1... 
+72823 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:80] Shutdown complete for MOTOR1. 
+72823 [pool-1-thread-3] DEBUG c.o.q.devices.NettyCommServer - [NettyCommServer.java:97] CommServer shutdown initiated. 
+72826 [pool-1-thread-3] DEBUG c.o.q.devices.NettyCommServer - [NettyCommServer.java:100] CommServer shutdown complete. 
+72827 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:78] Shutting down MOTOR2... 
+72827 [pool-1-thread-3] DEBUG com.onyx.quadcopter.devices.Device - [Motor.java:80] Shutdown complete for MOTOR2. 
+72879 [pool-1-thread-3] DEBUG com.onyx.quadcopter.main.Controller - [Controller.java:91] Controller shutdown complete. 
+72880 [pool-1-thread-3] INFO  c.onyx.quadcopter.main.StateMonitor - [StateMonitor.java:336] Application exiting. 
