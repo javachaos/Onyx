@@ -13,6 +13,7 @@ import com.google.common.collect.MapMaker;
 import com.onyx.quadcopter.devices.Blackboard;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
+import com.onyx.quadcopter.devices.GyroMagAcc;
 import com.onyx.quadcopter.devices.Motor;
 import com.onyx.quadcopter.devices.NettyCommServer;
 import com.onyx.quadcopter.exceptions.OnyxException;
@@ -72,6 +73,7 @@ public class Controller implements Runnable {
         cleaner = new Cleaner();
         addDevice(blackboard);
         addDevice(commServer);
+        addDevice(new GyroMagAcc(this));
         addDevice(new Motor(this, DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
         addDevice(new Motor(this, DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
         addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
