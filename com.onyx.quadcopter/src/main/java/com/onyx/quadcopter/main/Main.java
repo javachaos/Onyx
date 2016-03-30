@@ -19,7 +19,7 @@ public class Main {
     public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
     private static final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("JOB-%d")
-            .setDaemon(true).setPriority(Thread.MAX_PRIORITY).setUncaughtExceptionHandler(new OnyxExceptionHandler())
+            .setDaemon(false).setPriority(Thread.MAX_PRIORITY).setUncaughtExceptionHandler(new OnyxExceptionHandler())
             .build();
 
     /**
