@@ -1,0 +1,9 @@
+[Unit]
+Description=Onyx Quadcopter service
+
+[Service]
+ExecStart=/opt/onyx/Onyx/onyx_start
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
