@@ -17,6 +17,7 @@
     <app.name>onyx</app.name>
     <project.build.output.dir>./bin/</project.build.output.dir>
     <staging.dir>${project.build.directory}/staging</staging.dir>
+    <install.dir>/opt/${app.name}/Onyx</install.dir>
   </properties>
   
   <build>
@@ -41,7 +42,7 @@
                   <goal>copy-resources</goal>
                 </goals>
                 <configuration>
-                  <outputDirectory>${staging.dir}</outputDirectory>
+                  <outputDirectory>${install.dir}</outputDirectory>
                   <resources>          
                     <resource>
                       <directory>src/main/resources</directory>
@@ -84,6 +85,62 @@
                 </execution>
               </executions>
             </plugin>
+            <plugin>
+			    <artifactId>maven-dependency-plugin</artifactId>
+			    <executions>
+			        <execution>
+			            <id>install-jar</id>
+			            <phase>install</phase>
+			            <goals>
+			                <goal>copy</goal>
+			            </goals>
+			            <configuration>
+			                <artifactItems>
+			                    <artifactItem>
+			                        <groupId></groupId>
+			                        <artifactId></artifactId>
+			                        <version></version>
+			                    </artifactItem>
+			                </artifactItems>
+			                <outputDirectory>${install.dir}</outputDirectory>
+			                <stripVersion>true</stripVersion>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
+			<plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>appassembler-maven-plugin</artifactId>
+            <version>1.10</version>
+            <configuration>
+              <!-- Set the target configuration directory to be used in the bin scripts -->
+              <configurationDirectory>conf</configurationDirectory>
+              <!-- Copy the contents from "/src/main/config" to the target
+                   configuration directory in the assembled application -->
+              <copyConfigurationDirectory>true</copyConfigurationDirectory>
+              <!-- Include the target configuration directory in the beginning of
+                   the classpath declaration in the bin scripts -->
+              <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+              <!-- set alternative assemble directory -->
+              <assembleDirectory>${install.dir}</assembleDirectory>
+              <!-- Extra JVM arguments that will be included in the bin scripts -->
+              <extraJvmArguments>-Xms512m</extraJvmArguments>
+              <!-- Generate bin scripts for windows and unix pr default -->
+              <platforms>
+                <platform>unix</platform>
+              </platforms>
+              <programs>
+                <program>
+                  <mainClass>${main.class}</mainClass>
+                  <id>${app.name}</id>
+                  <!-- Only generate windows bat script for this application -->
+                  <platforms>
+                    <platform>unix</platform>
+                  </platforms>
+                </program>
+              </programs>
+            </configuration>
+          </plugin>
       </plugins>
   </build>
   <dependencies>
@@ -124,15 +181,15 @@
 	    <artifactId>javassist</artifactId>
 	    <version>3.20.0-GA</version>
         </dependency>
-        <dependency>
+    <dependency>
 	    <groupId>com.nativelibs4java</groupId>
 	    <artifactId>bridj</artifactId>
 	    <version>0.7.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.sarxos</groupId>
-            <artifactId>webcam-capture</artifactId>
-            <version>0.3.10</version>
-        </dependency>
+    </dependency>
+    <dependency>
+        <groupId>com.github.sarxos</groupId>
+        <artifactId>webcam-capture</artifactId>
+        <version>0.3.10</version>
+    </dependency>
   </dependencies>
 </project>
