@@ -32,6 +32,33 @@
             </configuration>
           </plugin>
           <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>native-maven-plugin</artifactId>
+              <version>1.0-alpha-8</version>
+              <extensions>true</extensions>
+              <configuration>
+                  <!--  trigger javah -->
+                  <javahOS>linux</javahOS>
+                  <compilerStartOptions>
+                     <compilerStartOption>-fPIC -O</compilerStartOption>
+                  </compilerStartOptions>
+                  <linkerStartOptions>
+                      <linkerStartOption>-shared -lc -ldl</linkerStartOption>
+                  </linkerStartOptions>
+                  <javahClassNames>
+                     <javahClassName>com.onyx.quadcopter.evdev.NativeEventDevice</javahClassName>
+                  </javahClassNames>
+                  <sources>
+                       <source>
+                          <directory>src/main/native</directory>
+                           <fileNames>
+                              <fileName>evdev-java.c</fileName>
+                         </fileNames>
+                     </source>
+                  </sources>
+              </configuration>
+          </plugin>
+          <plugin>
             <artifactId>maven-resources-plugin</artifactId>
             <version>2.6</version>
             <executions>
