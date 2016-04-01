@@ -140,8 +140,10 @@ public class GyroMagAcc extends Device {
     @Override
     protected void alternate() {
         pollXYZ();
-        LOGGER.debug(gyrX + ":" + gyrY + ":" + gyrZ + ";" + accX + ":" + accY + ":" + accZ + ";" + magX + ":" + magY
-                + ":" + magZ);
+        LOGGER.debug(String.format("%08x", gyrX) + ":" + String.format("%08x", gyrY) + ":" + String.format("%08x", gyrZ)
+                + ";" + String.format("%08x", accX) + ":" + String.format("%08x", accY) + ":"
+                + String.format("%08x", accZ) + ";" + String.format("%08x", magX) + ":" + String.format("%08x", magY)
+                + ":" + String.format("%08x", magZ));
     }
 
     @Override
