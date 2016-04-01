@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,6 @@ public class GyroMagAcc extends Device {
     private DataInputStream magStream;
 
     private final byte[] timeval = new byte[16];
-    private BigInteger time;
     private short gyrX, gyrY, gyrZ;
     private short accX, accY, accZ;
     private short magX, magY, magZ;
@@ -50,7 +48,6 @@ public class GyroMagAcc extends Device {
                 m.setSender(getId());
                 m.setContent(gyrX + ":" + gyrY + ":" + gyrZ + ";" + accX + ":" + accY + ":" + accZ + ";" + magX + ":"
                         + magY + ":" + magZ);
-                m.setValue(time.doubleValue());
                 getController().getBlackboard().addMessage(m);
             default:
                 break;
@@ -64,7 +61,6 @@ public class GyroMagAcc extends Device {
     private void pollXYZ() {
         try {
             gyroStream.readFully(timeval);
-            time = new BigInteger(timeval);
             gyroStream.readShort();
             gyroStream.readShort();
             gyrX = (short) gyroStream.readInt();
