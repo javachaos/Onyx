@@ -23,7 +23,7 @@
 #include <unistd.h>
 
 #include <jni.h>
-#include "com_dgis_input_evdev_NativeEventDevice.h"
+#include "com_onyx_quadcopter_evdev_NativeEventDevice.h"
 
 /*
  * Class:     com_dgis_input_evdev_NativeEventDevice
