@@ -66,10 +66,6 @@
                         <configuration>
                             <javahOS>linux</javahOS>
                             <javahProvider>default</javahProvider>
-                            <javahOutputFileName>NativeEventDevice.h</javahOutputFileName>
-                            <javahClassNames>
-                                <javahClassName>com.onyx.quadcopter.evdev.NativeEventDevice</javahClassName>
-                            </javahClassNames>
                         </configuration>
                         <goals>
                             <goal>javah</goal>
