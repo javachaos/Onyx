@@ -31,9 +31,9 @@ public class PwmControl {
     private final int pwmRange = 200;
 
     /**
-     * True if this is a simulated PWM Control pin.
+     * True for all invocations of PwnControl once setup() has been called.
      */
-    private static boolean simulation = Constants.SIMULATION;
+    private static boolean initialized = false;
 
     /**
      * Create a new PwmControl.
@@ -53,12 +53,15 @@ public class PwmControl {
      * Setup this PWMControl.
      */
     public void setup() {
-        if (simulation) {
-            LOGGER.debug("Setup simulation PWM control on pin: " + pwmPin);
-        } else {
-            LOGGER.debug("Setup PWM control on pin: " + pwmPin);
-            com.pi4j.wiringpi.Gpio.wiringPiSetup();
-            SoftPwm.softPwmCreate(pwmPin, initialSpeed, pwmRange);
+        if (!initialized) {
+            if (Constants.SIMULATION) {
+                LOGGER.debug("Setup simulation PWM control on pin: " + pwmPin);
+            } else {
+                LOGGER.debug("Setup PWM control on pin: " + pwmPin);
+                com.pi4j.wiringpi.Gpio.wiringPiSetup();
+                SoftPwm.softPwmCreate(pwmPin, initialSpeed, pwmRange);
+                initialized = true;
+            }
         }
     }
 
@@ -72,7 +75,7 @@ public class PwmControl {
         if ((value < 0) || (value > 200)) {
             throw new OnyxException("Cannot set pwmWrite of: " + value);
         }
-        if (!simulation) {
+        if (!Constants.SIMULATION) {
             SoftPwm.softPwmWrite(pwmPin, value);
         } else {
             LOGGER.info("PWM write simulated: " + value);
@@ -80,7 +83,7 @@ public class PwmControl {
     }
 
     public void shutdown() {
-        if (!simulation) {
+        if (!Constants.SIMULATION) {
             SoftPwm.softPwmWrite(pwmPin, initialSpeed);
         }
     }
