@@ -112,6 +112,13 @@
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>native-maven-plugin</artifactId>
               <version>1.0-alpha-8</version>
+              <dependencies>
+                    <dependency>
+                        <groupId>${project.groupId}</groupId>
+                        <artifactId>${project.artifactId}</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
               <extensions>true</extensions>
               <configuration>
                   <!--  trigger javah -->
