@@ -10,7 +10,7 @@ CUTOFF_TEMP=37
 START_TEMP=38
 ON=1
 OFF=0
-FAN_LOGFILE=/opt/onyx/Onyx/fan.log
+FAN_LOGFILE=/opt/onyx/fan.log
 
 #512MB
 MAX_LOG_SIZE=512000000

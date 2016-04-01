@@ -17,7 +17,7 @@
     <app.name>onyx</app.name>
     <project.build.output.dir>./bin/</project.build.output.dir>
     <staging.dir>${project.build.directory}/staging</staging.dir>
-    <install.dir>/opt/${app.name}/Onyx</install.dir>
+    <install.dir>/opt/${app.name}/</install.dir>
   </properties>
   
   <build>
@@ -64,7 +64,7 @@
                     <goal>shade</goal>
                   </goals>
                   <configuration>
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
+                    <shadedArtifactAttached>false</shadedArtifactAttached>
                     <shadedClassifierName>shaded</shadedClassifierName>
                       <filters>
                         <filter>
@@ -97,9 +97,9 @@
 			            <configuration>
 			                <artifactItems>
 			                    <artifactItem>
-			                        <groupId></groupId>
-			                        <artifactId></artifactId>
-			                        <version></version>
+			                        <groupId>${project.groupId}</groupId>
+			                        <artifactId>${project.artifactId}</artifactId>
+			                        <version>${project.version}</version>
 			                    </artifactItem>
 			                </artifactItems>
 			                <outputDirectory>${install.dir}</outputDirectory>
@@ -108,39 +108,6 @@
 			        </execution>
 			    </executions>
 			</plugin>
-			<plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>appassembler-maven-plugin</artifactId>
-            <version>1.10</version>
-            <configuration>
-              <!-- Set the target configuration directory to be used in the bin scripts -->
-              <configurationDirectory>conf</configurationDirectory>
-              <!-- Copy the contents from "/src/main/config" to the target
-                   configuration directory in the assembled application -->
-              <copyConfigurationDirectory>true</copyConfigurationDirectory>
-              <!-- Include the target configuration directory in the beginning of
-                   the classpath declaration in the bin scripts -->
-              <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
-              <!-- set alternative assemble directory -->
-              <assembleDirectory>${install.dir}</assembleDirectory>
-              <!-- Extra JVM arguments that will be included in the bin scripts -->
-              <extraJvmArguments>-Xms512m</extraJvmArguments>
-              <!-- Generate bin scripts for windows and unix pr default -->
-              <platforms>
-                <platform>unix</platform>
-              </platforms>
-              <programs>
-                <program>
-                  <mainClass>${main.class}</mainClass>
-                  <id>${app.name}</id>
-                  <!-- Only generate windows bat script for this application -->
-                  <platforms>
-                    <platform>unix</platform>
-                  </platforms>
-                </program>
-              </programs>
-            </configuration>
-          </plugin>
       </plugins>
   </build>
   <dependencies>
