@@ -26,9 +26,9 @@ public class GyroMagAcc extends Device {
 
     private final byte[] timeval = new byte[16];
     private BigInteger time;
-    private short gyrX, gyrY, gyrZ;
-    private short accX, accY, accZ;
-    private short magX, magY, magZ;
+    private int gyrX, gyrY, gyrZ;
+    private int accX, accY, accZ;
+    private int magX, magY, magZ;
     /**
      * Logger.
      */
@@ -68,35 +68,35 @@ public class GyroMagAcc extends Device {
             time = new BigInteger(timeval);
             gyroStream.readShort();
             gyroStream.readShort();
-            gyrX = gyroStream.readShort();
+            gyrX = gyroStream.readInt();
             gyroStream.readShort();
             gyroStream.readShort();
-            gyrY = gyroStream.readShort();
+            gyrY = gyroStream.readInt();
             gyroStream.readShort();
             gyroStream.readShort();
-            gyrZ = gyroStream.readShort();
+            gyrZ = gyroStream.readInt();
 
             accelStream.readFully(timeval);
             accelStream.readShort();
             accelStream.readShort();
-            accX = accelStream.readShort();
+            accX = accelStream.readInt();
             accelStream.readShort();
             accelStream.readShort();
-            accY = accelStream.readShort();
+            accY = accelStream.readInt();
             accelStream.readShort();
             accelStream.readShort();
-            accZ = accelStream.readShort();
+            accZ = accelStream.readInt();
 
             magStream.readFully(timeval);
             magStream.readShort();
             magStream.readShort();
-            magX = magStream.readShort();
+            magX = magStream.readInt();
             magStream.readShort();
             magStream.readShort();
-            magY = magStream.readShort();
+            magY = magStream.readInt();
             magStream.readShort();
             magStream.readShort();
-            magZ = magStream.readShort();
+            magZ = magStream.readInt();
         } catch (final IOException e) {
             throw new OnyxException(e, LOGGER);
         }
