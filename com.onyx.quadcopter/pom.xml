@@ -148,6 +148,13 @@
                             <goal>javah</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
               </executions>
           </plugin>
       </plugins>
@@ -174,6 +181,7 @@
       								</versionRange>
       								<goals>
       									<goal>javah</goal>
+      									<goal>compile</goal>
       								</goals>
       							</pluginExecutionFilter>
       							<action>
