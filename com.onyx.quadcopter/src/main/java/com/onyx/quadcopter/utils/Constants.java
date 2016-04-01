@@ -58,7 +58,7 @@ public final class Constants {
     /**
      * The name of this application.
      */
-    public static final String APPLICATION_NAME = "Onyx";
+    public static final String APPLICATION_NAME = "onyx";
 
     /**
      * The name of this application.
@@ -78,7 +78,7 @@ public final class Constants {
     /**
      * Name of the recovery file.
      */
-    public static final String RECOVERY_NAME = "backup_data.db";
+    public static final String RECOVERY_NAME = "backup_" + Constants.DATABASE_NAME;
 
     /**
      * Database file.
@@ -196,15 +196,15 @@ public final class Constants {
     /**
      * PWM GPIO Pins.
      */
-    public static final int GPIO_MOTOR1 = 22;
-    public static final int GPIO_MOTOR2 = 23;
-    public static final int GPIO_MOTOR3 = 24;
-    public static final int GPIO_MOTOR4 = 25;
+    public static final int GPIO_MOTOR1 = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor1.pin", 22);
+    public static final int GPIO_MOTOR2 = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor2.pin", 23);
+    public static final int GPIO_MOTOR3 = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor3.pin", 24);
+    public static final int GPIO_MOTOR4 = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor4.pin", 25);
 
     /**
      * True if this is a simulation run.
      */
-    public static final boolean SIMULATION = PROPERTIES.getBooleanProperty("com.onyx.quadcopter.simulation", false);
+    public static final boolean SIMULATION = PROPERTIES.getBooleanProperty("com.onyx.quadcopter.simulation", true);
 
     /**
      * Number of threads to use.
@@ -242,16 +242,24 @@ public final class Constants {
     /**
      * Gyro input device file
      */
-    public static final String GYRO_DEV_FILE = "/dev/input/event1";
+    public static final String GYRO_DEV_FILE = PROPERTIES.getStringProperty("com.onyx.quadcopter.devices.gyro.iofile",
+            "/dev/input/event1");
 
     /**
      * Accelerometer input device file
      */
-    public static final String ACC_DEV_FILE = "/dev/input/event2";
+    public static final String ACC_DEV_FILE = PROPERTIES
+            .getStringProperty("com.onyx.quadcopter.devices.accelerometer.iofile", "/dev/input/event2");
 
     /**
      * Magnetometer input device file
      */
-    public static final String MAG_DEV_FILE = "/dev/input/event3";
+    public static final String MAG_DEV_FILE = PROPERTIES
+            .getStringProperty("com.onyx.quadcopter.devices.magnetometer.iofile", "/dev/input/event3");
+
+    /**
+     * Unix random input file.
+     */
+    public static final String URANDOM = "/dev/urandom";
 
 }

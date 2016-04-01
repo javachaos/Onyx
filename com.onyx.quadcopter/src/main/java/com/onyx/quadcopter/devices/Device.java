@@ -84,6 +84,9 @@ public abstract class Device implements Executable {
     }
 
     protected boolean isNewMessage() {
+        if ((previousMessage == null) && (lastMessage instanceof ACLMessage)) {
+            return true;
+        }
         return !previousMessage.equals(lastMessage);
     }
 

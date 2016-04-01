@@ -105,12 +105,22 @@ public class GyroMagAcc extends Device {
     @Override
     protected void init() {
         LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device.");
-        try {
-            gyroStream = new DataInputStream(new FileInputStream(Constants.GYRO_DEV_FILE));
-            accelStream = new DataInputStream(new FileInputStream(Constants.ACC_DEV_FILE));
-            magStream = new DataInputStream(new FileInputStream(Constants.MAG_DEV_FILE));
-        } catch (final FileNotFoundException e) {
-            throw new OnyxException(e, LOGGER);
+        if (Constants.SIMULATION) {
+            try {
+                gyroStream = new DataInputStream(new FileInputStream(Constants.URANDOM));
+                accelStream = new DataInputStream(new FileInputStream(Constants.URANDOM));
+                magStream = new DataInputStream(new FileInputStream(Constants.URANDOM));
+            } catch (final FileNotFoundException e) {
+                throw new OnyxException(e, LOGGER);
+            }
+        } else {
+            try {
+                gyroStream = new DataInputStream(new FileInputStream(Constants.GYRO_DEV_FILE));
+                accelStream = new DataInputStream(new FileInputStream(Constants.ACC_DEV_FILE));
+                magStream = new DataInputStream(new FileInputStream(Constants.MAG_DEV_FILE));
+            } catch (final FileNotFoundException e) {
+                throw new OnyxException(e, LOGGER);
+            }
         }
 
     }

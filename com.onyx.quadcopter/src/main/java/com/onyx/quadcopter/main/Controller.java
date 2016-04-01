@@ -161,13 +161,6 @@ public class Controller implements Runnable {
         return devices.entrySet();
     }
 
-    @Override
-    public void run() {
-        if (isRunning() && initialized) {
-            update();
-        }
-    }
-
     /**
      * Return the state of this controller.
      *
@@ -175,5 +168,12 @@ public class Controller implements Runnable {
      */
     public synchronized boolean isRunning() {
         return isRunning;
+    }
+
+    @Override
+    public void run() {
+        if (isRunning() && initialized) {
+            update();
+        }
     }
 }
