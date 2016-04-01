@@ -73,7 +73,7 @@ public final class Constants {
     /**
      * Application directory location.
      */
-    public static final String APPLICATION_DIR = System.getProperty("user.home") + File.separator + APPLICATION_NAME;
+    public static final String APPLICATION_DIR = File.separator + "opt" + File.separator + APPLICATION_NAME;
 
     /**
      * Name of the recovery file.
@@ -123,21 +123,6 @@ public final class Constants {
     public static final int LATCH_COUNT = 1;
 
     /**
-     * Archive name.
-     */
-    public static final String ARCHIVE_NAME = Constants.APPLICATION_NAME + ".zip";
-
-    /**
-     * Archive directory.
-     */
-    public static final String ARCHIVE_DIR = System.getProperty("user.home");
-
-    /**
-     * Archive path.
-     */
-    public static final String ARCHIVE_PATH = ARCHIVE_DIR + File.separator + ARCHIVE_NAME;
-
-    /**
      * The property manager instance.
      */
     public static final PropertyManager PROPERTIES = new PropertyManager();
@@ -176,41 +161,6 @@ public final class Constants {
     public static final TimeUnit CONTROLLER_TIMEUNIT = TimeUnit.MICROSECONDS;
 
     /**
-     * MQTT Message broker URL.
-     */
-    public static final String BROKER_URL = "tcp://onyx.cnc.io:1883";
-
-    /**
-     * MQTT Domain.
-     */
-    public static final String MQTT_DOMAIN = "quadcopter";
-
-    /**
-     * MQTT Thing.
-     */
-    public static final String MQTT_THING = "onyx";
-
-    /**
-     * MQTT Username.
-     */
-    public static final String MQTT_USERNAME = "fred";
-
-    /**
-     * MQTT Password in MD5
-     */
-    public static final String MQTT_PASSWORD_MD5 = "";
-
-    /**
-     * MQTT Keep alive value
-     */
-    public static final int MQTT_KEEPALIVE = 30;
-
-    /**
-     * MQTT logging mode, true for quiet i.e no logging, false for full logging.
-     */
-    public static final boolean MQTT_QUIET = PROPERTIES.getBooleanProperty("com.onyx.quadcopter.mqtt.quiet", false);
-
-    /**
      * Database create statement.
      */
     public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS blackboard ("
@@ -234,11 +184,13 @@ public final class Constants {
     public static final int TRANSMIT_QOS = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.comms.transmit.qos", 2);
 
     /**
-     * Timeout value for MQTT Async listener.
+     * Max GPIO pin number.
      */
-    public static final int STATE_CHANGE_TIMEOUT = 10000;
-
     public static final int GPIO_MAX = 40;
+
+    /**
+     * Min GPIO pin number.
+     */
     public static final int GPIO_MIN = 0;
 
     /**
@@ -247,12 +199,12 @@ public final class Constants {
     public static final int GPIO_MOTOR1 = 22;
     public static final int GPIO_MOTOR2 = 23;
     public static final int GPIO_MOTOR3 = 24;
-    public static final int GPIO_MOTOR4 = 26;
+    public static final int GPIO_MOTOR4 = 25;
 
     /**
      * True if this is a simulation run.
      */
-    public static final boolean SIMULATION = PROPERTIES.getBooleanProperty("com.onyx.quadcopter.simulation", true);
+    public static final boolean SIMULATION = PROPERTIES.getBooleanProperty("com.onyx.quadcopter.simulation", false);
 
     /**
      * Number of threads to use.
