@@ -108,99 +108,21 @@
 			        </execution>
 			    </executions>
 			</plugin>
-			          <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>native-maven-plugin</artifactId>
-              <version>1.0-alpha-8</version>
-              <dependencies>
-                    <dependency>
-                        <groupId>${project.groupId}</groupId>
-                        <artifactId>${project.artifactId}</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                </dependencies>
-              <extensions>true</extensions>
-              <configuration>
-                  <!--  trigger javah -->
-                  <javahOS>linux</javahOS>
-                  <compilerExecutable>gcc</compilerExecutable>
-                    <linkerExecutable>gcc</linkerExecutable>
-                  <compilerStartOptions>
-                    <compilerStartOption>-fPIC -O</compilerStartOption>
-                  </compilerStartOptions>
-                  <linkerStartOptions>
-                    <linkerStartOption>-shared -lc -ldl</linkerStartOption>
-                  </linkerStartOptions>
-                  <javahClassNames>
-                    <javahClassName>com.onyx.quadcopter.evdev.NativeEventDevice</javahClassName>
-                  </javahClassNames>
-                  <sources>
-                       <source>
-                          <directory>src/main/native</directory>
-                           <fileNames>
-                              <fileName>evdev-java.c</fileName>
-                         </fileNames>
-                     </source>
-                  </sources>
-              </configuration>
-              <executions>
-                    <execution>
-                        <id>javah</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <javahOS>linux</javahOS>
-                            <javahProvider>default</javahProvider>
-                        </configuration>
-                        <goals>
-                            <goal>javah</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-              </executions>
-          </plugin>
+		    <plugin>
+	        <groupId>com.github.maven-nar</groupId>
+	        <artifactId>nar-maven-plugin</artifactId>
+	        <version>3.2.0</version>
+	        <extensions>true</extensions>
+	        <configuration>
+	          <libraries>
+	            <library>
+	              <type>jni</type>
+	              <narSystemPackage>com.onyx.quadcopter.natives</narSystemPackage>
+	            </library>
+	          </libraries>
+	        </configuration>
+	      </plugin>
       </plugins>
-      <pluginManagement>
-      	<plugins>
-      		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-      		<plugin>
-      			<groupId>org.eclipse.m2e</groupId>
-      			<artifactId>lifecycle-mapping</artifactId>
-      			<version>1.0.0</version>
-      			<configuration>
-      				<lifecycleMappingMetadata>
-      					<pluginExecutions>
-      						<pluginExecution>
-      							<pluginExecutionFilter>
-      								<groupId>
-      									org.codehaus.mojo
-      								</groupId>
-      								<artifactId>
-      									native-maven-plugin
-      								</artifactId>
-      								<versionRange>
-      									[1.0-alpha-8,)
-      								</versionRange>
-      								<goals>
-      									<goal>javah</goal>
-      									<goal>compile</goal>
-      								</goals>
-      							</pluginExecutionFilter>
-      							<action>
-      								<ignore></ignore>
-      							</action>
-      						</pluginExecution>
-      					</pluginExecutions>
-      				</lifecycleMappingMetadata>
-      			</configuration>
-      		</plugin>
-      	</plugins>
-      </pluginManagement>
   </build>
   <dependencies>
 	  <dependency>
