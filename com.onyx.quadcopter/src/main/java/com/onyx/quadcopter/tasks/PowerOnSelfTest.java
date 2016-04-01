@@ -33,7 +33,7 @@ public class PowerOnSelfTest {
         if (c != null) {
             controller = c;
         } else {
-            throw new OnyxException("Controller null.");
+            throw new OnyxException("Controller null.", LOGGER);
         }
     }
 

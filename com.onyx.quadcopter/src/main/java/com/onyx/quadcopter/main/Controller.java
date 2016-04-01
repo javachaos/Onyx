@@ -113,10 +113,10 @@ public class Controller implements Runnable {
                 devices.put(d.getId(), d);
                 LOGGER.debug("Device " + d + " added to controller.");
             } else {
-                throw new OnyxException("Max devices exceeded.");
+                throw new OnyxException("Max devices exceeded.", LOGGER);
             }
         } else {
-            throw new OnyxException("Attempting to add null device to Controller.");
+            throw new OnyxException("Attempting to add null device to Controller.", LOGGER);
         }
     }
 
@@ -125,7 +125,7 @@ public class Controller implements Runnable {
         if (dev != null) {
             return devices.get(d);
         } else {
-            throw new OnyxException("Device not found for DeviceID: " + d);
+            throw new OnyxException("Device not found for DeviceID: " + d, LOGGER);
         }
     }
 

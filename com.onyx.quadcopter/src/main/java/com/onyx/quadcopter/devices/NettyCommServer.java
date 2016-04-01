@@ -75,6 +75,7 @@ public class NettyCommServer extends Device implements Runnable {
             // shut down your server.
             f.channel().closeFuture().sync();
         } catch (final InterruptedException e) {
+            LOGGER.error(e.getMessage());
             throw new OnyxException(e.getMessage(), LOGGER);
         } finally {
             workerGroup.shutdownGracefully();

@@ -68,6 +68,7 @@ public class CommunicationHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
         cause.printStackTrace();
         ctx.close();
+        LOGGER.error(cause.getMessage());
         throw new OnyxException(cause.getMessage(), LOGGER);
     }
 

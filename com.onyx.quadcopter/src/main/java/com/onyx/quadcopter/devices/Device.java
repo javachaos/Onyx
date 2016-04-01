@@ -47,7 +47,7 @@ public abstract class Device implements Executable {
         if (c != null) {
             controller = c;
         } else {
-            throw new OnyxException("Device could not be constructed, controller null.");
+            throw new OnyxException("Device could not be constructed, controller null.", LOGGER);
         }
     }
 

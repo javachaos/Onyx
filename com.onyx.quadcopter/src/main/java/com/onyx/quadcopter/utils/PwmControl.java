@@ -45,7 +45,7 @@ public class PwmControl {
         if ((pinNum > Constants.GPIO_MIN) && (pinNum < Constants.GPIO_MAX)) {
             pwmPin = pinNum;
         } else {
-            throw new OnyxException("PWM Pin out of range.");
+            throw new OnyxException("PWM Pin out of range.", LOGGER);
         }
     }
 
@@ -73,7 +73,7 @@ public class PwmControl {
      */
     public void pwmWrite(final int value) {
         if ((value < 0) || (value > 200)) {
-            throw new OnyxException("Cannot set pwmWrite of: " + value);
+            throw new OnyxException("Cannot set pwmWrite of: " + value, LOGGER);
         }
         if (!Constants.SIMULATION) {
             SoftPwm.softPwmWrite(pwmPin, value);

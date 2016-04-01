@@ -9,7 +9,6 @@ import java.math.BigInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.MessageType;
@@ -98,7 +97,7 @@ public class GyroMagAcc extends Device {
             magStream.readShort();
             magZ = (short) magStream.readInt();
         } catch (final IOException e) {
-            throw new OnyxException(e, LOGGER);
+            LOGGER.error(e.getMessage());
         }
     }
 
@@ -111,7 +110,7 @@ public class GyroMagAcc extends Device {
                 accelStream = new DataInputStream(new FileInputStream(Constants.URANDOM));
                 magStream = new DataInputStream(new FileInputStream(Constants.URANDOM));
             } catch (final FileNotFoundException e) {
-                throw new OnyxException(e, LOGGER);
+                LOGGER.error(e.getMessage());
             }
         } else {
             try {
@@ -119,7 +118,7 @@ public class GyroMagAcc extends Device {
                 accelStream = new DataInputStream(new FileInputStream(Constants.ACC_DEV_FILE));
                 magStream = new DataInputStream(new FileInputStream(Constants.MAG_DEV_FILE));
             } catch (final FileNotFoundException e) {
-                throw new OnyxException(e, LOGGER);
+                LOGGER.error(e.getMessage());
             }
         }
 
@@ -133,7 +132,7 @@ public class GyroMagAcc extends Device {
             accelStream.close();
             magStream.close();
         } catch (final IOException e) {
-            throw new OnyxException(e, LOGGER);
+            LOGGER.error(e.getMessage());
         }
     }
 
