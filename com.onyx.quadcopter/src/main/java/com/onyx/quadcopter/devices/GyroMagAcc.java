@@ -22,7 +22,7 @@ public class GyroMagAcc extends Device {
     private DataInputStream accelStream;
     private DataInputStream magStream;
 
-    private final byte[] timeval = new byte[16];
+    private final byte[] timeval = new byte[24];
     private short gyrX, gyrY, gyrZ;
     private short accX, accY, accZ;
     private short magX, magY, magZ;
@@ -58,7 +58,7 @@ public class GyroMagAcc extends Device {
     /**
      * Get a snapshot of the X Y and Z data.
      */
-    private void pollXYZ() {
+    private synchronized void pollXYZ() {
         try {
             gyroStream.readFully(timeval);
             gyroStream.readShort();
