@@ -26,9 +26,9 @@ public class GyroMagAcc extends Device {
 
     private final byte[] timeval = new byte[16];
     private BigInteger time;
-    private int gyrX, gyrY, gyrZ;
-    private int accX, accY, accZ;
-    private int magX, magY, magZ;
+    private short gyrX, gyrY, gyrZ;
+    private short accX, accY, accZ;
+    private short magX, magY, magZ;
     /**
      * Logger.
      */
@@ -68,35 +68,35 @@ public class GyroMagAcc extends Device {
             time = new BigInteger(timeval);
             gyroStream.readShort();
             gyroStream.readShort();
-            gyrX = gyroStream.readInt();
+            gyrX = (short) gyroStream.readInt();
             gyroStream.readShort();
             gyroStream.readShort();
-            gyrY = gyroStream.readInt();
+            gyrY = (short) gyroStream.readInt();
             gyroStream.readShort();
             gyroStream.readShort();
-            gyrZ = gyroStream.readInt();
+            gyrZ = (short) gyroStream.readInt();
 
             accelStream.readFully(timeval);
             accelStream.readShort();
             accelStream.readShort();
-            accX = accelStream.readInt();
+            accX = (short) accelStream.readInt();
             accelStream.readShort();
             accelStream.readShort();
-            accY = accelStream.readInt();
+            accY = (short) accelStream.readInt();
             accelStream.readShort();
             accelStream.readShort();
-            accZ = accelStream.readInt();
+            accZ = (short) accelStream.readInt();
 
             magStream.readFully(timeval);
             magStream.readShort();
             magStream.readShort();
-            magX = magStream.readInt();
+            magX = (short) magStream.readInt();
             magStream.readShort();
             magStream.readShort();
-            magY = magStream.readInt();
+            magY = (short) magStream.readInt();
             magStream.readShort();
             magStream.readShort();
-            magZ = magStream.readInt();
+            magZ = (short) magStream.readInt();
         } catch (final IOException e) {
             throw new OnyxException(e, LOGGER);
         }
