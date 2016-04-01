@@ -60,7 +60,7 @@ public class GyroMagAcc extends Device {
      */
     private synchronized void pollXYZ() {
         try {
-            gyroStream.readFully(timeval);
+            gyroStream.read(timeval);
             gyroStream.readShort();
             gyroStream.readShort();
             gyrX = (short) gyroStream.readInt();
@@ -71,7 +71,7 @@ public class GyroMagAcc extends Device {
             gyroStream.readShort();
             gyrZ = (short) gyroStream.readInt();
 
-            accelStream.readFully(timeval);
+            accelStream.read(timeval);
             accelStream.readShort();
             accelStream.readShort();
             accX = (short) accelStream.readInt();
@@ -82,7 +82,7 @@ public class GyroMagAcc extends Device {
             accelStream.readShort();
             accZ = (short) accelStream.readInt();
 
-            magStream.readFully(timeval);
+            magStream.read(timeval);
             magStream.readShort();
             magStream.readShort();
             magX = (short) magStream.readInt();

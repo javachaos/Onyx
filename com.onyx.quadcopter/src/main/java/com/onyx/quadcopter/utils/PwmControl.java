@@ -54,14 +54,16 @@ public class PwmControl {
      */
     public void setup() {
         if (!initialized) {
-            if (Constants.SIMULATION) {
-                LOGGER.debug("Setup simulation PWM control on pin: " + pwmPin);
-            } else {
-                LOGGER.debug("Setup PWM control on pin: " + pwmPin);
-                com.pi4j.wiringpi.Gpio.wiringPiSetup();
-                SoftPwm.softPwmCreate(pwmPin, initialSpeed, pwmRange);
-                initialized = true;
-            }
+            LOGGER.debug("Setting up wiringPi library.");
+            com.pi4j.wiringpi.Gpio.wiringPiSetup();
+            initialized = true;
+        }
+
+        if (Constants.SIMULATION) {
+            LOGGER.debug("Setup simulation PWM control on pin: " + pwmPin);
+        } else {
+            LOGGER.debug("Setup PWM control on pin: " + pwmPin);
+            SoftPwm.softPwmCreate(pwmPin, initialSpeed, pwmRange);
         }
     }
 
