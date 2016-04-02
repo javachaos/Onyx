@@ -240,15 +240,21 @@ public final class Constants {
             .getIntegerProperty("com.onyx.quadcopter.nio.commserver.startdelay", 5);
 
     /**
+     * Native libraries directory
+     */
+    public static final String NATIVES_DIR = PROPERTIES.getStringProperty("com.onyx.quadcopter.natives.dir",
+	    APPLICATION_DIR + File.separator + "natives");
+    
+    /**
      * Java native library name.
      */
     public static final String GYRO_NATIVE_LIB = PROPERTIES.getStringProperty("com.onyx.quadcopter.natives.gyro",
-            "javaupm_lsm9ds0");
+	    NATIVES_DIR + File.separator + "libjavaupm_lsm9ds0.so");
 
     /**
      * MRAA Java native library.
      */
     public static final String MRAA_NATIVE_LIB = PROPERTIES.getStringProperty("com.onyx.quadcopter.natives.mraa",
-            "mraajava");
+	    NATIVES_DIR + File.separator +  "libmraajava.so");
 
 }

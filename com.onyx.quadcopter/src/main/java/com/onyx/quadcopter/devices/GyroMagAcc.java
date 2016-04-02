@@ -19,7 +19,7 @@ public class GyroMagAcc extends Device {
 
     static {
         try {
-            System.loadLibrary(Constants.GYRO_NATIVE_LIB);
+            System.load(Constants.GYRO_NATIVE_LIB);
         } catch (final UnsatisfiedLinkError e) {
             LOGGER.error(e.getMessage());
         }
