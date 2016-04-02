@@ -265,6 +265,7 @@ public final class Constants {
     /**
      * Path to libmraajava.so
      */
-    public static final String LIB_MRAA_PATH = "/usr/local/lib/libmraajava.so";
+    public static final String LIB_MRAA_PATH = APPLICATION_DIR + "natives" + File.separator + "arm" + File.separator
+            + "libmraajava.so";
 
 }
