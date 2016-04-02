@@ -258,14 +258,9 @@ public final class Constants {
             .getStringProperty("com.onyx.quadcopter.devices.magnetometer.iofile", "/dev/input/event3");
 
     /**
-     * Unix random input file.
-     */
-    public static final String URANDOM = "/dev/urandom";
-
-    /**
      * Path to libmraajava.so
      */
-    public static final String LIB_MRAA_PATH = APPLICATION_DIR + "natives" + File.separator + "arm" + File.separator
-            + "libmraajava.so";
+    public static final String LIB_MRAA_PATH = PROPERTIES.getStringProperty("com.onyx.quadcopter.upm.natives.dir",
+            APPLICATION_DIR + File.separator + "natives" + File.separator + "arm" + File.separator + "libmraajava.so");
 
 }

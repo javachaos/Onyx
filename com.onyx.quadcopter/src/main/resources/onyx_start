@@ -19,6 +19,7 @@ exec /usr/bin/java\
     -Xms512m\
     -Dapp.name="onyx"\
     -Dapp.pid="$$"\
+    -Djava.library.path="$BASEDIR/natives/arm/"\
     -Dapp.home="$BASEDIR" \
     -Dbasedir="$BASEDIR" \
     -jar /opt/onyx/onyx.jar
