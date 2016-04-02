@@ -12,14 +12,23 @@ import upm_lsm9ds0.LSM9DS0;
 
 public class GyroMagAcc extends Device {
 
-    private LSM9DS0 lsm;
-    private short gyrX, gyrY, gyrZ;
-    private short accX, accY, accZ;
-    private short magX, magY, magZ;
     /**
      * Logger.
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(GyroMagAcc.class);
+
+    static {
+        try {
+            System.loadLibrary(Constants.GYRO_NATIVE_LIB);
+        } catch (final UnsatisfiedLinkError e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
+    private LSM9DS0 lsm;
+    private short gyrX, gyrY, gyrZ;
+    private short accX, accY, accZ;
+    private short magX, magY, magZ;
 
     public GyroMagAcc(final Controller c) {
         super(c, DeviceID.GYRO_MAG_ACC);
@@ -49,7 +58,7 @@ public class GyroMagAcc extends Device {
     protected void init() {
         if (Constants.SIMULATION) {
             LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device. (Simulated)");
-            lsm = null;
+            lsm = new SIMLSM9DS0();
         } else {
             LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device.");
             lsm = new LSM9DS0();

@@ -18,7 +18,7 @@
     <project.build.output.dir>./bin/</project.build.output.dir>
     <staging.dir>${project.build.directory}/staging</staging.dir>
     <install.dir>/opt/${app.name}/</install.dir>
-    <link.libraries>${install.dir}/libs/</link.libraries>
+    <link.libraries>/usr/local/lib/java</link.libraries>
   </properties>
   
   <build>
@@ -153,10 +153,23 @@
         <artifactId>lsm9ds0</artifactId>
         <version>0.0.1</version>
     </dependency>
-        <dependency>
+    <dependency>
         <groupId>com.intel.upm</groupId>
         <artifactId>mraa</artifactId>
         <version>0.0.1</version>
     </dependency>
   </dependencies>
+  <repositories>
+	  <repository>
+	    <id>repo</id>
+	    <releases>
+	        <enabled>true</enabled>
+	        <checksumPolicy>ignore</checksumPolicy>
+	    </releases>
+	    <snapshots>
+	        <enabled>false</enabled>
+	    </snapshots>
+	    <url>file://${project.basedir}/libs</url>
+	</repository>
+  </repositories>
 </project>

@@ -240,27 +240,15 @@ public final class Constants {
             .getIntegerProperty("com.onyx.quadcopter.nio.commserver.startdelay", 5);
 
     /**
-     * Gyro input device file
+     * Java native library name.
      */
-    public static final String GYRO_DEV_FILE = PROPERTIES.getStringProperty("com.onyx.quadcopter.devices.gyro.iofile",
-            "/dev/input/event1");
+    public static final String GYRO_NATIVE_LIB = PROPERTIES.getStringProperty("com.onyx.quadcopter.natives.gyro",
+            "javaupm_lsm9ds0");
 
     /**
-     * Accelerometer input device file
+     * MRAA Java native library.
      */
-    public static final String ACC_DEV_FILE = PROPERTIES
-            .getStringProperty("com.onyx.quadcopter.devices.accelerometer.iofile", "/dev/input/event2");
-
-    /**
-     * Magnetometer input device file
-     */
-    public static final String MAG_DEV_FILE = PROPERTIES
-            .getStringProperty("com.onyx.quadcopter.devices.magnetometer.iofile", "/dev/input/event3");
-
-    /**
-     * Path to libmraajava.so
-     */
-    public static final String LIB_MRAA_PATH = PROPERTIES.getStringProperty("com.onyx.quadcopter.upm.natives.dir",
-            APPLICATION_DIR + File.separator + "natives" + File.separator + "arm" + File.separator + "libmraajava.so");
+    public static final String MRAA_NATIVE_LIB = PROPERTIES.getStringProperty("com.onyx.quadcopter.natives.mraa",
+            "mraajava");
 
 }

@@ -16,7 +16,7 @@ public class Main {
 
     static {
         try {
-            System.load(Constants.LIB_MRAA_PATH);
+            System.loadLibrary(Constants.MRAA_NATIVE_LIB);
         } catch (final UnsatisfiedLinkError e) {
             LOGGER.error("Could not load link library 'mraajava'.");
         }
