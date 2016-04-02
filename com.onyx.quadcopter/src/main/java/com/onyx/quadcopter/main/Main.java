@@ -14,6 +14,14 @@ public class Main {
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
+    static {
+        try {
+            System.load(Constants.LIB_MRAA_PATH);
+        } catch (final UnsatisfiedLinkError e) {
+            LOGGER.error("Could not load link library 'mraajava'.");
+        }
+    }
+
     /**
      * Thread coordinator.
      */

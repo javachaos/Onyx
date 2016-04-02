@@ -262,4 +262,9 @@ public final class Constants {
      */
     public static final String URANDOM = "/dev/urandom";
 
+    /**
+     * Path to libmraajava.so
+     */
+    public static final String LIB_MRAA_PATH = "/usr/local/lib/libmraajava.so";
+
 }

@@ -21,14 +21,6 @@ public class GyroMagAcc extends Device {
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(GyroMagAcc.class);
 
-    static {
-        try {
-            System.loadLibrary("mraajava");
-        } catch (final UnsatisfiedLinkError e) {
-            LOGGER.error("Could not load link library 'mraajava'.");
-        }
-    }
-
     public GyroMagAcc(final Controller c) {
         super(c, DeviceID.GYRO_MAG_ACC);
     }
@@ -55,10 +47,11 @@ public class GyroMagAcc extends Device {
 
     @Override
     protected void init() {
-        LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device.");
         if (Constants.SIMULATION) {
+            LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device. (Simulated)");
             lsm = null;
         } else {
+            LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device.");
             lsm = new LSM9DS0();
             lsm.enableTemperatureSensor(true);
         }

@@ -18,6 +18,7 @@
     <project.build.output.dir>./bin/</project.build.output.dir>
     <staging.dir>${project.build.directory}/staging</staging.dir>
     <install.dir>/opt/${app.name}/</install.dir>
+    <link.libraries>${install.dir}/libs/</link.libraries>
   </properties>
   
   <build>
@@ -150,6 +151,11 @@
     <dependency>
         <groupId>com.intel.upm</groupId>
         <artifactId>lsm9ds0</artifactId>
+        <version>0.0.1</version>
+    </dependency>
+        <dependency>
+        <groupId>com.intel.upm</groupId>
+        <artifactId>mraa</artifactId>
         <version>0.0.1</version>
     </dependency>
   </dependencies>
