@@ -21,6 +21,14 @@ public class GyroMagAcc extends Device {
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(GyroMagAcc.class);
 
+    static {
+        try {
+            System.loadLibrary("mraajava");
+        } catch (final UnsatisfiedLinkError e) {
+            LOGGER.error("Could not load link library 'mraajava'.");
+        }
+    }
+
     public GyroMagAcc(final Controller c) {
         super(c, DeviceID.GYRO_MAG_ACC);
     }
