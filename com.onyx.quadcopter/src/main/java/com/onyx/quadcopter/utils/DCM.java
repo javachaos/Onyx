@@ -252,12 +252,20 @@ public class DCM extends Device {
 
     @Override
     protected void alternate() {
-	float[] Kb = dcm[2];
-	float[] Kg = new float[] {dcm[0][0], dcm[1][0], dcm[2][0]};
+	float[] K = dcm[2];
+	float Kxy = (float) Math.sqrt(K[0]*K[0] + K[1]*K[1]);
+	float pitch, roll;
+	float pitch_roll = (float) Math.acos(K[2]);
+	if(Math.abs(Kxy) < 0.01){
+		pitch = 0;
+		roll = pitch_roll;
+	} else {
+		pitch = (float) (- pitch_roll * Math.asin(K[0]/Kxy) / (Math.PI/2.0)); 
+		roll = (float) (pitch_roll * Math.asin(K[1]/Kxy) / (Math.PI/2.0)); 		
+	}
 	
-	LOGGER.debug("Current body vector: "+ Kb[0] + ", " + Kb[1] + ", " + Kb[2]);
-	LOGGER.debug("Current Angle: " + Math.sqrt(dcm[2][0]*dcm[2][0] + dcm[2][1]*dcm[2][1]));
-	LOGGER.debug("Pitch and roll: " + dotProduct(Kb,Kg));
+	LOGGER.debug("Current pitch/roll: "+ pitch + ", " + roll);
+	LOGGER.debug("Current Angle: " + Math.cbrt(dcm[2][0]*dcm[2][0] + dcm[2][1]*dcm[2][1]) + dcm[2][2]*dcm[2][2]);
 	LOGGER.debug("Update time in millis: " + intr_t);
     }
 
