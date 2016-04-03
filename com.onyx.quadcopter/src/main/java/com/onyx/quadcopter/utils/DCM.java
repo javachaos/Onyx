@@ -205,9 +205,9 @@ public class DCM extends Device {
 	//about a fixed earth's (global) frame, if we look from the perspective of device then
 	//the global vectors (I,K,J) rotation direction will be the inverse
 	float[] w = new float[3];					//gyro rates (angular velocity of a global vector in local coordinates)
-	w[0] = -data[0][0];	//rotation rate about accelerometer's X axis (GY output) in rad/ms
-	w[1] = -data[0][1];	//rotation rate about accelerometer's Y axis (GX output) in rad/ms
-	w[2] = -data[0][2];	//rotation rate about accelerometer's Z axis (GZ output) in rad/ms
+	w[0] = (float) (-data[0][0] * 1.74533e-5);	//rotation rate about accelerometer's X axis (GY output) in rad/ms
+	w[1] = (float) (-data[0][1] * 1.74533e-5);	//rotation rate about accelerometer's Y axis (GX output) in rad/ms
+	w[2] = (float) (-data[0][2] * 1.74533e-5);	//rotation rate about accelerometer's Z axis (GZ output) in rad/ms
 	for(int i = 0; i < 3; i++){
 		w[i] *= intr_t;	//scale by elapsed time to get angle in radians
 		//compute weighted average with the accelerometer correction vector
@@ -265,7 +265,7 @@ public class DCM extends Device {
 	}
 	
 	LOGGER.debug("Current pitch/roll: "+ pitch + ", " + roll);
-	LOGGER.debug("Current Angle: " + Math.cbrt(dcm[2][0]*dcm[2][0] + dcm[2][1]*dcm[2][1]) + dcm[2][2]*dcm[2][2]);
+	LOGGER.debug("Current Angle: " + Math.cbrt(dcm[2][0]*dcm[2][0] + dcm[2][1]*dcm[2][1] + dcm[2][2]*dcm[2][2]));
 	LOGGER.debug("Update time in millis: " + intr_t);
     }
 
