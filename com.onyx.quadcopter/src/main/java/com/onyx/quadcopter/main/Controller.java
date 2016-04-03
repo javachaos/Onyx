@@ -19,7 +19,6 @@ import com.onyx.quadcopter.devices.NettyCommServer;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.utils.Cleaner;
 import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.DCM;
 
 /**
  * Controller class.
@@ -79,7 +78,6 @@ public class Controller implements Runnable {
         addDevice(new Motor(this, DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
         addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
         addDevice(new Motor(this, DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
-        addDevice(new DCM(this));
         LOGGER.debug("Controller Initialized.");
         initialized = true;
     }

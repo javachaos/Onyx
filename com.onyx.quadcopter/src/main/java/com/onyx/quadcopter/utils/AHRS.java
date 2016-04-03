@@ -4,11 +4,11 @@ public class AHRS {
     
  // Java Implementation of Madgwick's IMU and AHRS algorithms.
     private static final float betaDef = 0.1f;
-    private static final float sampleFreq = 512.0f;
+    private static final float sampleFreq = 200.0f;
     volatile float beta = betaDef;								// 2 * proportional gain (Kp)
     volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;	// quaternion of sensor frame relative to auxiliary frame
     
-    class Quaternion {
+    public class Quaternion {
 	volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;
 	public Quaternion(float q0, float q1, float q2, float q3) {
 	    this.q0 = q0;
@@ -33,7 +33,7 @@ public class AHRS {
 	}
     }
     
-    public Quaternion update(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz) {
+    public void update(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz) {
 	float recipNorm;
 	float s0, s1, s2, s3;
 	float qDot1, qDot2, qDot3, qDot4;
@@ -42,7 +42,8 @@ public class AHRS {
 
 	// Use IMU algorithm if magnetometer measurement invalid (avoids NaN in magnetometer normalisation)
 	if((mx == 0.0f) && (my == 0.0f) && (mz == 0.0f)) {
-		return updateIMU(gx, gy, gz, ax, ay, az);
+		updateIMU(gx, gy, gz, ax, ay, az);
+		return;
 	}
 
 	// Rate of change of quaternion from gyroscope
@@ -126,10 +127,9 @@ public class AHRS {
 	q1 *= recipNorm;
 	q2 *= recipNorm;
 	q3 *= recipNorm;
-	return new Quaternion(q0,q1,q2,q3);
     }
     
-    public Quaternion updateIMU(float gx, float gy, float gz, float ax, float ay, float az) {
+    public void updateIMU(float gx, float gy, float gz, float ax, float ay, float az) {
 	float recipNorm;
 	float s0, s1, s2, s3;
 	float qDot1, qDot2, qDot3, qDot4;
@@ -195,7 +195,6 @@ public class AHRS {
 	q1 *= recipNorm;
 	q2 *= recipNorm;
 	q3 *= recipNorm;
-	return new Quaternion(q0,q1,q2,q3);
     }
 
     
@@ -206,6 +205,10 @@ public class AHRS {
         x = Float.intBitsToFloat(i);
         x = x*(1.5f - xhalf*x*x);
         return x;
+    }
+
+    public Quaternion getQuaternion() {
+	return new Quaternion(q0,q1,q2,q3); 
     }
 
 }

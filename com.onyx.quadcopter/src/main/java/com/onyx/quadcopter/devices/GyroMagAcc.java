@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.MessageType;
+import com.onyx.quadcopter.utils.AHRS;
+import com.onyx.quadcopter.utils.AHRS.Quaternion;
 import com.onyx.quadcopter.utils.Constants;
 
 public class GyroMagAcc extends Device {
@@ -23,29 +25,38 @@ public class GyroMagAcc extends Device {
         }
     }
 
+
+    /**
+     * AHRS algorithm implementation.
+     */
+    private AHRS ahrs;
     private upm_lsm9ds0.LSM9DS0 lsm;
 
     public GyroMagAcc(final Controller c) {
         super(c, DeviceID.GYRO_MAG_ACC);
+        ahrs = new AHRS();
     }
 
     @Override
     protected void update() {
         lsm.update();
+	float[] gyrodata = lsm.getGyroscope();
+	float[] acceldata = lsm.getAccelerometer();
+	float[] magdata = lsm.getMagnetometer();
+        ahrs.update(gyrodata[0], gyrodata[1], gyrodata[2],
+        	acceldata[0], acceldata[1], acceldata[2],
+        	magdata[0], magdata[1], magdata[2]);
         if (isNewMessage()) {
             switch (lastMessage.getActionID()) {
             case GET_ORIENT:
             case SEND_DATA:
-        	float[] gyrodata = lsm.getGyroscope();
-        	float[] acceldata = lsm.getAccelerometer();
-        	float[] magdata = lsm.getMagnetometer();
                 final ACLMessage m = new ACLMessage(MessageType.SEND);
                 m.setActionID(lastMessage.getActionID());
                 m.setReciever(lastMessage.getSender());
                 m.setSender(getId());
-                m.setContent(gyrodata[0] + ":" + gyrodata[1] + ":" + gyrodata[2] + ";" 
-                	+ acceldata[0] + ":" + acceldata[1] + ":" + acceldata[2] + ";" 
-                        + magdata[0] + ":" + magdata[1] + ":" + magdata[2]);
+                Quaternion q = ahrs.getQuaternion();
+                m.setContent(q.getQ0() + ":" + q.getQ1() + ":" + q.getQ2() + ":" 
+                	+ q.getQ3());
                 m.setValue(lsm.getTemperature());
                 getController().getBlackboard().addMessage(m);
             default:
@@ -76,12 +87,9 @@ public class GyroMagAcc extends Device {
 
     @Override
     protected void alternate() {
-	float[] gyrodata = lsm.getGyroscope();
-	float[] acceldata = lsm.getAccelerometer();
-	float[] magdata = lsm.getMagnetometer();
-        LOGGER.debug(gyrodata[0] + ":" + gyrodata[1] + ":" + gyrodata[2] + ";" 
-	+ acceldata[0] + ":" + acceldata[1] + ":" + acceldata[2] + ";" 
-        + magdata[0] + ":" + magdata[1] + ":" + magdata[2]);
+        Quaternion q = ahrs.getQuaternion();
+        LOGGER.debug(q.getQ0() + ":" + q.getQ1() + ":" + q.getQ2() + ":" 
+        	+ q.getQ3());
         shutdown();//Kluge to free memory by poorly written C++ driver.
         init();
     }
