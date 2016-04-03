@@ -48,14 +48,17 @@
                     <resource>
                       <directory>src/main/resources</directory>
                       <filtering>true</filtering>
+                       <excludes>
+				          <exclude>**/*.so</exclude>
+				       </excludes>
                     </resource>
                     <resource>
-			        <directory>src/main/resources</directory>
-			        <filtering>false</filtering>
-			        <includes>
-			          <include>**/*.so</include>
-			        </includes>
-			      </resource>
+			          <directory>src/main/resources</directory>
+			          <filtering>false</filtering>
+			          <includes>
+			            <include>**/*.so</include>
+			          </includes>
+			        </resource>
                   </resources>              
                 </configuration>            
               </execution>
