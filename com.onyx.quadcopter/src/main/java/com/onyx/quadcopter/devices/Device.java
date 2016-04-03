@@ -34,7 +34,7 @@ public abstract class Device implements Executable {
     /**
      * The last message posted to the black board for this agent.
      */
-    protected ACLMessage lastMessage, previousMessage;
+    protected volatile ACLMessage lastMessage, previousMessage;
 
     /**
      * The human readable name for this device.

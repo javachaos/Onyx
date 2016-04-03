@@ -140,7 +140,7 @@ public class Controller implements Runnable {
         }
     }
 
-    private void update() {
+    private synchronized void update() {
         final Iterator<DeviceID> it = devices.keySet().iterator();
         while (it.hasNext()) {
             getDevice(it.next()).execute();
