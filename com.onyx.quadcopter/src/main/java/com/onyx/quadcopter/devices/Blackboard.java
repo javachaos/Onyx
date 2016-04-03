@@ -82,10 +82,11 @@ public class Blackboard extends Device {
      */
     public synchronized ACLMessage getMessage(final Device device) {
         final ACLMessage n = blackboard.get(device.getId());
-        if (n != null) {
+        if (n != null && n.isValid()) {
             return n;
+        } else {
+            return new ACLMessage(MessageType.EMPTY);
         }
-        return new ACLMessage(MessageType.EMPTY);
     }
 
     @Override

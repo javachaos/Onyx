@@ -77,7 +77,7 @@ public abstract class Device implements Executable {
     protected abstract void update();
 
     @Override
-    public void execute() {
+    public synchronized void execute() {
         if (!isInitialized()) {
             init();
             initialized = true;
@@ -102,7 +102,7 @@ public abstract class Device implements Executable {
             return lastMessage.isValid() && lastMessage.getReciever() == getId();
         }
         return !previousMessage.equals(lastMessage) 
-        	&& lastMessage.isValid() && lastMessage.getReciever() == getId();
+        	&& lastMessage.isValid();
     }
 
     /**
