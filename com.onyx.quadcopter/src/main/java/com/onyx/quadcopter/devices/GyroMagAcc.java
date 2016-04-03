@@ -82,7 +82,7 @@ public class GyroMagAcc extends Device {
         LOGGER.debug(gyrodata[0] + ":" + gyrodata[1] + ":" + gyrodata[2] + ";" 
 	+ acceldata[0] + ":" + acceldata[1] + ":" + acceldata[2] + ";" 
         + magdata[0] + ":" + magdata[1] + ":" + magdata[2]);
-        shutdown();//Kluge to free memory by poorly written C driver.
+        shutdown();//Kluge to free memory by poorly written C++ driver.
         init();
     }
 

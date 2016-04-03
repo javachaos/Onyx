@@ -19,6 +19,7 @@ import com.onyx.quadcopter.devices.NettyCommServer;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.utils.Cleaner;
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.DCM;
 
 /**
  * Controller class.
@@ -74,6 +75,7 @@ public class Controller implements Runnable {
         addDevice(blackboard);
         addDevice(commServer);
         addDevice(new GyroMagAcc(this));
+        addDevice(new DCM(this));
         addDevice(new Motor(this, DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
         addDevice(new Motor(this, DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
         addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
