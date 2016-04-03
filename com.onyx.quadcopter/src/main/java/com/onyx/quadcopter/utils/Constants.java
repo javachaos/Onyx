@@ -257,4 +257,9 @@ public final class Constants {
     public static final String MRAA_NATIVE_LIB = PROPERTIES.getStringProperty("com.onyx.quadcopter.natives.mraa",
 	    NATIVES_DIR + File.separator +  "libmraajava.so");
 
+    /**
+     * The i2c bus ID.
+     */
+    public static final int I2C_BUS_ID = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.bus.id", 1);
+
 }
