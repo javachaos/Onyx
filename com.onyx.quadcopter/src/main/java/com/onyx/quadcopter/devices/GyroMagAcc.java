@@ -8,8 +8,6 @@ import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.MessageType;
 import com.onyx.quadcopter.utils.Constants;
 
-import upm_lsm9ds0.LSM9DS0;
-
 public class GyroMagAcc extends Device {
 
     /**
@@ -25,7 +23,7 @@ public class GyroMagAcc extends Device {
         }
     }
 
-    private LSM9DS0 lsm;
+    private upm_lsm9ds0.LSM9DS0 lsm;
     private short gyrX, gyrY, gyrZ;
     private short accX, accY, accZ;
     private short magX, magY, magZ;
@@ -61,7 +59,7 @@ public class GyroMagAcc extends Device {
             lsm = new SIMLSM9DS0();
         } else {
             LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device.");
-            lsm = new LSM9DS0(Constants.I2C_BUS_ID);
+            lsm = new upm_lsm9ds0.LSM9DS0();
             lsm.enableTemperatureSensor(true);
         }
 
