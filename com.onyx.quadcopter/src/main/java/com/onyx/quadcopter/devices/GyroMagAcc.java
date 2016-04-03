@@ -79,7 +79,7 @@ public class GyroMagAcc extends Device {
 	float[] magdata = lsm.getMagnetometer();
         LOGGER.debug(gyrodata[0] + ":" + gyrodata[1] + ":" + gyrodata[2] + ";" 
 	+ acceldata[0] + ":" + acceldata[1] + ":" + acceldata[2] + ";" 
-        + magdata[0] + ":" + magdata[1] + ":" + magdata[2]);
+        + magdata[0] + ":" + magdata[1] + ":" + magdata[2] + ";" + lsm.getTemperature());
     }
 
     @Override
