@@ -24,9 +24,6 @@ public class GyroMagAcc extends Device {
     }
 
     private upm_lsm9ds0.LSM9DS0 lsm;
-    private short gyrX, gyrY, gyrZ;
-    private short accX, accY, accZ;
-    private short magX, magY, magZ;
 
     public GyroMagAcc(final Controller c) {
         super(c, DeviceID.GYRO_MAG_ACC);
@@ -62,7 +59,6 @@ public class GyroMagAcc extends Device {
             lsm = new upm_lsm9ds0.LSM9DS0(Constants.I2C_BUS_ID);
             lsm.init();
         }
-
     }
 
     @Override
@@ -73,8 +69,7 @@ public class GyroMagAcc extends Device {
 
     @Override
     protected void alternate() {
-        LOGGER.debug(gyrX + ":" + gyrY + ":" + gyrZ + ";" + accX + ":" + accY + ":" + accZ + ";" + magX + ":" + magY
-                + ":" + magZ);
+        LOGGER.debug(lsm.getGyroscope() + ";" + lsm.getAccelerometer() + ";" + lsm.getMagnetometer() + ";" + lsm.getTemperature());
     }
 
     @Override
