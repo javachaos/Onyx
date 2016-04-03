@@ -16,6 +16,7 @@ public class DCM extends Device {
      * Logger.
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(DCM.class);
+    
     private static final float ACC_WEIGHT = 0.01f;
     private static final float MAG_WEIGHT = 0.01f;
     private float[][] dcm = new float[3][3];
@@ -251,9 +252,12 @@ public class DCM extends Device {
 
     @Override
     protected void alternate() {
-	LOGGER.debug("Current body vector: "+ dcm[2][0] + ", " + dcm[2][1] + ", " + dcm[2][2]);
+	float[] Kb = dcm[2];
+	float[] Kg = new float[] {dcm[0][0], dcm[1][0], dcm[2][0]};
+	
+	LOGGER.debug("Current body vector: "+ Kb[0] + ", " + Kb[1] + ", " + Kb[2]);
 	LOGGER.debug("Current Angle: " + Math.sqrt(dcm[2][0]*dcm[2][0] + dcm[2][1]*dcm[2][1]));
-	LOGGER.debug("Pitch and roll: " + Math.acos(dcm[2][2]));
+	LOGGER.debug("Pitch and roll: " + dotProduct(Kb,Kg));
 	LOGGER.debug("Update time in millis: " + intr_t);
     }
 
