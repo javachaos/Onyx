@@ -168,7 +168,7 @@ public class DCM extends Device {
 
 
 	//---------------
-	//Acelerometer
+	//Accelerometer
 	//---------------
 	//Accelerometer measures gravity vector G in body coordinate system
 	//Gravity vector is the reverse of K unity vector of global system expressed in local coordinates
@@ -177,9 +177,9 @@ public class DCM extends Device {
 	    return;
 	
 	//Acc can estimate global K vector(zenith) measured in body's coordinate systems (the reverse of gravitation vector)	
-	accel[0] = -data[0][0];	
-	accel[1] = -data[0][1];
-	accel[2] = -data[0][2];
+	accel[0] = -data[1][0];	
+	accel[1] = -data[1][1];
+	accel[2] = -data[1][2];
 	accel = normalize(accel);
 	//calculate correction vector to bring dcmEst's K vector closer to Acc vector (K vector according to accelerometer)
 	float[] wA = new float[3]; 
@@ -191,9 +191,9 @@ public class DCM extends Device {
 	//calculate correction vector to bring dcmEst's I vector closer to Mag vector (I vector according to magnetometer)
 	float[] wM = new float[3]; 
 	//in the absense of magnetometer let's assume North vector (I) is always in XZ plane of the device (y coordinate is 0)
-	magni[0] = data[1][0];
-	magni[1] = data[1][1];
-	magni[2] = data[1][2];
+	magni[0] = data[2][0];
+	magni[1] = data[2][1];
+	magni[2] = data[2][2];
 	
 	wM = crossProduct(dcm[0],magni);	// wM = Igyro x Imag, roation needed to bring Imag to Igyro
 
@@ -204,9 +204,9 @@ public class DCM extends Device {
 	//about a fixed earth's (global) frame, if we look from the perspective of device then
 	//the global vectors (I,K,J) rotation direction will be the inverse
 	float[] w = new float[3];					//gyro rates (angular velocity of a global vector in local coordinates)
-	w[0] = -data[2][1];	//rotation rate about accelerometer's X axis (GY output) in rad/ms
-	w[1] = -data[2][0];	//rotation rate about accelerometer's Y axis (GX output) in rad/ms
-	w[2] = -data[2][2];	//rotation rate about accelerometer's Z axis (GZ output) in rad/ms
+	w[0] = -data[0][1];	//rotation rate about accelerometer's X axis (GY output) in rad/ms
+	w[1] = -data[0][0];	//rotation rate about accelerometer's Y axis (GX output) in rad/ms
+	w[2] = -data[0][2];	//rotation rate about accelerometer's Z axis (GZ output) in rad/ms
 	for(int i = 0; i < 3; i++){
 		w[i] *= intr_t;	//scale by elapsed time to get angle in radians
 		//compute weighted average with the accelerometer correction vector
