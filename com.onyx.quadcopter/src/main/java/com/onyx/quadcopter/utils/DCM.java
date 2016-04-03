@@ -16,8 +16,8 @@ public class DCM extends Device {
      * Logger.
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(DCM.class);
-    private static final float ACC_WEIGHT = 0.1f;
-    private static final float MAG_WEIGHT = 0.1f;
+    private static final float ACC_WEIGHT = 0.01f;
+    private static final float MAG_WEIGHT = 0.01f;
     private float[][] dcm = new float[3][3];
     private long intr_t = 0;		
     private long time_t = 0;
