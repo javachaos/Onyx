@@ -66,7 +66,7 @@ public class Blackboard extends Device {
      */
     public synchronized void addMessage(final ACLMessage aclMessage) {
         if (aclMessage.isValid()) {
-            blackboard.put(aclMessage.getSender(), aclMessage);
+            blackboard.put(aclMessage.getReciever(), aclMessage);
         }
     }
 
