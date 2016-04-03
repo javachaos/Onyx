@@ -50,8 +50,11 @@
                       <filtering>true</filtering>
                     </resource>
                     <resource>
-			        <directory>src/main/resources/natives</directory>
+			        <directory>src/main/resources</directory>
 			        <filtering>false</filtering>
+			        <includes>
+			          <include>**/*.so</include>
+			        </includes>
 			      </resource>
                   </resources>              
                 </configuration>            
