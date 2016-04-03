@@ -15,17 +15,16 @@ public class DCM extends Device {
     /**
      * Logger.
      */
-    protected static final Logger LOGGER = LoggerFactory.getLogger(DCM.class);
-    
+    public static final Logger LOGGER = LoggerFactory.getLogger(DCM.class);
     private static final float ACC_WEIGHT = 0.1f;
     private static final float MAG_WEIGHT = 0.1f;
-    float[][] dcm = new float[3][3];
-    long intr_t = 0;		
-    long time_t = 0;
-    long prev_t = 0;
-    float[] accel = new float[3];
-    float[] magni = new float[3];
-    float[][] data = new float[3][3];
+    private float[][] dcm = new float[3][3];
+    private long intr_t = 0;		
+    private long time_t = 0;
+    private long prev_t = 0;
+    private float[] accel = new float[3];
+    private float[] magni = new float[3];
+    private float[][] data = new float[3][3];
 
     private boolean dataReady = false;
     
@@ -49,8 +48,7 @@ public class DCM extends Device {
 	for(i = 0; i < 3; i++){
 	    dR = crossProduct(w,m[i]);
 	    m[i] = sum(m[i],dR);
-	}		
-
+	}
 	//make matrix orthonormal again
 	orthonormalize(m);
 	return m;
@@ -244,7 +242,6 @@ public class DCM extends Device {
 
     @Override
     protected void init() {
-	
     }
 
     @Override
