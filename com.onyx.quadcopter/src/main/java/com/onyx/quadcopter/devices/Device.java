@@ -99,9 +99,10 @@ public abstract class Device implements Executable {
      */
     protected boolean isNewMessage() {
         if ((previousMessage == null) && (lastMessage instanceof ACLMessage)) {
-            return true;
+            return lastMessage.isValid() && lastMessage.getReciever() == getId();
         }
-        return !previousMessage.equals(lastMessage);
+        return !previousMessage.equals(lastMessage) 
+        	&& lastMessage.isValid() && lastMessage.getReciever() == getId();
     }
 
     /**
