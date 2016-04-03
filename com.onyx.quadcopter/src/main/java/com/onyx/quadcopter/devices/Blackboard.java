@@ -38,6 +38,10 @@ public class Blackboard extends Device {
 
     @Override
     protected void update() {
+	if (blackboard.size() >= Constants.BLACKBOARD_SIZE) {
+            LOGGER.debug("Clearing blackboard.");
+            blackboard.clear();
+        }
     }
 
     @Override
@@ -46,10 +50,7 @@ public class Blackboard extends Device {
 
     @Override
     protected void alternate() {
-        if (blackboard.size() >= Constants.BLACKBOARD_SIZE) {
-            LOGGER.debug("Clearing blackboard.");
-            blackboard.clear();
-        }
+	System.gc();//Clear out junk.
     }
 
     @Override

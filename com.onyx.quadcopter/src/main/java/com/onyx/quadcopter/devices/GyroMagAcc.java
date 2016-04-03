@@ -52,6 +52,7 @@ public class GyroMagAcc extends Device {
                 break;
             }
         }
+        
     }
 
     @Override
@@ -70,6 +71,7 @@ public class GyroMagAcc extends Device {
     public void shutdown() {
         LOGGER.debug("Shutting down Gyro, Magnetometer and Accelerometer Device.");
         lsm.delete();
+        lsm = null;
     }
 
     @Override
@@ -79,12 +81,21 @@ public class GyroMagAcc extends Device {
 	float[] magdata = lsm.getMagnetometer();
         LOGGER.debug(gyrodata[0] + ":" + gyrodata[1] + ":" + gyrodata[2] + ";" 
 	+ acceldata[0] + ":" + acceldata[1] + ":" + acceldata[2] + ";" 
-        + magdata[0] + ":" + magdata[1] + ":" + magdata[2] + ";" + lsm.getTemperature());
+        + magdata[0] + ":" + magdata[1] + ":" + magdata[2]);
+        shutdown();//Kluge to free memory by poorly written C driver.
+        init();
     }
 
     @Override
     public boolean selfTest() {
-        return true;// TODO Complete Gyro self test
+	init();
+	if (lsm.getAccelerometer()[2] > 1) {
+	    shutdown();
+	    LOGGER.error("Vertical acceleration exceeds 9.8m/s^2 self test failed, please ensure aircraft is not in motion.");
+	    return false;
+	}
+	shutdown();
+        return true;
     }
 
 }
