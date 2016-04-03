@@ -36,11 +36,16 @@ public class GyroMagAcc extends Device {
             switch (lastMessage.getActionID()) {
             case GET_ORIENT:
             case SEND_DATA:
+        	float[] gyrodata = lsm.getGyroscope();
+        	float[] acceldata = lsm.getAccelerometer();
+        	float[] magdata = lsm.getMagnetometer();
                 final ACLMessage m = new ACLMessage(MessageType.SEND);
                 m.setActionID(lastMessage.getActionID());
                 m.setReciever(lastMessage.getSender());
                 m.setSender(getId());
-                m.setContent(lsm.getAccelerometer() + ";" + lsm.getGyroscope() + ";" + lsm.getMagnetometer());
+                m.setContent(gyrodata[0] + ":" + gyrodata[1] + ":" + gyrodata[2] + ";" 
+                	+ acceldata[0] + ":" + acceldata[1] + ":" + acceldata[2] + ";" 
+                        + magdata[0] + ":" + magdata[1] + ":" + magdata[2]);
                 m.setValue(lsm.getTemperature());
                 getController().getBlackboard().addMessage(m);
             default:
@@ -69,7 +74,12 @@ public class GyroMagAcc extends Device {
 
     @Override
     protected void alternate() {
-        LOGGER.debug(lsm.getGyroscope() + ";" + lsm.getAccelerometer() + ";" + lsm.getMagnetometer() + ";" + lsm.getTemperature());
+	float[] gyrodata = lsm.getGyroscope();
+	float[] acceldata = lsm.getAccelerometer();
+	float[] magdata = lsm.getMagnetometer();
+        LOGGER.debug(gyrodata[0] + ":" + gyrodata[1] + ":" + gyrodata[2] + ";" 
+	+ acceldata[0] + ":" + acceldata[1] + ":" + acceldata[2] + ";" 
+        + magdata[0] + ":" + magdata[1] + ":" + magdata[2]);
     }
 
     @Override
