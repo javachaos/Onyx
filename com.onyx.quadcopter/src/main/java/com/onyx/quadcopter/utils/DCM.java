@@ -26,6 +26,8 @@ public class DCM extends Device {
     float[] accel = new float[3];
     float[] magni = new float[3];
     float[][] data = new float[3][3];
+
+    private boolean dataReady = false;
     
     public DCM(final Controller c) {
 	super(c, DeviceID.DCM);
@@ -165,8 +167,10 @@ public class DCM extends Device {
 	//Accelerometer measures gravity vector G in body coordinate system
 	//Gravity vector is the reverse of K unity vector of global system expressed in local coordinates
 	//K vector coincides with the z coordinate of body's i,j,k vectors expressed in global coordinates (K.i , K.j, K.k)
-		
-	//Acc can estimate global K vector(zenith) measured in body's coordinate systems (the reverse of gravitation vector)
+	if(!dataReady)
+	    return;
+	
+	//Acc can estimate global K vector(zenith) measured in body's coordinate systems (the reverse of gravitation vector)	
 	accel[0] = -data[0][0];	
 	accel[1] = -data[0][1];
 	accel[2] = -data[0][2];
@@ -226,15 +230,17 @@ public class DCM extends Device {
 	    data[2][0] = Float.parseFloat(magdata[0]);
 	    data[2][1] = Float.parseFloat(magdata[1]);
 	    data[2][2] = Float.parseFloat(magdata[2]);
+	    dataReady = true;
 	}
     }
 
     @Override
-    protected void init() {	
+    protected void init() {
+	
     }
 
     @Override
-    public void shutdown() {	
+    public void shutdown() {
     }
 
     @Override
