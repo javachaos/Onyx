@@ -19,7 +19,7 @@ public class DCM extends Device {
     
     private static final float ACC_WEIGHT = 0.1f;
     private static final float MAG_WEIGHT = 0.1f;
-    float[][] dcm;
+    float[][] dcm = new float[3][3];
     long intr_t = 0;		
     long time_t = 0;
     long prev_t = 0;
@@ -29,9 +29,17 @@ public class DCM extends Device {
 
     private boolean dataReady = false;
     
+    /**
+     * Create a new DCM.
+     * @param c
+     */
     public DCM(final Controller c) {
 	super(c, DeviceID.DCM);
-	dcm = new float[][]{{1,0,0},{0,1,0},{0,0,1}};
+	dcm = new float[][] {
+	    {1, 0, 0},
+	    {0, 1, 0},
+	    {0, 0, 1}
+	};
     }
     
     private float[][] rotate(float[][] m, float[] w) {
@@ -241,6 +249,7 @@ public class DCM extends Device {
 
     @Override
     public void shutdown() {
+	data = null;
     }
 
     @Override
@@ -251,7 +260,6 @@ public class DCM extends Device {
 
     @Override
     public boolean selfTest() {
-	// TODO Auto-generated method stub
 	return true;
     }
 

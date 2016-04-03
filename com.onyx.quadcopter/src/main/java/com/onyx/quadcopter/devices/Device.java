@@ -41,16 +41,26 @@ public abstract class Device implements Executable {
      */
     private String name;
 
+    /**
+     * Create a new device.
+     * @param c
+     * @param id
+     */
     public Device(final Controller c, final DeviceID id) {
         setId(id);
         setName(id.toString());
         if (c != null) {
             controller = c;
         } else {
+            LOGGER.error("Device could not be constructed, controller null.");
             throw new OnyxException("Device could not be constructed, controller null.", LOGGER);
         }
     }
 
+    /**
+     * Set the name of this device.
+     * @param n
+     */
     private void setName(final String n) {
         if ((n != null) && (n.length() > 0)) {
             name = n;
@@ -83,6 +93,10 @@ public abstract class Device implements Executable {
         }
     }
 
+    /**
+     * Return true if there is a new message.
+     * @return
+     */
     protected boolean isNewMessage() {
         if ((previousMessage == null) && (lastMessage instanceof ACLMessage)) {
             return true;
@@ -153,10 +167,18 @@ public abstract class Device implements Executable {
         return getName();
     }
 
+    /**
+     * Get the name of this device.
+     * @return
+     */
     private String getName() {
         return name;
     }
 
+    /**
+     * Get a reference to the controller.
+     * @return
+     */
     protected Controller getController() {
         return controller;
     }

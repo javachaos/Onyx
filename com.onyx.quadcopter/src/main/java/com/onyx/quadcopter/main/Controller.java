@@ -75,11 +75,11 @@ public class Controller implements Runnable {
         addDevice(blackboard);
         addDevice(commServer);
         addDevice(new GyroMagAcc(this));
-        addDevice(new DCM(this));
         addDevice(new Motor(this, DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
         addDevice(new Motor(this, DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
         addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
         addDevice(new Motor(this, DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
+        addDevice(new DCM(this));
         LOGGER.debug("Controller Initialized.");
         initialized = true;
     }
