@@ -260,6 +260,6 @@ public final class Constants {
     /**
      * The i2c bus ID.
      */
-    public static final int I2C_BUS_ID = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.bus.id", 1);
+    public static final int I2C_BUS_ID = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.bus.id", 0);
 
 }

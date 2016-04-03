@@ -60,7 +60,7 @@ public class GyroMagAcc extends Device {
         } else {
             LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device.");
             lsm = new upm_lsm9ds0.LSM9DS0();
-            lsm.enableTemperatureSensor(true);
+            lsm.init();
         }
 
     }
