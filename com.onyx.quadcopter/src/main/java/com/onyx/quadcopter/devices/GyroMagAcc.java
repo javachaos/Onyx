@@ -59,7 +59,7 @@ public class GyroMagAcc extends Device {
             lsm = new SIMLSM9DS0();
         } else {
             LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device.");
-            lsm = new upm_lsm9ds0.LSM9DS0();
+            lsm = new upm_lsm9ds0.LSM9DS0(Constants.I2C_BUS_ID);
             lsm.init();
         }
 
