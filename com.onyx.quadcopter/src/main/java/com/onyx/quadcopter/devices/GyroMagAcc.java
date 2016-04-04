@@ -130,7 +130,7 @@ public class GyroMagAcc extends Device {
     protected void alternate() {
 	if(!Constants.SIMULATION) {
 	    float[] rph = getRPH();
-            LOGGER.debug("Yaw: " + Math.toDegrees(rph[0]) + " Pitch: "+Math.toDegrees(rph[1])+ " Roll: "+ Math.toDegrees(rph[2]));
+            LOGGER.debug("Yaw: " + rph[0] + " Pitch: "+ rph[1] + " Roll: "+ rph[2]);
             shutdown();
             init();
 	} else {
