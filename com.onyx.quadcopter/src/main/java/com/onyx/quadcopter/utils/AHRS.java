@@ -5,7 +5,7 @@ public class AHRS {
  // Java Implementation of Madgwick's IMU and AHRS algorithms.
     private static final float betaDef = 0.1f;
     private static final float sampleFreq = 200.0f;
-    volatile float beta = betaDef;								// 2 * proportional gain (Kp)
+    volatile float beta = betaDef;							// 2 * proportional gain (Kp)
     volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;	// quaternion of sensor frame relative to auxiliary frame
     
     public class Quaternion {
@@ -17,7 +17,7 @@ public class AHRS {
 	    this.q3 = q3;
 	}
 	public float[] getArray() {
-	    return new float[] {q0,q1,q2,q3};
+	    return new float[] { q0, q1, q2, q3 };
 	}
 	public float getQ0() {
 	    return q0;
@@ -32,7 +32,7 @@ public class AHRS {
 	    return q3;
 	}
     }
-    
+
     public void update(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz) {
 	float recipNorm;
 	float s0, s1, s2, s3;
@@ -207,6 +207,10 @@ public class AHRS {
         return x;
     }
 
+    /**
+     * Get the internal Quaternion values wrapped in a quaternion.
+     * @return
+     */
     public Quaternion getQuaternion() {
 	return new Quaternion(q0,q1,q2,q3); 
     }

@@ -88,9 +88,19 @@ public class GyroMagAcc extends Device {
     @Override
     protected void alternate() {
         Quaternion q = ahrs.getQuaternion();
+        float x,y,z,w;
+        w = q.getQ0();
+        x = q.getQ1();
+        y = q.getQ2();
+        z = q.getQ3();
+        
         LOGGER.debug(q.getQ0() + ":" + q.getQ1() + ":" + q.getQ2() + ":" 
         	+ q.getQ3());
-        shutdown();//Kluge to free memory by poorly written C++ driver.
+        float roll  = (float) Math.atan2(2*y*w - 2*x*z, 1 - 2*y*y - 2*z*z);
+        float pitch = (float) Math.atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z);
+        float yaw   = (float) Math.asin(2*x*y + 2*z*w);
+        LOGGER.debug("Yaw: " + yaw + "Pitch: "+pitch+ "Roll: "+ roll);
+        shutdown();
         init();
     }
 
