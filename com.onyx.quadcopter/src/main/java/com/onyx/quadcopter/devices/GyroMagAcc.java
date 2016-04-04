@@ -25,16 +25,10 @@ public class GyroMagAcc extends Device {
         }
     }
 
-
-    /**
-     * AHRS algorithm implementation.
-     */
-    private AHRS ahrs;
     private upm_lsm9ds0.LSM9DS0 lsm;
 
     public GyroMagAcc(final Controller c) {
         super(c, DeviceID.GYRO_MAG_ACC);
-        ahrs = new AHRS();
     }
 
     @Override
@@ -43,9 +37,21 @@ public class GyroMagAcc extends Device {
 	float[] gyrodata = lsm.getGyroscope();
 	float[] acceldata = lsm.getAccelerometer();
 	float[] magdata = lsm.getMagnetometer();
-        ahrs.update(gyrodata[0], gyrodata[1], gyrodata[2],
-        	acceldata[0], acceldata[1], acceldata[2],
-        	magdata[0], magdata[1], magdata[2]);
+	float roll = (float) Math.atan2(acceldata[1], acceldata[2]);
+        float pitch = 0;
+        if (acceldata[1] * Math.sin(roll) + acceldata[2] * Math.cos(roll) == 0) {
+            pitch = (float) (acceldata[0] > 0 ? (Math.PI / 2.0) : (-Math.PI / 2.0));
+        } else {
+            pitch = (float) Math.atan(-acceldata[0] / (acceldata[1] * Math.sin(roll) + acceldata[2] * Math.cos(roll)));
+        }
+        float heading = 0;
+        heading = (float) Math.atan2((float)(magdata[2] * Math.sin(roll)) - magdata[1] * Math.cos(roll),
+        	                             magdata[0] * Math.cos(pitch) + 
+        	                             magdata[1] * Math.sin(pitch) * Math.sin(roll) + 
+        	                             magdata[2] * Math.sin(pitch) * Math.cos(pitch));
+//        float gyrodata[0], gyrodata[1], gyrodata[2],
+//        	acceldata[0], ,
+//        	magdata[0], magdata[1], magdata[2]);
         if (isNewMessage()) {
             switch (lastMessage.getActionID()) {
             case GET_ORIENT:
@@ -54,9 +60,7 @@ public class GyroMagAcc extends Device {
                 m.setActionID(lastMessage.getActionID());
                 m.setReciever(lastMessage.getSender());
                 m.setSender(getId());
-                Quaternion q = ahrs.getQuaternion();
-                m.setContent(q.getQ0() + ":" + q.getQ1() + ":" + q.getQ2() + ":" 
-                	+ q.getQ3());
+                m.setContent(roll + ":" + pitch + ":" + heading);
                 m.setValue(lsm.getTemperature());
                 getController().getBlackboard().addMessage(m);
             default:
@@ -64,6 +68,25 @@ public class GyroMagAcc extends Device {
             }
         }
         
+    }
+    
+    private float[] getRPH() {
+	//float[] gyrodata = lsm.getGyroscope();
+	float[] acceldata = lsm.getAccelerometer();
+	float[] magdata = lsm.getMagnetometer();
+	float roll = (float) Math.atan2(acceldata[1], acceldata[2]);
+        float pitch = 0;
+        if (acceldata[1] * Math.sin(roll) + acceldata[2] * Math.cos(roll) == 0) {
+            pitch = (float) (acceldata[0] > 0 ? (Math.PI / 2.0) : (-Math.PI / 2.0));
+        } else {
+            pitch = (float) Math.atan(-acceldata[0] / (acceldata[1] * Math.sin(roll) + acceldata[2] * Math.cos(roll)));
+        }
+        float heading = 0;
+        heading = (float) Math.atan2((float)(magdata[2] * Math.sin(roll)) - magdata[1] * Math.cos(roll),
+        	                             magdata[0] * Math.cos(pitch) + 
+        	                             magdata[1] * Math.sin(pitch) * Math.sin(roll) + 
+        	                             magdata[2] * Math.sin(pitch) * Math.cos(pitch));
+        return new float[] {roll, pitch, heading};
     }
 
     @Override
@@ -87,19 +110,8 @@ public class GyroMagAcc extends Device {
 
     @Override
     protected void alternate() {
-        Quaternion q = ahrs.getQuaternion();
-        float x,y,z,w;
-        w = q.getQ0();
-        x = q.getQ1();
-        y = q.getQ2();
-        z = q.getQ3();
-        
-        LOGGER.debug(q.getQ0() + ":" + q.getQ1() + ":" + q.getQ2() + ":" 
-        	+ q.getQ3());
-        float roll  = (float) Math.atan2(2*y*w - 2*x*z, 1 - 2*y*y - 2*z*z);
-        float pitch = (float) Math.atan2(2*x*w - 2*y*z, 1 - 2*x*x - 2*z*z);
-        float yaw   = (float) Math.asin(2*x*y + 2*z*w);
-        LOGGER.debug("Yaw: " + yaw + "Pitch: "+pitch+ "Roll: "+ roll);
+	float[] rph = getRPH();
+        LOGGER.debug("Yaw: " + rph[0] + " Pitch: "+rph[1]+ " Roll: "+ rph[2]);
         shutdown();
         init();
     }
