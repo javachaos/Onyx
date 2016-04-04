@@ -140,6 +140,9 @@ public abstract class Device implements Executable {
 
     /**
      * Run self test code to ensure everything works.
+     * 
+     * Note: Only called during live tests.
+     * if Constants.SIMULATION is set to true this will not be run.
      *
      * @return true if everything is OK
      */

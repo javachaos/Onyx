@@ -262,4 +262,10 @@ public final class Constants {
      */
     public static final int I2C_BUS_ID = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.bus.id", 0);
 
+    /**
+     * Orientation change threashold. 
+     * Any data which changes by a factor of this value after a single update is discarded.
+     */
+    public static final float ORIENTATION_THRESHOLD = 0.1f;
+
 }

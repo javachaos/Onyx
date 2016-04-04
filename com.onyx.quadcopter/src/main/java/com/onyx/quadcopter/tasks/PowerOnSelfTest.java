@@ -9,6 +9,7 @@ import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
+import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.StartupState;
 
 /**
@@ -38,6 +39,9 @@ public class PowerOnSelfTest {
     }
 
     public StartupState test() {
+	if (Constants.SIMULATION) {
+	    return StartupState.SUCCESSFUL;
+	}
         for (final Entry<DeviceID, Device> d : controller.getDevices()) {
             if (d.getValue().selfTest()) {
                 continue;

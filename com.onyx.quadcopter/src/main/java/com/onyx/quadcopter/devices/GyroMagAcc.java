@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.MessageType;
-import com.onyx.quadcopter.utils.AHRS;
-import com.onyx.quadcopter.utils.AHRS.Quaternion;
 import com.onyx.quadcopter.utils.Constants;
 
 public class GyroMagAcc extends Device {
@@ -26,6 +24,7 @@ public class GyroMagAcc extends Device {
     }
 
     private upm_lsm9ds0.LSM9DS0 lsm;
+    private float[] last_orient;
 
     public GyroMagAcc(final Controller c) {
         super(c, DeviceID.GYRO_MAG_ACC);
@@ -34,24 +33,9 @@ public class GyroMagAcc extends Device {
     @Override
     protected void update() {
         lsm.update();
-	float[] gyrodata = lsm.getGyroscope();
-	float[] acceldata = lsm.getAccelerometer();
-	float[] magdata = lsm.getMagnetometer();
-	float roll = (float) Math.atan2(acceldata[1], acceldata[2]);
-        float pitch = 0;
-        if (acceldata[1] * Math.sin(roll) + acceldata[2] * Math.cos(roll) == 0) {
-            pitch = (float) (acceldata[0] > 0 ? (Math.PI / 2.0) : (-Math.PI / 2.0));
-        } else {
-            pitch = (float) Math.atan(-acceldata[0] / (acceldata[1] * Math.sin(roll) + acceldata[2] * Math.cos(roll)));
-        }
-        float heading = 0;
-        heading = (float) Math.atan2((float)(magdata[2] * Math.sin(roll)) - magdata[1] * Math.cos(roll),
-        	                             magdata[0] * Math.cos(pitch) + 
-        	                             magdata[1] * Math.sin(pitch) * Math.sin(roll) + 
-        	                             magdata[2] * Math.sin(pitch) * Math.cos(pitch));
-//        float gyrodata[0], gyrodata[1], gyrodata[2],
-//        	acceldata[0], ,
-//        	magdata[0], magdata[1], magdata[2]);
+        float[] orient = getRPH();
+        last_orient = orient;
+        orient = correct(orient);
         if (isNewMessage()) {
             switch (lastMessage.getActionID()) {
             case GET_ORIENT:
@@ -60,18 +44,50 @@ public class GyroMagAcc extends Device {
                 m.setActionID(lastMessage.getActionID());
                 m.setReciever(lastMessage.getSender());
                 m.setSender(getId());
-                m.setContent(roll + ":" + pitch + ":" + heading);
+                m.setContent(orient[0] + ":" + orient[1] + ":" + orient[2]);
                 m.setValue(lsm.getTemperature());
                 getController().getBlackboard().addMessage(m);
             default:
                 break;
             }
         }
-        
     }
     
+    /**
+     * Crude data filter.
+     */
+    private float[] correct(float[] orient) {
+	float mse = MSE(last_orient, orient);
+	if (mse > Constants.ORIENTATION_THRESHOLD) {
+	    LOGGER.warn("Change in orientation too fast discarding bad value MSE: " + mse);
+	    orient = last_orient;
+	}
+	return orient;
+    }
+
+    /**
+     * Calculate the mean squared error between two vectors.
+     * @param actual
+     * @param predicted
+     * @return
+     */
+    private float MSE(float[] actual, float[] predicted) {
+	if (actual.length != predicted.length) {
+	    return Float.POSITIVE_INFINITY;
+	}
+	int n = actual.length;
+	int res = 0;
+	for(int i = 0; i < n; i++) {
+	    res += Math.pow(predicted[i] - actual[i], 2);
+	}
+	return (float) (res / n);
+    }
+    
+    /**
+     * Return the Roll Pitch and heading in degree's.
+     * @return
+     */
     private float[] getRPH() {
-	//float[] gyrodata = lsm.getGyroscope();
 	float[] acceldata = lsm.getAccelerometer();
 	float[] magdata = lsm.getMagnetometer();
 	float roll = (float) Math.atan2(acceldata[1], acceldata[2]);
@@ -86,14 +102,16 @@ public class GyroMagAcc extends Device {
         	                             magdata[0] * Math.cos(pitch) + 
         	                             magdata[1] * Math.sin(pitch) * Math.sin(roll) + 
         	                             magdata[2] * Math.sin(pitch) * Math.cos(pitch));
-        return new float[] {roll, pitch, heading};
+        return new float[] {(float) Math.toDegrees(roll),
+        	(float) Math.toDegrees(pitch),
+        	(float) Math.toDegrees(heading)};
     }
 
     @Override
     protected void init() {
         if (Constants.SIMULATION) {
             LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device. (Simulated)");
-            lsm = new SIMLSM9DS0();
+            lsm = null;
         } else {
             LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device.");
             lsm = new upm_lsm9ds0.LSM9DS0(Constants.I2C_BUS_ID);
@@ -110,10 +128,14 @@ public class GyroMagAcc extends Device {
 
     @Override
     protected void alternate() {
-	float[] rph = getRPH();
-        LOGGER.debug("Yaw: " + Math.toDegrees(rph[0]) + " Pitch: "+Math.toDegrees(rph[1])+ " Roll: "+ Math.toDegrees(rph[2]));
-        shutdown();
-        init();
+	if(!Constants.SIMULATION) {
+	    float[] rph = getRPH();
+            LOGGER.debug("Yaw: " + Math.toDegrees(rph[0]) + " Pitch: "+Math.toDegrees(rph[1])+ " Roll: "+ Math.toDegrees(rph[2]));
+            shutdown();
+            init();
+	} else {
+            LOGGER.debug("Yaw: " + Math.random() * 180 + " Pitch: " + Math.random() * 180 + " Roll: " + Math.random() * 180);
+	}
     }
 
     @Override
