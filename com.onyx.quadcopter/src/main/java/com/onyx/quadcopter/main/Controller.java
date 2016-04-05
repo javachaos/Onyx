@@ -175,7 +175,7 @@ public class Controller implements TimerTask {
 
     @Override
     public void run(Timeout t) {
-        if (isRunning() && initialized) {
+        while (isRunning() && initialized) {
             update();
             blackboard.update();
         }
