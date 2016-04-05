@@ -10,14 +10,13 @@
  ******************************************************************************/
 package com.onyx.quadcopter.main;
 
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.ShutdownAgent;
 import com.onyx.quadcopter.utils.ThreadUtils;
+
+import io.netty.util.Timeout;
+import io.netty.util.TimerTask;
 
 /**
  * State monitor to monitor the application state.
@@ -25,7 +24,7 @@ import com.onyx.quadcopter.utils.ThreadUtils;
  * @author fred
  *
  */
-public final class StateMonitor implements Runnable {
+public final class StateMonitor implements TimerTask {
 
     /**
      * Logger.
@@ -130,8 +129,8 @@ public final class StateMonitor implements Runnable {
      * Run the state monitor.
      */
     @Override
-    public void run() {
-        if (isRunning) {
+    public void run(Timeout t) {
+        while (isRunning) {
             update();
         }
     }
@@ -335,7 +334,7 @@ public final class StateMonitor implements Runnable {
         isRunning = false;
         LOGGER.info("Application exiting.");
         ThreadUtils.shutdown();
-        Main.COORDINATOR.schedule(new ShutdownAgent(Main.COORDINATOR), Constants.SLEEP_TIME, TimeUnit.MILLISECONDS);
+        // Main.COORDINATOR.newTimeout(new ShutdownAgent(Main.COORDINATOR), Constants.SLEEP_TIME, TimeUnit.MILLISECONDS);
         System.exit(status);
     }
 }
