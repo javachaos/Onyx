@@ -31,7 +31,7 @@ public class Main {
 
         final Controller controller = new Controller();
         final StateMonitor monitor = new StateMonitor(controller);
-        Main.COORDINATOR.scheduleAtFixedRate(monitor, Constants.MONITOR_DELAY,Constants.MONITOR_PERIOD, Constants.MONITOR_TIMEUNIT);
+        Main.COORDINATOR.scheduleWithFixedDelay(monitor, Constants.MONITOR_DELAY,Constants.MONITOR_PERIOD, Constants.MONITOR_TIMEUNIT);
         Main.COORDINATOR.scheduleAtFixedRate(controller, Constants.CONTROLLER_DELAY, Constants.CONTROLLER_PERIOD, Constants.CONTROLLER_TIMEUNIT);
         addHook();
     }
