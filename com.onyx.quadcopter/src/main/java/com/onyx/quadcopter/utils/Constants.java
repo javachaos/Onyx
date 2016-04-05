@@ -273,4 +273,9 @@ public final class Constants {
      */
     public static final int GPIO_MOTOR_INIT_SPEED = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.motor.init.speed", 0);
 
+    /**
+     * Amount of time to delay the start of the controller thread. In milliseconds.
+     */
+    public static final long CONTROLLER_DELAY = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.controller.start.delay", 1000);
+
 }
