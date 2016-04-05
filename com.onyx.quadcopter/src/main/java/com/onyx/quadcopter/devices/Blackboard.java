@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.MessageType;
 import com.onyx.quadcopter.utils.Constants;
@@ -22,7 +21,7 @@ import com.onyx.quadcopter.utils.Constants;
  * @author fred
  *
  */
-public class Blackboard extends Device {
+public class Blackboard {
 
     /**
      * Logger.
@@ -31,32 +30,15 @@ public class Blackboard extends Device {
 
     private ConcurrentMap<DeviceID, ACLMessage> blackboard;
 
-    public Blackboard(final Controller c) {
-        super(c, DeviceID.BLACKBOARD);
+    public Blackboard() {
         blackboard = new ConcurrentHashMap<DeviceID, ACLMessage>(Constants.BLACKBOARD_SIZE);
     }
 
-    @Override
-    protected void update() {
+    public void update() {
 	if (blackboard.size() >= Constants.BLACKBOARD_SIZE) {
             LOGGER.debug("Clearing blackboard.");
             blackboard.clear();
         }
-    }
-
-    @Override
-    protected synchronized void init() {
-    }
-
-    @Override
-    protected void alternate() {
-	System.gc();//Clear out junk.
-    }
-
-    @Override
-    public boolean selfTest() {
-        LOGGER.debug("Running blackboard self test.");
-        return true; // TODO implement
     }
 
     /**
@@ -70,6 +52,26 @@ public class Blackboard extends Device {
         }
     }
 
+
+    /**
+     * Get a message for Device device. Searches the database for all messages
+     * which are destined to device returning the first occurence.
+     *
+     * @param id
+     *            the device id to find messages for
+     *
+     * @return the first ACLMessage found within the blackboard
+     *
+     */
+    public synchronized ACLMessage getMessage(DeviceID id) {
+	final ACLMessage n = blackboard.get(id);
+        if (n != null && n.isValid()) {
+            return n;
+        } else {
+            return new ACLMessage(MessageType.EMPTY);
+        }
+    }
+    
     /**
      * Get a message for Device device. Searches the database for all messages
      * which are destined to device returning the first occurence.
@@ -81,17 +83,12 @@ public class Blackboard extends Device {
      *
      */
     public synchronized ACLMessage getMessage(final Device device) {
-        final ACLMessage n = blackboard.get(device.getId());
-        if (n != null && n.isValid()) {
-            return n;
-        } else {
-            return new ACLMessage(MessageType.EMPTY);
-        }
+        return getMessage(device.getId());
     }
 
-    @Override
     public void shutdown() {
         blackboard.clear();
         blackboard = null;
     }
+
 }

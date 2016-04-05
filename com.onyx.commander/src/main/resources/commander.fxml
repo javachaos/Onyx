@@ -94,7 +94,7 @@
                            <children>
                               <HBox AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
                                  <children>
-                                    <Button fx:id="enterCommandButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="126.0" text="Enter" />
+                                    <Button fx:id="enterCommandButton" mnemonicParsing="false" onAction="#sendCommand" prefHeight="26.0" prefWidth="126.0" text="Enter" />
                                     <TextField fx:id="commandTextField" prefHeight="26.0" prefWidth="596.0" />
                                  </children>
                               </HBox>

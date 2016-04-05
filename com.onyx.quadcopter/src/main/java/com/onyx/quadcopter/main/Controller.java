@@ -62,7 +62,7 @@ public class Controller implements Runnable {
     public Controller() {
         devices = new MapMaker().concurrencyLevel(Constants.NUM_THREADS).initialCapacity(Constants.MAX_DEVICES)
                 .makeMap();
-        blackboard = new Blackboard(this);
+        blackboard = new Blackboard();
         commServer = new NettyCommServer(this);
         Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
         init();
@@ -71,7 +71,6 @@ public class Controller implements Runnable {
     private void init() {
         LOGGER.debug("Initializing Controller...");
         cleaner = new Cleaner();
-        addDevice(blackboard);
         addDevice(commServer);
         addDevice(new GyroMagAcc(this));
         addDevice(new Motor(this, DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
@@ -84,6 +83,7 @@ public class Controller implements Runnable {
 
     private void shutdown() {
         LOGGER.debug("Starting Controller shutdown...");
+        blackboard.shutdown();
         for (final Entry<DeviceID, Device> d : devices.entrySet()) {
             d.getValue().shutdown();
             cleaner.cleanUp(d.getValue());
@@ -174,6 +174,7 @@ public class Controller implements Runnable {
     public void run() {
         if (isRunning() && initialized) {
             update();
+            blackboard.update();
         }
     }
 }

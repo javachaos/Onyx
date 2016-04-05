@@ -34,8 +34,8 @@ public class GyroMagAcc extends Device {
     protected void update() {
         lsm.update();
         float[] orient = getRPH();
-        last_orient = orient;
         orient = correct(orient);
+        last_orient = orient;
         if (isNewMessage()) {
             switch (lastMessage.getActionID()) {
             case GET_ORIENT:

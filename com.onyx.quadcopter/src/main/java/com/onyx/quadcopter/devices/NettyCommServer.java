@@ -8,6 +8,9 @@ import com.onyx.quadcopter.communication.ACLEncoder;
 import com.onyx.quadcopter.communication.CommunicationHandler;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
+import com.onyx.quadcopter.messaging.ACLMessage;
+import com.onyx.quadcopter.messaging.ActionId;
+import com.onyx.quadcopter.messaging.MessageType;
 import com.onyx.quadcopter.utils.Constants;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -43,6 +46,11 @@ public class NettyCommServer extends Device implements Runnable {
      */
     private final CommunicationHandler handler;
 
+    /**
+     * Ping clients for data.
+     */
+    private ACLMessage pingRequest;
+
     public NettyCommServer(final Controller c) {
         super(c, DeviceID.COMM_SERVER);
         handler = new CommunicationHandler(getController());
@@ -50,6 +58,11 @@ public class NettyCommServer extends Device implements Runnable {
 
     @Override
     protected void init() {
+	pingRequest = new ACLMessage(MessageType.RELAY);
+	pingRequest.setActionID(ActionId.SEND_DATA);
+	pingRequest.setSender(getId());
+	pingRequest.setReciever(DeviceID.COMM_CLIENT);
+	pingRequest.setValue(System.currentTimeMillis());
     }
 
     @Override
@@ -85,6 +98,8 @@ public class NettyCommServer extends Device implements Runnable {
 
     @Override
     protected void update() {
+	//Send client a request for data.
+        handler.addData(pingRequest);
         switch (lastMessage.getActionID()) {
         case SEND_DATA:
             handler.addData(lastMessage);
