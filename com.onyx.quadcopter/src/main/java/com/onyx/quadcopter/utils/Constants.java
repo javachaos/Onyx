@@ -266,6 +266,6 @@ public final class Constants {
      * Orientation change threashold. 
      * Any data which changes by a factor of this value after a single update is discarded.
      */
-    public static final float ORIENTATION_THRESHOLD = 0.1f;
+    public static final float ORIENTATION_THRESHOLD = PROPERTIES.getFloatProperty("com.onyx.quadcopter.orient.threshold", 1000.0f);
 
 }
