@@ -72,6 +72,9 @@ public class GyroMagAcc extends Device {
      * @return
      */
     private float MSE(float[] actual, float[] predicted) {
+	if (actual == null || predicted == null) {
+	    return 0;
+	}
 	if (actual.length != predicted.length) {
 	    return Float.POSITIVE_INFINITY;
 	}
