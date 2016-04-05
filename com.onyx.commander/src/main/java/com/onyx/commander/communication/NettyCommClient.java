@@ -3,9 +3,6 @@ package com.onyx.commander.communication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.communication.ACLDecoder;
-import com.onyx.quadcopter.communication.ACLEncoder;
-
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -14,6 +11,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 
 public class NettyCommClient implements Runnable {
 
@@ -49,7 +49,8 @@ public class NettyCommClient implements Runnable {
             b.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new ACLEncoder(), new ACLDecoder(), new ClientCommunicationHandler());
+                    ch.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(
+                	    ClassResolvers.softCachingConcurrentResolver(getClass().getClassLoader())), new ClientCommunicationHandler());
                 }
             });
     

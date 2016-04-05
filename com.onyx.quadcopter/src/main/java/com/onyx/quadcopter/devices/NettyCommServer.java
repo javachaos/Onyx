@@ -3,8 +3,6 @@ package com.onyx.quadcopter.devices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.communication.ACLDecoder;
-import com.onyx.quadcopter.communication.ACLEncoder;
 import com.onyx.quadcopter.communication.CommunicationHandler;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
@@ -21,6 +19,9 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 
 public class NettyCommServer extends Device implements Runnable {
 
@@ -74,7 +75,8 @@ public class NettyCommServer extends Device implements Runnable {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         public void initChannel(final SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new ACLEncoder(), new ACLDecoder(), handler);
+                            ch.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(
+                        	    ClassResolvers.softCachingConcurrentResolver(getClass().getClassLoader())), handler);
                         }
                     }).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
 

@@ -21,14 +21,16 @@ public class ClientCommunicationHandler extends ChannelInboundHandlerAdapter {
     
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        ACLMessage m = (ACLMessage) msg;
-        GuiController.getBlackboard().addMessage(m);
-        LOGGER.debug(m.toString());
-        m = GuiController.getBlackboard().getMessage(DeviceID.COMM_CLIENT);
-        if (m != null) {
-            final ChannelFuture f = ctx.writeAndFlush(m);
-            f.addListener(ChannelFutureListener.CLOSE);
-        }
+	if (msg instanceof ACLMessage) {
+            final ACLMessage m = (ACLMessage) msg;
+            GuiController.getBlackboard().addMessage(m);
+            LOGGER.debug(m.toString());
+            final ACLMessage m1 = GuiController.getBlackboard().getMessage(DeviceID.COMM_CLIENT);
+            if (m1 != null) {
+                final ChannelFuture f = ctx.writeAndFlush(m1);
+                f.addListener(ChannelFutureListener.CLOSE);
+            }
+	}
     }
 
     @Override
