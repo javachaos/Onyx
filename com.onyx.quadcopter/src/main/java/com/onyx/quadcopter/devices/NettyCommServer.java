@@ -22,10 +22,8 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
-import io.netty.util.Timeout;
-import io.netty.util.TimerTask;
 
-public class NettyCommServer extends Device implements TimerTask {
+public class NettyCommServer extends Device implements Runnable {
 
     /**
      * Logger.
@@ -69,7 +67,7 @@ public class NettyCommServer extends Device implements TimerTask {
     }
 
     @Override
-    public void run(Timeout t) {
+    public void run() {
         LOGGER.debug("Starting CommServer.");
         try {
             final ServerBootstrap b = new ServerBootstrap();

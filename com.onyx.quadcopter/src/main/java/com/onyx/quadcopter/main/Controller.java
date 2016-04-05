@@ -20,16 +20,13 @@ import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.utils.Cleaner;
 import com.onyx.quadcopter.utils.Constants;
 
-import io.netty.util.Timeout;
-import io.netty.util.TimerTask;
-
 /**
  * Controller class.
  *
  * @author fred
  *
  */
-public class Controller implements TimerTask {
+public class Controller implements Runnable {
 
     /**
      * Logger.
@@ -67,7 +64,7 @@ public class Controller implements TimerTask {
                 .makeMap();
         blackboard = new Blackboard();
         commServer = new NettyCommServer(this);
-        Main.COORDINATOR.newTimeout(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
+        Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
         init();
     }
 
@@ -174,8 +171,8 @@ public class Controller implements TimerTask {
     }
 
     @Override
-    public void run(Timeout t) {
-        while (isRunning() && initialized) {
+    public void run() {
+        if (isRunning() && initialized) {
             update();
             blackboard.update();
         }

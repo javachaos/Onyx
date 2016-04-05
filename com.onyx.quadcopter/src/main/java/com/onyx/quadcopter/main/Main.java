@@ -4,9 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.OnyxScheduledExecutor;
 import com.onyx.quadcopter.utils.ShutdownHook;
-
-import io.netty.util.HashedWheelTimer;
 
 public class Main {
 
@@ -26,18 +25,14 @@ public class Main {
     /**
      * Thread coordinator.
      */
-    //public static final OnyxScheduledExecutor COORDINATOR = new OnyxScheduledExecutor(Constants.NUM_THREADS);
-    
-    public static final HashedWheelTimer COORDINATOR = new HashedWheelTimer();
+    public static final OnyxScheduledExecutor COORDINATOR = new OnyxScheduledExecutor(Constants.NUM_THREADS);
 
     public static void main(final String[] args) {
 
         final Controller controller = new Controller();
         final StateMonitor monitor = new StateMonitor(controller);
-        Main.COORDINATOR.newTimeout(controller, 0, Constants.CONTROLLER_TIMEUNIT);
-        Main.COORDINATOR.newTimeout(monitor, Constants.MONITOR_DELAY, Constants.MONITOR_TIMEUNIT);
-//        Main.COORDINATOR.scheduleAtFixedRate(controller, Constants.CONTROLLER_PERIOD, Constants.CONTROLLER_PERIOD,
-//                Constants.CONTROLLER_TIMEUNIT);
+        Main.COORDINATOR.scheduleAtFixedRate(controller, 0, Constants.CONTROLLER_PERIOD, Constants.CONTROLLER_TIMEUNIT);
+        Main.COORDINATOR.scheduleAtFixedRate(monitor, Constants.MONITOR_DELAY,Constants.MONITOR_PERIOD, Constants.MONITOR_TIMEUNIT);
         addHook();
     }
 
