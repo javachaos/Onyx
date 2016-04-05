@@ -268,4 +268,9 @@ public final class Constants {
      */
     public static final float ORIENTATION_THRESHOLD = PROPERTIES.getFloatProperty("com.onyx.quadcopter.orient.threshold", 1000.0f);
 
+    /**
+     * Initial speed of the motors.
+     */
+    public static final int GPIO_MOTOR_INIT_SPEED = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.motor.init.speed", 0);
+
 }

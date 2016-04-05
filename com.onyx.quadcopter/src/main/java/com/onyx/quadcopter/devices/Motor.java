@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
+import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.PwmControl;
 
 public class Motor extends Device {
@@ -70,12 +71,14 @@ public class Motor extends Device {
     protected void init() {
         LOGGER.debug("Initializing " + getId() + "...");
         pwm.setup();
+        setSpeed(Constants.GPIO_MOTOR_INIT_SPEED);
         LOGGER.debug("Initializing complete for " + getId() + ".");
     }
 
     @Override
     public void shutdown() {
         LOGGER.debug("Shutting down " + getId() + "...");
+        setSpeed(0);
         pwm.shutdown();
         LOGGER.debug("Shutdown complete for " + getId() + ".");
     }
@@ -87,7 +90,7 @@ public class Motor extends Device {
 
     @Override
     public boolean selfTest() {
-        return true;// TODO Motor self test.
+        return true;
     }
 
 }
