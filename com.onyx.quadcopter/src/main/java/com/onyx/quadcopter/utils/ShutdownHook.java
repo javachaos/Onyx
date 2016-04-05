@@ -50,7 +50,7 @@ public class ShutdownHook extends Thread {
     public final void run() {
         try {
             StateMonitor.shutdownState();
-            Main.COORDINATOR.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
+            //Main.COORDINATOR.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
             mainThread.join();
         } catch (final InterruptedException e) {
             ExceptionUtils.logError(ShutdownHook.class, e);

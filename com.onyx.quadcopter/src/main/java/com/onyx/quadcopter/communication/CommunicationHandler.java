@@ -10,13 +10,15 @@ import com.onyx.quadcopter.utils.ConcurrentStack;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 
 /**
  * Handles a server-side channel.
  */
-public class CommunicationHandler extends ChannelInboundHandlerAdapter {
+@Sharable
+public class CommunicationHandler extends SimpleChannelInboundHandler<ACLMessage> {
 
     /**
      * Logger.
@@ -45,12 +47,6 @@ public class CommunicationHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(final ChannelHandlerContext ctx, final Object msg) {
-        controller.getBlackboard().addMessage(((ACLMessage) msg));
-        ctx.close();
-    }
-
-    @Override
     public void channelReadComplete(final ChannelHandlerContext ctx) {
         ctx.flush();
     }
@@ -62,6 +58,12 @@ public class CommunicationHandler extends ChannelInboundHandlerAdapter {
             final ChannelFuture f = ctx.writeAndFlush(msg);
             f.addListener(ChannelFutureListener.CLOSE);
         }
+        try {
+	    super.channelActive(ctx);
+	} catch (Exception e) {
+	    e.printStackTrace();
+	    LOGGER.error(e.getMessage());
+	}
     }
 
     @Override
@@ -76,5 +78,11 @@ public class CommunicationHandler extends ChannelInboundHandlerAdapter {
         if (data.isValid()) {
             dataStack.push(data);
         }
+    }
+
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, ACLMessage msg) throws Exception {
+        controller.getBlackboard().addMessage(msg);
+        ctx.close();
     }
 }
