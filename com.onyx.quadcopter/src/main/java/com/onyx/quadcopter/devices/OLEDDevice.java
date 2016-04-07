@@ -1,16 +1,18 @@
 package com.onyx.quadcopter.devices;
 
+import java.io.IOException;
+
+import com.onyx.quadcopter.display.Display;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
-
-import upm_i2clcd.SSD1306;
+import com.pi4j.io.gpio.RaspiPin;
 
 public class OLEDDevice extends Device {
 
     /**
      * OLED Device driver.
      */
-    private SSD1306 oled;
+    private Display oled;
 
     /**
      * Message index.
@@ -43,13 +45,19 @@ public class OLEDDevice extends Device {
 
     @Override
     protected void init() {
-	oled = new SSD1306(Constants.I2C_BUS_ID);
+	try {
+	    oled = new Display(128, 32,
+		    getController().getGpio(),
+		    getController().getI2CBus(),
+		    0x3C, RaspiPin.GPIO_25);
+	} catch (ReflectiveOperationException | IOException e) {
+	    LOGGER.error(e.getMessage());
+	}
     }
 
     @Override
     public void shutdown() {
 	oled.clear();
-	oled.delete();
     }
 
     @Override
@@ -64,12 +72,7 @@ public class OLEDDevice extends Device {
     @Override
     public boolean selfTest() {
 	oled.write("Testing...");
-	try {
-	    Thread.sleep(1);
-	} catch (InterruptedException e) {
-	    LOGGER.error(e.getMessage());
-	}
-	return oled.clear() == 1;
+	return true;
     }
 
 }

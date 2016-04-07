@@ -323,4 +323,9 @@ public final class Constants {
      */
     public static final long WEBCAM_TIMEOUT = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.webcam.timeout", 10);
 
+    /**
+     * Display font for OLED Display.
+     */
+    public static final int DISP_FONT = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.disp.font", 10);
+
 }
