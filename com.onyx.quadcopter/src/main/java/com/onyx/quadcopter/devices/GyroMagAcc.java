@@ -141,13 +141,10 @@ public class GyroMagAcc extends Device {
 
     @Override
     public boolean selfTest() {
-	init();
 	if (lsm.getAccelerometer()[2] > 1) {
-	    shutdown();
 	    LOGGER.error("Vertical acceleration exceeds 9.8m/s^2 self test failed, please ensure aircraft is not in motion.");
 	    return false;
 	}
-	shutdown();
         return true;
     }
 
