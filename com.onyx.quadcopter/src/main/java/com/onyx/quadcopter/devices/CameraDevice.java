@@ -55,7 +55,7 @@ public class CameraDevice extends Device {
     @Override
     protected void alternate() {
 	Mat m = new Mat();
-	while(webcam.grab()) {
+	if (webcam.grab()) {
 	    while (webcam.read(m) == false);
 	    String fileName = String.format(Constants.IMG_DIR 
 		    +File.separator + "img_%s.png",UUID.randomUUID().toString());
