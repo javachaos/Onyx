@@ -11,14 +11,19 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.MapMaker;
 import com.onyx.quadcopter.devices.Blackboard;
+import com.onyx.quadcopter.devices.CameraDevice;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.devices.GyroMagAcc;
 import com.onyx.quadcopter.devices.Motor;
 import com.onyx.quadcopter.devices.NettyCommServer;
+import com.onyx.quadcopter.devices.OLEDDevice;
+import com.onyx.quadcopter.devices.RedButton;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.utils.Cleaner;
 import com.onyx.quadcopter.utils.Constants;
+import com.pi4j.io.gpio.GpioController;
+import com.pi4j.io.gpio.GpioFactory;
 
 /**
  * Controller class.
@@ -53,6 +58,11 @@ public class Controller implements Runnable {
     private boolean isRunning = false;
 
     private volatile boolean initialized = false;
+    
+    /**
+     * GPIO Controller.
+     */
+    private GpioController gpio;
 
     /**
      * Communications server reference.
@@ -70,13 +80,17 @@ public class Controller implements Runnable {
 
     private void init() {
         LOGGER.debug("Initializing Controller...");
+	setGpio(GpioFactory.getInstance());
         cleaner = new Cleaner();
         addDevice(commServer);
+        addDevice(new RedButton(this));
+        addDevice(new OLEDDevice(this));
         addDevice(new GyroMagAcc(this));
         addDevice(new Motor(this, DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
         addDevice(new Motor(this, DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
         addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
         addDevice(new Motor(this, DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
+        addDevice(new CameraDevice(this));
         LOGGER.debug("Controller Initialized.");
         initialized = true;
     }
@@ -176,5 +190,19 @@ public class Controller implements Runnable {
             update();
             blackboard.update();
         }
+    }
+
+    /**
+     * @return the gpio
+     */
+    public GpioController getGpio() {
+	return gpio;
+    }
+
+    /**
+     * @param gpio the gpio to set
+     */
+    public void setGpio(GpioController gpio) {
+	this.gpio = gpio;
     }
 }

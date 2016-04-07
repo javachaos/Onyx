@@ -3,10 +3,10 @@ package com.onyx.quadcopter.devices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.onyx.quadcopter.control.PwmControl;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.PwmControl;
 
 public class Motor extends Device {
 

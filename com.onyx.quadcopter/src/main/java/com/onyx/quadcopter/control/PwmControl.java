@@ -1,9 +1,10 @@
-package com.onyx.quadcopter.utils;
+package com.onyx.quadcopter.control;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.exceptions.OnyxException;
+import com.onyx.quadcopter.utils.Constants;
 import com.pi4j.wiringpi.SoftPwm;
 
 public class PwmControl {
@@ -18,13 +19,14 @@ public class PwmControl {
      */
     private final int pwmPin;
 
+    //private PCA9685 pwm;
     /**
      * Initial PWM speed.
      */
     private final int initialSpeed = 0;
 
     /**
-     * PWM Range. (Effectively sets the PWM frequency to 50Hz.
+     * PWM Range. (Effectively sets the PWM frequency to 50Hz.)
      *
      * f = 1 / range * 100uS
      */

@@ -74,6 +74,11 @@ public final class Constants {
      * Application directory location.
      */
     public static final String APPLICATION_DIR = File.separator + "opt" + File.separator + APPLICATION_NAME;
+    
+    /**
+     * Directory to store images.
+     */
+    public static final String IMG_DIR = APPLICATION_DIR + File.separator + "images";
 
     /**
      * Name of the recovery file.
@@ -277,5 +282,45 @@ public final class Constants {
      * Amount of time to delay the start of the controller thread. In milliseconds.
      */
     public static final long CONTROLLER_DELAY = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.controller.start.delay", 1000);
+
+    /**
+     * Max number of locally stored messages to keep.
+     */
+    public static final int OLED_MAX_MSGS = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.oled.max.msgs", 32);
+
+    /**
+     * Default UART port ID.
+     */
+    public static final int UART_PORT = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.uart.port", 0);
+
+    /**
+     * NMEA Buffer size.
+     */
+    public static final int NMEA_BUFF_SIZE = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.nmea.buffer.size", 256);
+
+    /**
+     * P Gain for PID controller.
+     */
+    public static final float PID_GAIN_P = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gain.p", 0);
+
+    /**
+     * I Gain for PID controller.
+     */
+    public static final float PID_GAIN_I = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gain.i", 0);
+    
+    /**
+     * D Gain for PID controller.
+     */
+    public static final float PID_GAIN_D = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gain.d", 0);
+
+    /**
+     * PWM Frequency.
+     */
+    public static final float PWM_FREQ = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pwm.freq", 50);
+
+    /**
+     * How long to wait for camera. In seconds.
+     */
+    public static final long WEBCAM_TIMEOUT = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.webcam.timeout", 10);
 
 }

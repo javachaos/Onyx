@@ -20,7 +20,7 @@ public class Main extends Application {
     /**
      * Logger.
      */
-    public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+    public final Logger LOGGER = LoggerFactory.getLogger(getClass());
     
     /**
      * Thread coordinator.
@@ -30,13 +30,6 @@ public class Main extends Application {
     public static void main(String[] args) {
 	launch(args);
 	addHook();
-    }
-    
-    /**
-     * Shutdown hook.
-     */
-    private static void addHook() {
-        Runtime.getRuntime().addShutdownHook(new ShutdownHook(Thread.currentThread()));
     }
     
     @Override
@@ -50,5 +43,12 @@ public class Main extends Application {
        primaryStage.show();
        LOGGER.debug("Application Launched.");
     }
-
+    
+    /**
+     * Shutdown hook.
+     */
+    private static void addHook() {
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook(Thread.currentThread()));
+    }
+    
 }

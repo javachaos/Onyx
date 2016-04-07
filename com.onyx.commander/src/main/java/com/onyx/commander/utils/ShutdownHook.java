@@ -48,7 +48,7 @@ public class ShutdownHook extends Thread {
     @Override
     public final void run() {
         try {
-            //Main.COORDINATOR.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
+            Main.COORDINATOR.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
             mainThread.join();
         } catch (final InterruptedException e) {
             LOGGER.error(e.getMessage());
