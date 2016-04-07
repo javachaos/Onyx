@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.control.PwmControl;
 import com.onyx.quadcopter.main.Controller;
-import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.Constants;
 
 public class Motor extends Device {
@@ -42,18 +41,16 @@ public class Motor extends Device {
 
     @Override
     protected void update() {
-        final ACLMessage m = getController().getBlackboard().getMessage(this);
-        if (m.isValid()) {
-            switch (m.getActionID()) {
+        if (isNewMessage()) {
+            switch (lastMessage.getActionID()) {
             case CHANGE_MOTOR_SPEED:
-                setSpeed((int) m.getValue());
+                setSpeed((int) lastMessage.getValue());
                 LOGGER.debug("PWM Speed changed to " + currentSpeed + "%.");
                 break;
             default:
                 break;
             }
         }
-
     }
 
     /**

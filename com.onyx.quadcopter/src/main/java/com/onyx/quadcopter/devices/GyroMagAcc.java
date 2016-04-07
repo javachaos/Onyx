@@ -4,8 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.main.Controller;
-import com.onyx.quadcopter.messaging.ACLMessage;
-import com.onyx.quadcopter.messaging.MessageType;
+import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
 
 public class GyroMagAcc extends Device {
@@ -40,13 +39,8 @@ public class GyroMagAcc extends Device {
             switch (lastMessage.getActionID()) {
             case GET_ORIENT:
             case SEND_DATA:
-                final ACLMessage m = new ACLMessage(MessageType.SEND);
-                m.setActionID(lastMessage.getActionID());
-                m.setReciever(lastMessage.getSender());
-                m.setSender(getId());
-                m.setContent(orient[0] + ":" + orient[1] + ":" + orient[2]);
-                m.setValue(lsm.getTemperature());
-                getController().getBlackboard().addMessage(m);
+        	sendReply(orient[0] + ":" + orient[1] + ":" + orient[2],
+        		lsm.getTemperature());
             default:
                 break;
             }
@@ -131,7 +125,9 @@ public class GyroMagAcc extends Device {
     protected void alternate() {
 	if(!Constants.SIMULATION) {
 	    float[] rph = getRPH();
-            LOGGER.debug("Yaw: " + rph[0] + " Pitch: "+ rph[1] + " Roll: "+ rph[2]);
+	    String msg = "Yaw: " + rph[0] + " Pitch: "+ rph[1] + " Roll: "+ rph[2];
+            LOGGER.debug(msg);
+            sendMessage(DeviceID.OLED_DEVICE, msg, ActionId.PRINT);
             shutdown();
             init();
 	} else {

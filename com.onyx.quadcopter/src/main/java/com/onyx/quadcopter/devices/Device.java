@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
+import com.onyx.quadcopter.messaging.ActionId;
+import com.onyx.quadcopter.messaging.MessageType;
 import com.onyx.quadcopter.utils.Constants;
 
 public abstract class Device implements Executable {
@@ -152,7 +154,97 @@ public abstract class Device implements Executable {
     public DeviceID getId() {
         return id;
     }
+    
+    /**
+     * Send a message to receiver.
+     * 
+     * @param receiver
+     * 		the message recipient
+     * @param content
+     *          the contents of the message
+     * @param action
+     *          the actionId
+     */
+    protected void sendMessage(final MessageType type, final DeviceID receiver, final String content, final double value, final ActionId action) {
+	final ACLMessage m = new ACLMessage(type);
+	m.setActionID(action);
+	m.setContent(content);
+	m.setReciever(receiver);
+	m.setSender(getId());
+	m.setValue(value);
+	getController().getBlackboard().addMessage(m);
+    }
+    
+    /**
+     * Send a message to receiver.
+     * 
+     * @param receiver
+     * 		the message recipient
+     * @param content
+     *          the contents of the message
+     * @param action
+     *          the actionId
+     */
+    protected void sendMessage(final DeviceID receiver, final String content, final double value, final ActionId action) {
+	sendMessage(MessageType.SEND, receiver, content, value, action);
+    }
+    
+    /**
+     * Send a message to receiver.
+     * 
+     * @param receiver
+     * 		the message recipient
+     * @param content
+     *          the contents of the message
+     * @param action
+     *          the actionId
+     */
+    protected void sendMessage(final DeviceID receiver, final String content, final ActionId action) {
+	sendMessage(receiver, content, 0.0, action);
+    }
+    
+    /**
+     * Send a reply to the last sender.
+     * 
+     * @param content
+     * @param value
+     * @param action
+     */
+    protected void sendReply(final String content, final double value, final ActionId action) {
+	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value, action);
+    }
 
+    /**
+     * Send a reply to the last sender.
+     * 
+     * @param content
+     * @param action
+     */
+    protected void sendReply(final String content, final ActionId action) {
+	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, action);
+    }
+    
+    /**
+     * Send a reply to the last sender.
+     * 
+     * @param content
+     * @param action
+     */
+    protected void sendReply(final String content) {
+	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, lastMessage.getActionID());
+    }
+    
+    /**
+     * Send a reply to the last sender.
+     * 
+     * @param content
+     * @param value
+     * @param action
+     */
+    protected void sendReply(final String content, final double value) {
+	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value, lastMessage.getActionID());
+    }
+    
     /**
      * Set the device id.
      *
