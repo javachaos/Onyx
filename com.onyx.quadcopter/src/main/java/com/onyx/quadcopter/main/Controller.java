@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.MapMaker;
+import com.onyx.quadcopter.control.RedButton;
 import com.onyx.quadcopter.devices.Blackboard;
 import com.onyx.quadcopter.devices.CameraDevice;
 import com.onyx.quadcopter.devices.Device;
@@ -19,7 +20,6 @@ import com.onyx.quadcopter.devices.GyroMagAcc;
 import com.onyx.quadcopter.devices.Motor;
 import com.onyx.quadcopter.devices.NettyCommServer;
 import com.onyx.quadcopter.devices.OLEDDevice;
-import com.onyx.quadcopter.devices.RedButton;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.utils.Cleaner;
 import com.onyx.quadcopter.utils.Constants;

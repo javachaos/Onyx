@@ -1,5 +1,7 @@
-package com.onyx.quadcopter.devices;
+package com.onyx.quadcopter.control;
 
+import com.onyx.quadcopter.devices.Device;
+import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.main.Controller;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.PinPullResistance;
@@ -26,7 +28,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
     @Override
     protected void init() {
         // provision gpio pin #02 as an input pin with its internal pull down resistor enabled
-        button = getController().getGpio().provisionDigitalInputPin(RaspiPin.GPIO_25, PinPullResistance.PULL_UP);
+        button = getController().getGpio().provisionDigitalInputPin(RaspiPin.GPIO_21, PinPullResistance.PULL_UP);
         button.addListener(this);
     }
 
