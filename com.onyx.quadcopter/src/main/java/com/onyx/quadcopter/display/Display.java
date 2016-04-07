@@ -1,5 +1,16 @@
 package com.onyx.quadcopter.display;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.onyx.quadcopter.utils.Constants;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
@@ -9,15 +20,13 @@ import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.spi.SpiChannel;
 import com.pi4j.io.spi.SpiDevice;
-import com.pi4j.wiringpi.I2C;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
-import java.io.IOException;
-import java.lang.reflect.Field;
 
 public class Display {
+
+    /**
+     * Logger.
+     */
+    public static final Logger LOGGER = LoggerFactory.getLogger(Display.class);
     
     protected int vccState;
     protected BufferedImage img;
@@ -27,7 +36,6 @@ public class Display {
     private GpioPinDigitalOutput rstPin, dcPin;
     private I2CDevice i2c;
     private SpiDevice spi;
-    private int fd;
     private byte[] buffer;
 
     /**
@@ -68,12 +76,7 @@ public class Display {
      */
     public Display(int width, int height, GpioController gpio, I2CBus i2c, int address, Pin rstPin) throws ReflectiveOperationException, IOException {
         this(width, height, true, gpio, rstPin);
-
         this.i2c = i2c.getDevice(address);
-
-        Field f = this.i2c.getClass().getDeclaredField("fd");
-        f.setAccessible(true);
-        this.fd = f.getInt(this.i2c);
     }
 
     /**
@@ -469,7 +472,11 @@ public class Display {
 
     private void i2cWrite(int register, int value) {
         value &= 0xFF;
-        I2C.wiringPiI2CWriteReg8(this.fd, register, value);
+        try {
+	    i2c.write(register, (byte) value);
+	} catch (IOException e) {
+	    LOGGER.error(e.getMessage());
+	}
     }
 
     private int x = 0;

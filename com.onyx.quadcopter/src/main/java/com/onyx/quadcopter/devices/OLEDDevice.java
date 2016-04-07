@@ -49,7 +49,7 @@ public class OLEDDevice extends Device {
 	    oled = new Display(128, 32,
 		    getController().getGpio(),
 		    getController().getI2CBus(),
-		    0x3C, RaspiPin.GPIO_25);
+		    0x3c, RaspiPin.GPIO_25);
 	} catch (ReflectiveOperationException | IOException e) {
 	    LOGGER.error(e.getMessage());
 	}

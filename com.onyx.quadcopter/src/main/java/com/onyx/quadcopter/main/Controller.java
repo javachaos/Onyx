@@ -49,7 +49,7 @@ public class Controller implements Runnable {
     /**
      * Number of devices.
      */
-    private final int deviceCount = 0;
+    private int deviceCount = 0;
 
     /**
      * Blackbaord instance.
@@ -139,7 +139,7 @@ public class Controller implements Runnable {
      */
     public void addDevice(final Device d) {
         if (d != null) {
-            if (deviceCount < Constants.MAX_DEVICES) {
+            if (deviceCount++ < Constants.MAX_DEVICES) {
                 devices.put(d.getId(), d);
                 LOGGER.debug("Device " + d + " added to controller.");
             } else {
