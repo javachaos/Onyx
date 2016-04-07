@@ -62,7 +62,7 @@ public class OLEDDevice extends Device {
     }
 
     @Override
-    public boolean selfTest() {
+    protected boolean selfTest() {
 	return oled.clear() == 1;
     }
 

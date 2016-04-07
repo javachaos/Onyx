@@ -106,7 +106,7 @@ public class Motor extends Device {
     }
 
     @Override
-    public boolean selfTest() {
+    protected boolean selfTest() {
         return true;
     }
 

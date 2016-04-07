@@ -146,8 +146,19 @@ public abstract class Device implements Executable {
      *
      * @return true if everything is OK
      */
-    public abstract boolean selfTest();
+    protected abstract boolean selfTest();
 
+    /**
+     * Test this device.
+     * @return
+     */
+    public boolean test() {
+	init();
+	boolean ret = test();
+	shutdown();
+	return ret;
+    }
+    
     /**
      * Return the device ID.
      *

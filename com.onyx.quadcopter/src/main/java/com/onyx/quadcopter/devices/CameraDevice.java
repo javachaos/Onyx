@@ -62,7 +62,7 @@ public class CameraDevice extends Device {
     }
 
     @Override
-    public boolean selfTest() {
+    protected boolean selfTest() {
 	return webcam.open();
     }
 

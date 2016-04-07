@@ -43,7 +43,7 @@ public class PowerOnSelfTest {
 	    return StartupState.SUCCESSFUL;
 	}
         for (final Entry<DeviceID, Device> d : controller.getDevices()) {
-            if (d.getValue().selfTest()) {
+            if (d.getValue().test()) {
                 continue;
             } else {
                 LOGGER.debug("Power on self test failed. Device: " + d + " did not pass.");

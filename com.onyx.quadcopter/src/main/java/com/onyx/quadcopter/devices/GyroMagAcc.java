@@ -142,7 +142,7 @@ public class GyroMagAcc extends Device {
     }
 
     @Override
-    public boolean selfTest() {
+    protected boolean selfTest() {
 	init();
 	if (lsm.getAccelerometer()[2] > 1) {
 	    shutdown();
