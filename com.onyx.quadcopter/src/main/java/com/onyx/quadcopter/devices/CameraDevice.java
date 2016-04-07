@@ -2,13 +2,10 @@ package com.onyx.quadcopter.devices;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import javax.imageio.ImageIO;
 
 import com.github.sarxos.webcam.Webcam;
-import com.github.sarxos.webcam.WebcamException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
 
@@ -22,7 +19,7 @@ public class CameraDevice extends Device {
     /**
      * Webcam instance.
      */
-    private Webcam webcam;
+    private Webcam webcam = Webcam.getDefault();
     private int imgIndex = 0;
     
     /**
@@ -39,11 +36,6 @@ public class CameraDevice extends Device {
 
     @Override
     protected void init() {
-	try {
-	    webcam = Webcam.getDefault(Constants.WEBCAM_TIMEOUT, TimeUnit.SECONDS);
-	} catch (WebcamException | TimeoutException e) {
-	    LOGGER.error("Could not instantiate webcam device. Error: " + e.getMessage());
-	}
     }
 
     @Override
@@ -63,7 +55,7 @@ public class CameraDevice extends Device {
 
     @Override
     public boolean selfTest() {
-	return webcam.open();
+	return true;
     }
 
 }
