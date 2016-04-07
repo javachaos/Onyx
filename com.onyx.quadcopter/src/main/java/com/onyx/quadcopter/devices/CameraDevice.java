@@ -17,6 +17,14 @@ import com.onyx.quadcopter.utils.Constants;
  */
 public class CameraDevice extends Device {
 
+    static {
+        try {
+            System.load(Constants.CAM_NATIVE_LIB);
+        } catch (final UnsatisfiedLinkError e) {
+            LOGGER.error(e.getMessage());
+        }
+    }
+
     /**
      * Webcam instance.
      */

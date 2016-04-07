@@ -307,7 +307,7 @@ public final class Constants {
      * I Gain for PID controller.
      */
     public static final float PID_GAIN_I = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gain.i", 0);
-    
+
     /**
      * D Gain for PID controller.
      */
@@ -322,6 +322,12 @@ public final class Constants {
      * How long to wait for camera. In seconds.
      */
     public static final long WEBCAM_TIMEOUT = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.webcam.timeout", 10);
+
+    /**
+     * OpenCV Java native library.
+     */
+    public static final String CAM_NATIVE_LIB = PROPERTIES.getStringProperty("com.onyx.quadcopter.natives.webcam",
+            NATIVES_DIR + File.separator +  "libopencv_java2412.so");
 
     /**
      * Display font for OLED Display.
