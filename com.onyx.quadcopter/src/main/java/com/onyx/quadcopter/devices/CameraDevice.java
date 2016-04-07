@@ -1,11 +1,12 @@
 package com.onyx.quadcopter.devices;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.UUID;
 
-import javax.imageio.ImageIO;
+import org.opencv.core.Mat;
+import org.opencv.highgui.Highgui;
+import org.opencv.highgui.VideoCapture;
 
-import com.github.sarxos.webcam.Webcam;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
 
@@ -19,9 +20,8 @@ public class CameraDevice extends Device {
     /**
      * Webcam instance.
      */
-    private Webcam webcam = Webcam.getDefault();
-    private int imgIndex = 0;
-    
+    private VideoCapture webcam;
+
     /**
      * Camera Constructor.
      * @param c
@@ -36,26 +36,28 @@ public class CameraDevice extends Device {
 
     @Override
     protected void init() {
+	 webcam = new VideoCapture(0);
     }
 
     @Override
     public void shutdown() {
-	webcam.close();
+	webcam.release();
     }
 
     @Override
     protected void alternate() {
-	try {
-	    ImageIO.write(webcam.getImage(), "PNG", 
-		new File(Constants.IMG_DIR+File.separator + "img" + (imgIndex++) + ".png"));
-	} catch (IOException e) {
-	    LOGGER.error(e.getMessage());
+	Mat m = new Mat();
+	while(webcam.grab()) {
+	    while (webcam.read(m) == false);
+	    String fileName = String.format(Constants.IMG_DIR 
+		    +File.separator + "img_%s.png",UUID.randomUUID().toString());
+	    Highgui.imwrite(fileName, m);
 	}
     }
 
     @Override
     public boolean selfTest() {
-	return true;
+	return webcam.isOpened();
     }
 
 }
