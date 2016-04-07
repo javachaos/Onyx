@@ -78,10 +78,6 @@ public abstract class Device implements Executable {
 
     @Override
     public synchronized void execute() {
-        if (!isInitialized()) {
-            init();
-            initialized = true;
-        }
         previousMessage = lastMessage;
         lastMessage = getController().getBlackboard().getMessage(this);
         update();
@@ -185,5 +181,17 @@ public abstract class Device implements Executable {
      */
     protected Controller getController() {
         return controller;
+    }
+
+    /**
+     * Initialize this device.
+     */
+    public void initialize() {
+        if (!isInitialized()) {
+            LOGGER.debug("Initializing " + getName());
+            init();
+            LOGGER.debug("Device: " + getName() + " initialized.");
+            initialized = true;
+        }
     }
 }

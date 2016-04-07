@@ -113,10 +113,8 @@ public class GyroMagAcc extends Device {
     @Override
     protected void init() {
         if (Constants.SIMULATION) {
-            LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device. (Simulated)");
             lsm = null;
         } else {
-            LOGGER.debug("Initializing Gyro, Magnetometer and Accelerometer Device.");
             lsm = new upm_lsm9ds0.LSM9DS0(Constants.I2C_BUS_ID);
             lsm.init();
         }

@@ -92,6 +92,9 @@ public class Controller implements Runnable {
         addDevice(new Motor(this, DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
         addDevice(new CameraDevice(this));
         LOGGER.debug("Controller Initialized.");
+        for (final Entry<DeviceID, Device> d : devices.entrySet()) {
+            d.getValue().initialize();
+        }
         initialized = true;
     }
 

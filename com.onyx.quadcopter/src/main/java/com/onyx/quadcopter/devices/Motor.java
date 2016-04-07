@@ -69,10 +69,8 @@ public class Motor extends Device {
 
     @Override
     protected void init() {
-        LOGGER.debug("Initializing " + getId() + "...");
         pwm.setup();
         setSpeed(Constants.GPIO_MOTOR_INIT_SPEED);
-        LOGGER.debug("Initializing complete for " + getId() + ".");
     }
 
     @Override
