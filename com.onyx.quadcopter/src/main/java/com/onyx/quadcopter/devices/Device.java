@@ -29,7 +29,7 @@ public abstract class Device implements Executable {
     /**
      * True when the device has been initialized.
      */
-    protected boolean initialized = false;
+    protected volatile boolean initialized = false;
 
     /**
      * The last message posted to the black board for this agent.

@@ -26,7 +26,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
     @Override
     protected void init() {
         // provision gpio pin #02 as an input pin with its internal pull down resistor enabled
-        button = getController().getGpio().provisionDigitalInputPin(RaspiPin.GPIO_26, PinPullResistance.PULL_UP);
+        button = getController().getGpio().provisionDigitalInputPin(RaspiPin.GPIO_25, PinPullResistance.PULL_UP);
         button.addListener(this);
     }
 
