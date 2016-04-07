@@ -90,7 +90,7 @@ public class Controller implements Runnable {
         LOGGER.debug("Initializing Controller...");
 	setGpio(GpioFactory.getInstance());
 	try {
-	    setI2CBus(I2CFactory.getInstance(Constants.I2C_BUS_ID));
+	    setI2CBus(I2CFactory.getInstance(1));
 	} catch (IOException e) {
 	    LOGGER.error(e.getMessage());
 	}
