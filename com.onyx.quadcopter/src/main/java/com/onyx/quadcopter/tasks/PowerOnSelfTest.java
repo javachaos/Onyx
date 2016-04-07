@@ -43,7 +43,16 @@ public class PowerOnSelfTest {
 	    return StartupState.SUCCESSFUL;
 	}
         for (final Entry<DeviceID, Device> d : controller.getDevices()) {
-            if (d.getValue().test()) {
+            final Device dev = d.getValue();
+            while (!dev.isInitialized()) {
+        	try {
+        	    //Wait for the device to be initialized.
+		    Thread.sleep(100);
+		} catch (InterruptedException e) {
+		    LOGGER.error(e.getMessage());
+		}
+            }
+            if (dev.selfTest()) {
                 continue;
             } else {
                 LOGGER.debug("Power on self test failed. Device: " + d + " did not pass.");

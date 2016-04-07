@@ -39,7 +39,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
     }
 
     @Override
-    protected boolean selfTest() {
+    public boolean selfTest() {
 	return getController().getGpio().isState(PinState.HIGH, button);
     }
 

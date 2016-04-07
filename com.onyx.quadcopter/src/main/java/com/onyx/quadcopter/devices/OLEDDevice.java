@@ -62,7 +62,13 @@ public class OLEDDevice extends Device {
     }
 
     @Override
-    protected boolean selfTest() {
+    public boolean selfTest() {
+	oled.write("Testing...");
+	try {
+	    Thread.sleep(1);
+	} catch (InterruptedException e) {
+	    LOGGER.error(e.getMessage());
+	}
 	return oled.clear() == 1;
     }
 

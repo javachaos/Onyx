@@ -123,7 +123,7 @@ public class NettyCommServer extends Device implements Runnable {
     }
 
     @Override
-    protected boolean selfTest() {
+    public boolean selfTest() {
         return true;// TODO complete NettyCommServer selfTest.
     }
 
