@@ -147,16 +147,11 @@
 	    <groupId>org.javassist</groupId>
 	    <artifactId>javassist</artifactId>
 	    <version>3.20.0-GA</version>
-        </dependency>
-    <dependency>
-	    <groupId>com.nativelibs4java</groupId>
-	    <artifactId>bridj</artifactId>
-	    <version>0.7.0</version>
     </dependency>
     <dependency>
         <groupId>com.github.sarxos</groupId>
         <artifactId>webcam-capture</artifactId>
-        <version>0.3.10</version>
+        <version>0.3.12-SNAPSHOT</version>
     </dependency>
     <dependency>
         <groupId>com.intel.upm</groupId>
@@ -195,6 +190,10 @@
 	        <enabled>false</enabled>
 	    </snapshots>
 	    <url>file://${project.basedir}/libs</url>
+	</repository>
+	<repository>
+	    <id>Sonatype OSS Snapshot Repository</id>
+	    <url>http://oss.sonatype.org/content/repositories/snapshots</url>
 	</repository>
   </repositories>
 </project>
