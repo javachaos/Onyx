@@ -292,6 +292,8 @@ public class Display {
      */
     public void clear() {
         this.buffer = new byte[this.width * this.pages];
+        this.img = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
+        this.graphics = this.img.createGraphics();
     }
 
     /**
