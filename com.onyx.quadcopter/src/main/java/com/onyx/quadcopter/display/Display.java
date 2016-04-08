@@ -224,7 +224,7 @@ public class Display {
         if (this.usingI2C) {
             byte[] buff = new byte[16];
             for (int i = 0; i < data.length; i += 16) {
-        	System.arraycopy(data, i, buff, i, 16);
+        	System.arraycopy(data, i, buff, 0, 16);
                 this.i2cWrite(0x40, buff);
             }
         } else {
