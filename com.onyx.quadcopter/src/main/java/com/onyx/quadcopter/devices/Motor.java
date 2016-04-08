@@ -75,7 +75,13 @@ public class Motor extends Device {
     @Override
     protected void init() {
         pwm.setup();
-        setSpeed(Constants.GPIO_MOTOR_INIT_SPEED);
+        setSpeed(Constants.MOTOR_MAX_SPEED);
+        try {
+	    Thread.sleep(Constants.MOTOR_INIT_DELAY);
+	} catch (InterruptedException e) {
+	    LOGGER.error(e.getMessage());
+	}
+        setSpeed(Constants.MOTOR_INIT_SPEED);
     }
 
     @Override

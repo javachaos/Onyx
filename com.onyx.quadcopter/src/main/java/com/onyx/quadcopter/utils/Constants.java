@@ -276,7 +276,7 @@ public final class Constants {
     /**
      * Initial speed of the motors.
      */
-    public static final int GPIO_MOTOR_INIT_SPEED = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.motor.init.speed", 0);
+    public static final int MOTOR_INIT_SPEED = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.motor.init.speed", 0);
 
     /**
      * Amount of time to delay the start of the controller thread. In milliseconds.
@@ -338,5 +338,15 @@ public final class Constants {
      * PCA9685 I2C Address.
      */
     public static final short PCA9685_I2C_ADDRESS = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.addr.pca9685", 0x40);
+
+    /**
+     * Maximum percentage speed of the motors.
+     */
+    public static final int MOTOR_MAX_SPEED = 100;
+
+    /**
+     * Initialization delay in milliseconds for the motors.
+     */
+    public static final long MOTOR_INIT_DELAY = 2000;
 
 }

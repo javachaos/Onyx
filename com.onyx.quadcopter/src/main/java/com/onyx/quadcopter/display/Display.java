@@ -27,6 +27,11 @@ public class Display {
      * Logger.
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(Display.class);
+
+    /**
+     * Buffer size.
+     */
+    private static final int BUFFER_SIZE = 16;
     
     protected int vccState;
     protected BufferedImage img;
@@ -163,11 +168,10 @@ public class Display {
         this.command(DisplayConstants.SSD1306_SETCOMPINS);
         this.command((short) compins);
         this.command(DisplayConstants.SSD1306_SETCONTRAST);
-        this.command((short)0x8F);
-//        if (this.vccState == DisplayConstants.SSD1306_EXTERNALVCC)
-//            this.command((short) 0x9F);
-//        else
-//            this.command((short) 0xCF);
+        if (this.vccState == DisplayConstants.SSD1306_EXTERNALVCC)
+            this.command((short) 0x9F);
+        else
+            this.command((short) 0xCF);
 
         this.command(DisplayConstants.SSD1306_SETPRECHARGE);
 
@@ -222,10 +226,10 @@ public class Display {
      */
     public void data(byte[] data) {
         if (this.usingI2C) {
-            for (int i = 0; i < data.length; i += 16) {
-                byte[] buff = new byte[16];
-        	System.arraycopy(data, i, buff, 0, 16);
-                try {
+            byte[] buff = new byte[BUFFER_SIZE];
+            for (int i = 0; i < data.length; i+=BUFFER_SIZE) {
+        	System.arraycopy(data, i, buff, 0, BUFFER_SIZE);
+        	try {
 		    i2c.write(0x40, buff);
 		} catch (IOException e) {
 		    LOGGER.error(e.getMessage());
