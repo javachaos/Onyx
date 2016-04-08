@@ -215,7 +215,7 @@ public class Display {
     public void data(byte[] data) {
         if (this.usingI2C) {
             byte[] buff = new byte[BUFFER_SIZE];
-            for (int i = 0; i < data.length; i+=BUFFER_SIZE) {
+            for (int i = 0; i < data.length; i += BUFFER_SIZE) {
         	System.arraycopy(data, i, buff, 0, BUFFER_SIZE);
         	try {
 		    i2c.write(DATA_ADDRESS, buff);

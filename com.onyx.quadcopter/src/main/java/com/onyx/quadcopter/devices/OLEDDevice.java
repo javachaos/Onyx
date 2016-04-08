@@ -52,6 +52,8 @@ public class OLEDDevice extends Device {
 		    I2CBusImpl.getBus(1),
 		    0x3c, RaspiPin.GPIO_25);
 	    oled.begin();
+	    oled.dim(false);
+	    oled.write("OLED Initialized.");
 	} catch (IOException | ReflectiveOperationException e) {
 	    LOGGER.error(e.getMessage());
 	}
@@ -75,7 +77,6 @@ public class OLEDDevice extends Device {
 
     @Override
     public boolean selfTest() {
-	oled.write("Power-on self test...");
 	return true;
     }
 
