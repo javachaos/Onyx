@@ -334,4 +334,9 @@ public final class Constants {
      */
     public static final int DISP_FONT = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.disp.font", 10);
 
+    /**
+     * PCA9685 I2C Address.
+     */
+    public static final short PCA9685_I2C_ADDRESS = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.addr.pca9685", 0x40);
+
 }

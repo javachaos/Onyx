@@ -67,10 +67,10 @@ public class Controller implements Runnable {
      */
     private GpioController gpio;
     
-    /**
-     * I2C Bus.
-     */
-    private I2CBus i2cbus;
+//    /**
+//     * I2C Bus.
+//     */
+//    private I2CBus i2cbus;
 
     /**
      * Communications server reference.
@@ -89,11 +89,11 @@ public class Controller implements Runnable {
     private void init() {
         LOGGER.debug("Initializing Controller...");
 	setGpio(GpioFactory.getInstance());
-	try {
-	    setI2CBus(I2CFactory.getInstance(1));
-	} catch (IOException e) {
-	    LOGGER.error(e.getMessage());
-	}
+//	try {
+//	    setI2CBus(I2CFactory.getInstance(1));
+//	} catch (IOException e) {
+//	    LOGGER.error(e.getMessage());
+//	}
         cleaner = new Cleaner();
         addDevice(commServer);
         addDevice(new RedButton(this));
@@ -222,17 +222,17 @@ public class Controller implements Runnable {
 	this.gpio = gpio;
     }
 
-    /**
-     * @return the i2cbus
-     */
-    public I2CBus getI2CBus() {
-	return i2cbus;
-    }
-
-    /**
-     * @param i2cbus the i2cbus to set
-     */
-    public void setI2CBus(I2CBus i2cbus) {
-	this.i2cbus = i2cbus;
-    }
+//    /**
+//     * @return the i2cbus
+//     */
+//    public I2CBus getI2CBus() {
+//	return i2cbus;
+//    }
+//
+//    /**
+//     * @param i2cbus the i2cbus to set
+//     */
+//    public void setI2CBus(I2CBus i2cbus) {
+//	this.i2cbus = i2cbus;
+//    }
 }

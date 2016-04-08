@@ -6,6 +6,7 @@ import com.onyx.quadcopter.display.Display;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
 import com.pi4j.io.gpio.RaspiPin;
+import com.pi4j.io.i2c.impl.I2CBusImpl;
 
 public class OLEDDevice extends Device {
 
@@ -48,9 +49,9 @@ public class OLEDDevice extends Device {
 	try {
 	    oled = new Display(128, 32,
 		    getController().getGpio(),
-		    getController().getI2CBus(),
+		    I2CBusImpl.getBus(1),
 		    0x3c, RaspiPin.GPIO_25);
-	} catch (ReflectiveOperationException | IOException e) {
+	} catch (IOException | ReflectiveOperationException e) {
 	    LOGGER.error(e.getMessage());
 	}
     }
