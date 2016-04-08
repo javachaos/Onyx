@@ -66,11 +66,11 @@ public class OLEDDevice extends Device {
 
     @Override
     protected void alternate() {
-	String msg = msgs[msgDispIndex++];
+	String msg = msgs[msgDispIndex];//Only works after 32 updates.
 	if (msg != null && !msg.isEmpty()) {
 	    oled.write(msg);
 	}
-	if(msgDispIndex >= msgs.length) {
+	if(++msgDispIndex > msgs.length) {
 	    msgDispIndex = 0;
 	}
     }
