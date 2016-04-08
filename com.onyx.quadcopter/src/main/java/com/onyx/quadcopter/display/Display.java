@@ -486,6 +486,7 @@ public class Display {
         getGraphics().setColor(Color.WHITE);
         getGraphics().setFont(new Font("Monospaced", Font.PLAIN, Constants.DISP_FONT));
         drawStringMultiLine(getGraphics(), string, width);
+	displayImage();
     }
     
     private void drawStringMultiLine(Graphics2D g, String text, int lineWidth) {
