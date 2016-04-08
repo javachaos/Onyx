@@ -64,8 +64,10 @@ public class OLEDDevice extends Device {
 	oled.clear();
     }
 
-    @Override
-    protected void alternate() {
+    /**
+     * Display the next msg from the msg list.
+     */
+    private void show() {
 	String msg = msgs[msgDispIndex];
 	if (msg != null && !msg.isEmpty()) {
             oled.write(msg);
@@ -73,6 +75,11 @@ public class OLEDDevice extends Device {
                 msgDispIndex = 0;
             }
 	}
+    }
+    
+    @Override
+    protected void alternate() {
+	show();
     }
 
     @Override

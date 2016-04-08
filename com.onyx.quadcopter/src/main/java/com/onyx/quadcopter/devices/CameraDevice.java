@@ -1,7 +1,6 @@
 package com.onyx.quadcopter.devices;
 
 import java.io.File;
-import java.util.UUID;
 
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
@@ -57,8 +56,7 @@ public class CameraDevice extends Device {
         Mat m = new Mat();
         if (webcam.grab()) {
             while (webcam.read(m) == false);
-	    String fileName = String.format(Constants.IMG_DIR 
-		    +File.separator + "img_%s.png",UUID.randomUUID().toString());
+	    String fileName = Constants.IMG_DIR + File.separator + "img_latest.png";
 	    Highgui.imwrite(fileName, m);
 	}
     }
