@@ -349,4 +349,14 @@ public final class Constants {
      */
     public static final long MOTOR_INIT_DELAY = 2000;
 
+    /**
+     * X start position for OLED graphics.
+     */
+    public static final int OLED_X_START = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.oled.x", 0);
+    
+    /**
+     * Y start position for OLED graphics.
+     */
+    public static final int OLED_Y_START = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.oled.y", 8);
+
 }

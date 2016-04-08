@@ -475,8 +475,8 @@ public class Display {
 	}
     }
 
-    private int x = 0;
-    private int y = 0;
+    private int x = Constants.OLED_X_START;
+    private int y = Constants.OLED_Y_START;
     
     public void write(String string) {
         getGraphics().setColor(Color.WHITE);
