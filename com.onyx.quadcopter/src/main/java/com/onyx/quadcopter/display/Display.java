@@ -148,7 +148,7 @@ public class Display {
         this.command((short) multiplex);
         this.command(DisplayConstants.SSD1306_SETDISPLAYOFFSET);
         this.command((short) 0x0);
-        this.command(DisplayConstants.SSD1306_SETSTARTLINE);
+        this.command(DisplayConstants.SSD1306_SETSTARTLINE | 0x0);
         this.command(DisplayConstants.SSD1306_CHARGEPUMP);
 
         if (this.vccState == DisplayConstants.SSD1306_EXTERNALVCC)
@@ -163,11 +163,11 @@ public class Display {
         this.command(DisplayConstants.SSD1306_SETCOMPINS);
         this.command((short) compins);
         this.command(DisplayConstants.SSD1306_SETCONTRAST);
-
-        if (this.vccState == DisplayConstants.SSD1306_EXTERNALVCC)
-            this.command((short) 0x9F);
-        else
-            this.command((short) 0xCF);
+        this.command((short)0x8F);
+//        if (this.vccState == DisplayConstants.SSD1306_EXTERNALVCC)
+//            this.command((short) 0x9F);
+//        else
+//            this.command((short) 0xCF);
 
         this.command(DisplayConstants.SSD1306_SETPRECHARGE);
 
@@ -222,9 +222,9 @@ public class Display {
      */
     public void data(byte[] data) {
         if (this.usingI2C) {
-            byte[] buff = new byte[16];
-            for (int i = 0; i < data.length; i += 16) {
-        	System.arraycopy(data, i, buff, 0, 16);
+            byte[] buff = new byte[8];
+            for (int i = 0; i < data.length; i += 8) {
+        	System.arraycopy(data, i, buff, 0, 8);
                 this.i2cWrite(0x40, buff);
             }
         } else {
@@ -296,7 +296,6 @@ public class Display {
      */
     public void clear() {
         this.buffer = new byte[this.width * this.pages];
-        display();
     }
 
     /**
