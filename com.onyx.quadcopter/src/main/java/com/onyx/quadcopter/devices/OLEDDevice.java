@@ -64,7 +64,6 @@ public class OLEDDevice extends Device {
 
     @Override
     protected void alternate() {
-	oled.clear();
 	String msg = msgs[msgDispIndex++];
 	if (msg != null && !msg.isEmpty()) {
 	    oled.write(msg);

@@ -478,11 +478,20 @@ public class Display {
 	    LOGGER.error(e.getMessage());
 	}
     }
+    
+    private void i2cWrite(int register, byte value) {
+        try {
+	    i2c.write(register, value);
+	} catch (IOException e) {
+	    LOGGER.error(e.getMessage());
+	}
+    }
 
     private int x = 0;
     private int y = 0;
     
     public void write(String string) {
+	clear();
         getGraphics().setColor(Color.WHITE);
         getGraphics().setFont(new Font("Monospaced", Font.PLAIN, Constants.DISP_FONT));
         drawStringMultiLine(getGraphics(), string, width);
