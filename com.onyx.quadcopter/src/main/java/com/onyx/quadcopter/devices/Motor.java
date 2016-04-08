@@ -34,7 +34,7 @@ public class Motor extends Device {
      * @param pwmPin
      *            the GPIO pin for this Motor.
      */
-    public Motor(final Controller c, final DeviceID id, final int pwmPin) {
+    public Motor(final Controller c, final DeviceID id, final short pwmPin) {
         super(c, id);
         pwm = new PwmControl(pwmPin);
     }
@@ -43,6 +43,9 @@ public class Motor extends Device {
     protected void update() {
         if (isNewMessage()) {
             switch (lastMessage.getActionID()) {
+            case CHANGE_PULSE_WIDTH:
+        	setPulseWidth((int) lastMessage.getValue());
+                LOGGER.debug("PWM Speed changed to " + currentSpeed + "%.");
             case CHANGE_MOTOR_SPEED:
                 setSpeed((int) lastMessage.getValue());
                 LOGGER.debug("PWM Speed changed to " + currentSpeed + "%.");
@@ -61,7 +64,12 @@ public class Motor extends Device {
      */
     private void setSpeed(final int value) {
         currentSpeed = value;
-        pwm.pwmWrite(currentSpeed);
+        pwm.setSpeed(currentSpeed);
+    }
+    
+    private void setPulseWidth(final int width) {
+	currentSpeed = (width - 1000) / 10;
+	pwm.pwmWrite(width);
     }
 
     @Override

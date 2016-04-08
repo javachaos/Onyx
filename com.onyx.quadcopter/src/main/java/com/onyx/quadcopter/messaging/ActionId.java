@@ -72,7 +72,12 @@ public enum ActionId {
     /**
      * No action is performed on the contents of the message.
      */
-    NO_ACTION(12);
+    NO_ACTION(12), 
+    
+    /**
+     * Change the pulse width
+     */
+    CHANGE_PULSE_WIDTH(13);
 
     /**
      * The internal ID field.

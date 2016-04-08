@@ -201,10 +201,10 @@ public final class Constants {
     /**
      * PWM GPIO Pins.
      */
-    public static final int GPIO_MOTOR1 = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor1.pin", 22);
-    public static final int GPIO_MOTOR2 = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor2.pin", 23);
-    public static final int GPIO_MOTOR3 = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor3.pin", 24);
-    public static final int GPIO_MOTOR4 = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor4.pin", 25);
+    public static final short GPIO_MOTOR1 = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor1.pin", 0);
+    public static final short GPIO_MOTOR2 = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor2.pin", 1);
+    public static final short GPIO_MOTOR3 = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor3.pin", 2);
+    public static final short GPIO_MOTOR4 = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor4.pin", 3);
 
     /**
      * True if this is a simulation run.
