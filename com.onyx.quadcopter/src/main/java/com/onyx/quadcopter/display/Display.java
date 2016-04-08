@@ -291,6 +291,8 @@ public class Display {
      * Clears the buffer by creating a new byte array
      */
     public void clear() {
+	this.x = Constants.OLED_X_START;
+	this.y = Constants.OLED_Y_START;
         this.buffer = new byte[this.width * this.pages];
         this.img = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
         this.graphics = this.img.createGraphics();
