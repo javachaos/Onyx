@@ -44,6 +44,7 @@ public class PwmControl {
 	    pin = -1;
 	} else {
 	    pin = pinNum;
+	    pwm = new PCA9685(Constants.I2C_BUS_ID);
 	}
     }
 
