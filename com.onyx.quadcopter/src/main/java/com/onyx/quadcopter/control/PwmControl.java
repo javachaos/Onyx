@@ -10,7 +10,7 @@ import upm_pca9685.PCA9685;
 //TODO Implement
 public class PwmControl {
 
-    private static PCA9685 pwm = new PCA9685(1);
+    private static PCA9685 pwm = new PCA9685(Constants.I2C_BUS_ID);
 
     /**
      * PWM Address.
