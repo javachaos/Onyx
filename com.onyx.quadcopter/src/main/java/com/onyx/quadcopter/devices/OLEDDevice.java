@@ -36,7 +36,7 @@ public class OLEDDevice extends Device {
 
     @Override
     protected void update() {
-	if(msgIndex > Constants.OLED_MAX_MSGS) {
+	if(msgIndex >= Constants.OLED_MAX_MSGS) {
 	    msgIndex = 0;
 	}
 	if(isNewMessage()) {

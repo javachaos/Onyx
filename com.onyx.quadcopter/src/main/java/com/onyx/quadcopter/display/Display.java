@@ -222,8 +222,10 @@ public class Display {
      */
     public void data(byte[] data) {
         if (this.usingI2C) {
+            byte[] buff = new byte[16];
             for (int i = 0; i < data.length; i += 16) {
-                this.i2cWrite(0x40, data[i]);
+        	System.arraycopy(data, i, buff, i, 16);
+                this.i2cWrite(0x40, buff);
             }
         } else {
             this.dcPin.setState(true);
@@ -294,6 +296,7 @@ public class Display {
      */
     public void clear() {
         this.buffer = new byte[this.width * this.pages];
+        display();
     }
 
     /**
@@ -412,7 +415,6 @@ public class Display {
      */
     public synchronized void displayImage() {
         Raster r = this.img.getRaster();
-
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
                 this.setPixel(x, y, (r.getSample(x, y, 0) > 0));
@@ -479,7 +481,7 @@ public class Display {
 	}
     }
     
-    private void i2cWrite(int register, byte value) {
+    private void i2cWrite(int register, byte[] value) {
         try {
 	    i2c.write(register, value);
 	} catch (IOException e) {
