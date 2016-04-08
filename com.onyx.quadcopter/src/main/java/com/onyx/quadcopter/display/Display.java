@@ -32,6 +32,11 @@ public class Display {
      * Buffer size.
      */
     private static final int BUFFER_SIZE = 16;
+
+    /**
+     * OLED Data address register.
+     */
+    private static final int DATA_ADDRESS = 0x40;
     
     protected int vccState;
     protected BufferedImage img;
@@ -204,23 +209,6 @@ public class Display {
     }
 
     /**
-     * Turns on data mode and sends data
-     * @param data Data to send. Should be in short range.
-     */
-    public void data(int data) {
-        if (this.usingI2C) {
-            this.i2cWrite(0x40, data);
-        } else {
-            this.dcPin.setState(true);
-            try {
-                this.spi.write((short) data);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
      * Turns on data mode and sends data array
      * @param data Data array
      */
@@ -230,11 +218,12 @@ public class Display {
             for (int i = 0; i < data.length; i+=BUFFER_SIZE) {
         	System.arraycopy(data, i, buff, 0, BUFFER_SIZE);
         	try {
-		    i2c.write(0x40, buff);
+		    i2c.write(DATA_ADDRESS, buff);
 		} catch (IOException e) {
 		    LOGGER.error(e.getMessage());
 		}
             }
+            buff = null;
         } else {
             this.dcPin.setState(true);
             try {
@@ -478,9 +467,9 @@ public class Display {
         return this.graphics;
     }
 
-    private void i2cWrite(int register, int value) {
+    private void i2cWrite(final int register, final int value) {
         try {
-	    i2c.write(register, (byte)(value & 0xff));
+	    i2c.write(register, (byte) (value & 0xFF));
 	} catch (IOException e) {
 	    LOGGER.error(e.getMessage());
 	}
@@ -490,22 +479,21 @@ public class Display {
     private int y = 0;
     
     public void write(String string) {
-	clear();
         getGraphics().setColor(Color.WHITE);
         getGraphics().setFont(new Font("Monospaced", Font.PLAIN, Constants.DISP_FONT));
-        drawStringMultiLine(getGraphics(), string, width);
+        drawStringMultiLine(getGraphics(), string);
 	displayImage();
     }
     
-    private void drawStringMultiLine(Graphics2D g, String text, int lineWidth) {
+    private void drawStringMultiLine(Graphics2D g, String text) {
         FontMetrics m = g.getFontMetrics();
-        if(m.stringWidth(text) < lineWidth) {
+        if(m.stringWidth(text) < width) {
             g.drawString(text, x, y);
         } else {
             String[] words = text.split(" ");
             String currentLine = words[0];
             for(int i = 1; i < words.length; i++) {
-                if(m.stringWidth(currentLine+words[i]) < lineWidth) {
+                if(m.stringWidth(currentLine+words[i]) < width) {
                     currentLine += " "+words[i];
                 } else {
                     g.drawString(currentLine, x, y);
