@@ -44,19 +44,19 @@ public class CameraDevice extends Device {
 
     @Override
     protected void init() {
-	 webcam = new VideoCapture(0);
+        webcam = new VideoCapture(0);
     }
 
     @Override
     public void shutdown() {
-	webcam.release();
+        webcam.release();
     }
 
     @Override
     protected void alternate() {
-	Mat m = new Mat();
-	if (webcam.grab()) {
-	    while (webcam.read(m) == false);
+        Mat m = new Mat();
+        if (webcam.grab()) {
+            while (webcam.read(m) == false);
 	    String fileName = String.format(Constants.IMG_DIR 
 		    +File.separator + "img_%s.png",UUID.randomUUID().toString());
 	    Highgui.imwrite(fileName, m);

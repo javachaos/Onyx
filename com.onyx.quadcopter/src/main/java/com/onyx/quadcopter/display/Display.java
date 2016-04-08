@@ -222,10 +222,14 @@ public class Display {
      */
     public void data(byte[] data) {
         if (this.usingI2C) {
-            byte[] buff = new byte[8];
-            for (int i = 0; i < data.length; i += 8) {
-        	System.arraycopy(data, i, buff, 0, 8);
-                this.i2cWrite(0x40, buff);
+            for (int i = 0; i < data.length; i += 16) {
+                byte[] buff = new byte[16];
+        	System.arraycopy(data, i, buff, 0, 16);
+                try {
+		    i2c.write(0x40, buff);
+		} catch (IOException e) {
+		    LOGGER.error(e.getMessage());
+		}
             }
         } else {
             this.dcPin.setState(true);
@@ -287,7 +291,6 @@ public class Display {
         this.command(DisplayConstants.SSD1306_PAGEADDR);
         this.command(0);
         this.command(this.pages - 1);
-
         this.data(this.buffer);
     }
 
@@ -472,17 +475,8 @@ public class Display {
     }
 
     private void i2cWrite(int register, int value) {
-        value &= 0xFF;
         try {
-	    i2c.write(register, (byte) value);
-	} catch (IOException e) {
-	    LOGGER.error(e.getMessage());
-	}
-    }
-    
-    private void i2cWrite(int register, byte[] value) {
-        try {
-	    i2c.write(register, value);
+	    i2c.write(register, (byte)(value & 0xff));
 	} catch (IOException e) {
 	    LOGGER.error(e.getMessage());
 	}
