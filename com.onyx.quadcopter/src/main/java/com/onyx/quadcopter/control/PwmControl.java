@@ -55,6 +55,8 @@ public class PwmControl {
 	pwm.setModeSleep(true);
 	pwm.setPrescaleFromHz(Constants.PWM_FREQ);
 	pwm.setModeSleep(false);
+	pwm.enableRestart(true);
+	enable();
     }
 
     /**
@@ -69,6 +71,7 @@ public class PwmControl {
 	if (pulseWidth > 2000 || pulseWidth < 1000) {
 	    LOGGER.error("Pulse width is out of range. [1000us - 2000us] expected.");
 	}else {
+	    pwm.ledFullOn(pin, false);
             pwm.ledOnTime(pin, 0);
             pwm.ledOffTime(pin, (int) (period - (pulseWidth / scale)));
 	}
@@ -82,8 +85,23 @@ public class PwmControl {
     public void setSpeed(final int percent) {
 	pwmWrite((10*percent) + 1000);
     }
+    
+    /**
+     * Enable this PWM Control.
+     */
+    public void enable() {
+	pwm.ledFullOff(pin, false);
+    }
+    
+    /**
+     * Enable this PWM Control.
+     */
+    public void disable() {
+	pwm.ledFullOff(pin, true);
+    }
 
     public void shutdown() {
+	disable();
 	pwm.setModeSleep(true);
 	pwm.delete();
     }
