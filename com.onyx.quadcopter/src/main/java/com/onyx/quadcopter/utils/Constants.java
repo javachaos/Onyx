@@ -357,6 +357,6 @@ public final class Constants {
     /**
      * Y start position for OLED graphics.
      */
-    public static final int OLED_Y_START = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.oled.y", 8);
+    public static final int OLED_Y_START = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.oled.y", 0);
 
 }

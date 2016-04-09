@@ -490,6 +490,16 @@ public class Display {
 	displayImage();
     }
     
+    /**
+     * Draw a string to the graphics for this display.
+     * 
+     * The 
+     */
+    private void drawString(String str, int x, int y) {
+	FontMetrics m = getGraphics().getFontMetrics();
+	getGraphics().drawString(str, x, y + m.getHeight());
+    }
+    
     private void drawStringMultiLine(Graphics2D g, String text) {
         FontMetrics m = g.getFontMetrics();
         String[] lines = text.split(System.lineSeparator());
@@ -498,11 +508,10 @@ public class Display {
         	break;
             }
             drawStringMultiLine(g, line);
-            //y += m.getHeight();
-            
+            y += m.getHeight();
         }
         if(m.stringWidth(text) < width) {
-            g.drawString(text, x, y);
+            drawString(text, x, y);
         } else {
             String[] words = text.split(" ");
             String currentLine = words[0];
@@ -510,14 +519,14 @@ public class Display {
                 if(m.stringWidth(currentLine + words[i]) < width) {
                     currentLine += " " + words[i];
                 } else {
-                    g.drawString(currentLine, x, y);
+                    drawString(currentLine, x, y);
                     y += m.getHeight();
                     currentLine = words[i];
                 }
             }
             
             if(currentLine.length() > 0) {
-                g.drawString(currentLine, x, y);
+                drawString(currentLine, x, y);
             }
         }
     }
