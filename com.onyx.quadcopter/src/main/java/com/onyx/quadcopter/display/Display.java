@@ -482,11 +482,15 @@ public class Display {
     private int x = Constants.OLED_X_START;
     private int y = Constants.OLED_Y_START;
     
+    /**
+     * Write text to the screen.
+     * @param string
+     */
     public void write(String string) {
 	clear();
         getGraphics().setColor(Color.WHITE);
         getGraphics().setFont(new Font("Monospaced", Font.PLAIN, Constants.DISP_FONT));
-        drawStringMultiLine(getGraphics(), string);
+        drawStringMultiLine(string);
 	displayImage();
     }
     
@@ -500,14 +504,14 @@ public class Display {
 	getGraphics().drawString(str, x, y + m.getHeight());
     }
     
-    private void drawStringMultiLine(Graphics2D g, String text) {
-        FontMetrics m = g.getFontMetrics();
+    private synchronized void drawStringMultiLine(String text) {
+        FontMetrics m = getGraphics().getFontMetrics();
         String[] lines = text.split(System.lineSeparator());
         for (String line : lines) {
             if (lines.length == 1) {
         	break;
             }
-            drawStringMultiLine(g, line);
+            drawStringMultiLine(line);
             y += m.getHeight();
         }
         if(m.stringWidth(text) < width) {

@@ -332,7 +332,7 @@ public final class Constants {
     /**
      * Display font for OLED Display.
      */
-    public static final int DISP_FONT = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.disp.font", 10);
+    public static final int DISP_FONT = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.disp.font", 8);
 
     /**
      * PCA9685 I2C Address.
