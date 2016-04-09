@@ -125,7 +125,10 @@ public class GyroMagAcc extends Device {
     protected void alternate() {
 	if(!Constants.SIMULATION) {
 	    float[] rph = getRPH();
-	    String msg = "Yaw: " + rph[0] + " Pitch: "+ rph[1] + " Roll: "+ rph[2];
+	    String msg = System.lineSeparator() + 
+		    "Yaw: " + rph[0] + System.lineSeparator() +
+		    "Pitch: "+ rph[1] + System.lineSeparator() +  
+		    "Roll: "+ rph[2];
             LOGGER.debug(msg);
             sendMessage(DeviceID.OLED_DEVICE, msg, ActionId.PRINT);
             shutdown();
