@@ -510,5 +510,12 @@ public class Display {
                 g.drawString(currentLine, x, y);
             }
         }
+        if (text.contains(System.lineSeparator())) {
+            String[] nibbles = text.split(System.lineSeparator());
+            for(String s : nibbles) {
+                y += m.getHeight();
+                drawStringMultiLine(g, s);
+            }
+        }
     }
 }
