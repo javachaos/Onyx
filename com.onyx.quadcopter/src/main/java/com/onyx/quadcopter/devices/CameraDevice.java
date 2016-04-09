@@ -53,9 +53,11 @@ public class CameraDevice extends Device {
 
     @Override
     protected void alternate() {
+	webcam.open(0);
         Mat m = new Mat();
         if (webcam.grab()) {
             while (webcam.read(m) == false);
+            webcam.release();
 	    String fileName = Constants.IMG_DIR + File.separator + "img_latest.png";
 	    Highgui.imwrite(fileName, m);
 	}

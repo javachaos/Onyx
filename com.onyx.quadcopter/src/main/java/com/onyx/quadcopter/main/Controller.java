@@ -1,6 +1,5 @@
 package com.onyx.quadcopter.main;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -25,8 +24,6 @@ import com.onyx.quadcopter.utils.Cleaner;
 import com.onyx.quadcopter.utils.Constants;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
-import com.pi4j.io.i2c.I2CBus;
-import com.pi4j.io.i2c.I2CFactory;
 
 /**
  * Controller class.
@@ -66,11 +63,6 @@ public class Controller implements Runnable {
      * GPIO Controller.
      */
     private GpioController gpio;
-    
-//    /**
-//     * I2C Bus.
-//     */
-//    private I2CBus i2cbus;
 
     /**
      * Communications server reference.
@@ -89,11 +81,6 @@ public class Controller implements Runnable {
     private void init() {
         LOGGER.debug("Initializing Controller...");
 	setGpio(GpioFactory.getInstance());
-//	try {
-//	    setI2CBus(I2CFactory.getInstance(1));
-//	} catch (IOException e) {
-//	    LOGGER.error(e.getMessage());
-//	}
         cleaner = new Cleaner();
         addDevice(commServer);
         addDevice(new RedButton(this));
@@ -221,18 +208,4 @@ public class Controller implements Runnable {
     public void setGpio(GpioController gpio) {
 	this.gpio = gpio;
     }
-
-//    /**
-//     * @return the i2cbus
-//     */
-//    public I2CBus getI2CBus() {
-//	return i2cbus;
-//    }
-//
-//    /**
-//     * @param i2cbus the i2cbus to set
-//     */
-//    public void setI2CBus(I2CBus i2cbus) {
-//	this.i2cbus = i2cbus;
-//    }
 }
