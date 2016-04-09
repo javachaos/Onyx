@@ -71,7 +71,7 @@ public class OLEDDevice extends Device {
 	String msg = msgs[msgDispIndex];
 	if (msg != null && !msg.isEmpty()) {
             oled.write(msg);
-            if(++msgDispIndex > msgs.length) {
+            if(++msgDispIndex >= msgs.length) {
                 msgDispIndex = 0;
             }
 	}

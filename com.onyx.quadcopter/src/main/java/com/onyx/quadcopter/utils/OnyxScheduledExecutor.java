@@ -48,7 +48,7 @@ public class OnyxScheduledExecutor extends ScheduledThreadPoolExecutor {
             try {
                 theRunnable.run();
             } catch (final Throwable e) {
-                LOGGER.error("General Error: " + e.getMessage());
+                LOGGER.error("Error: " + e.getCause());
                 throw new RuntimeException(e);
             }
         }
