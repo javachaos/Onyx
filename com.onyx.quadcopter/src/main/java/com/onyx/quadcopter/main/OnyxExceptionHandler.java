@@ -5,8 +5,6 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.exceptions.OnyxException;
-
 public class OnyxExceptionHandler implements UncaughtExceptionHandler {
 
     /**
@@ -17,7 +15,7 @@ public class OnyxExceptionHandler implements UncaughtExceptionHandler {
     @Override
     public void uncaughtException(final Thread t, final Throwable e) {
 	t.interrupt();
-	throw new OnyxException(e.getMessage(), LOGGER);
+	LOGGER.error("Error: " + e.toString());
     }
 
 }

@@ -23,11 +23,6 @@ public class Main {
 	    LOGGER.error("Could not load link library 'mraajava'.");
 	}
     }
-
-//    /**
-//     * Thread coordinator.
-//     */
-//    public static final OnyxScheduledExecutor COORDINATOR = new OnyxScheduledExecutor(Constants.NUM_THREADS);
     
     public static final ScheduledExecutorService COORDINATOR = Executors.newScheduledThreadPool(Constants.NUM_THREADS);
 

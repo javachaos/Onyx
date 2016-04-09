@@ -7,6 +7,7 @@ import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.ConcurrentStack;
+import com.onyx.quadcopter.utils.Constants;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -77,6 +78,10 @@ public class CommunicationHandler extends SimpleChannelInboundHandler<ACLMessage
     public synchronized void addData(final ACLMessage data) {
 	if (data.isValid()) {
 	    dataStack.push(data);
+	}
+	
+	if(dataStack.size() >= Constants.NETWORK_BUFFER_SIZE) {
+	    dataStack.clear();
 	}
     }
 

@@ -1,11 +1,14 @@
 package com.onyx.quadcopter.utils;
 
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ConcurrentStack<E> {
     AtomicReference<Node<E>> head = new AtomicReference<Node<E>>();
-
+    AtomicInteger size = new AtomicInteger();
+    
     public void push(final E item) {
+	size.incrementAndGet();
 	final Node<E> newHead = new Node<E>(item);
 	Node<E> oldHead;
 	do {
@@ -15,6 +18,7 @@ public class ConcurrentStack<E> {
     }
 
     public E pop() {
+	size.decrementAndGet();
 	Node<E> oldHead;
 	Node<E> newHead;
 	do {
@@ -26,6 +30,10 @@ public class ConcurrentStack<E> {
 	} while (!head.compareAndSet(oldHead, newHead));
 	return oldHead.item;
     }
+    
+    public int size() {
+	return size.get();
+    }
 
     static class Node<E> {
 	final E item;
@@ -34,5 +42,9 @@ public class ConcurrentStack<E> {
 	public Node(final E item) {
 	    this.item = item;
 	}
+    }
+
+    public void clear() {
+	head = new AtomicReference<Node<E>>();
     }
 }
