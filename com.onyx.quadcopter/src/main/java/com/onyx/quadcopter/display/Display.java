@@ -494,6 +494,9 @@ public class Display {
         FontMetrics m = g.getFontMetrics();
         String[] lines = text.split(System.lineSeparator());
         for (String line : lines) {
+            if (lines.length == 1) {
+        	break;
+            }
             y += m.getHeight();
             drawStringMultiLine(g, line);
         }
