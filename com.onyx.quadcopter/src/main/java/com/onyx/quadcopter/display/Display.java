@@ -492,6 +492,11 @@ public class Display {
     
     private void drawStringMultiLine(Graphics2D g, String text) {
         FontMetrics m = g.getFontMetrics();
+        String[] lines = text.split(System.lineSeparator());
+        for (String line : lines) {
+            y += m.getHeight();
+            drawStringMultiLine(g, line);
+        }
         if(m.stringWidth(text) < width) {
             g.drawString(text, x, y);
         } else {
