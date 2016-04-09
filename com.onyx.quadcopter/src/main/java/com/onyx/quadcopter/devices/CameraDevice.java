@@ -51,6 +51,7 @@ public class CameraDevice extends Device {
     @Override
     protected void init() {
 	webcam = new VideoCapture(0);
+	webcam.open("http://192.168.1.163:8080/?dummy=param.mjpg");
     }
 
     @Override

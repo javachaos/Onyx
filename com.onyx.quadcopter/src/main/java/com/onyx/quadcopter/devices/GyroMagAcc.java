@@ -33,7 +33,6 @@ public class GyroMagAcc extends Device {
     protected void update() {
 	lsm.update();
 	float[] orient = getRPH();
-	orient = correct(orient);
 	last_orient = orient;
 	if (isNewMessage()) {
 	    switch (lastMessage.getActionID()) {
@@ -44,40 +43,6 @@ public class GyroMagAcc extends Device {
 		break;
 	    }
 	}
-    }
-
-    /**
-     * Crude data filter.
-     */
-    private float[] correct(float[] orient) {
-	float mse = MSE(last_orient, orient);
-	if (mse > Constants.ORIENTATION_THRESHOLD) {
-	    LOGGER.warn("Change in orientation too fast discarding bad value MSE: " + mse);
-	    orient = last_orient;
-	}
-	return orient;
-    }
-
-    /**
-     * Calculate the mean squared error between two vectors.
-     * 
-     * @param actual
-     * @param predicted
-     * @return
-     */
-    private float MSE(float[] actual, float[] predicted) {
-	if (actual == null || predicted == null) {
-	    return 0;
-	}
-	if (actual.length != predicted.length) {
-	    return Float.POSITIVE_INFINITY;
-	}
-	int n = actual.length;
-	int res = 0;
-	for (int i = 0; i < n; i++) {
-	    res += Math.pow(predicted[i] - actual[i], 2);
-	}
-	return (float) (res / n);
     }
 
     /**
