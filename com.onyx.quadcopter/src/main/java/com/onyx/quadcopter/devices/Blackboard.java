@@ -31,14 +31,14 @@ public class Blackboard {
     private ConcurrentMap<DeviceID, ACLMessage> blackboard;
 
     public Blackboard() {
-        blackboard = new ConcurrentHashMap<DeviceID, ACLMessage>(Constants.BLACKBOARD_SIZE);
+	blackboard = new ConcurrentHashMap<DeviceID, ACLMessage>(Constants.BLACKBOARD_SIZE);
     }
 
     public void update() {
 	if (blackboard.size() >= Constants.BLACKBOARD_SIZE) {
-            LOGGER.debug("Clearing blackboard.");
-            blackboard.clear();
-        }
+	    LOGGER.debug("Clearing blackboard.");
+	    blackboard.clear();
+	}
     }
 
     /**
@@ -47,11 +47,10 @@ public class Blackboard {
      * @param aclMessage
      */
     public synchronized void addMessage(final ACLMessage aclMessage) {
-        if (aclMessage.isValid()) {
-            blackboard.put(aclMessage.getReciever(), aclMessage);
-        }
+	if (aclMessage.isValid()) {
+	    blackboard.put(aclMessage.getReciever(), aclMessage);
+	}
     }
-
 
     /**
      * Get a message for Device device. Searches the database for all messages
@@ -65,13 +64,13 @@ public class Blackboard {
      */
     public synchronized ACLMessage getMessage(DeviceID id) {
 	final ACLMessage n = blackboard.get(id);
-        if (n != null && n.isValid()) {
-            return n;
-        } else {
-            return new ACLMessage(MessageType.EMPTY);
-        }
+	if (n != null && n.isValid()) {
+	    return n;
+	} else {
+	    return new ACLMessage(MessageType.EMPTY);
+	}
     }
-    
+
     /**
      * Get a message for Device device. Searches the database for all messages
      * which are destined to device returning the first occurence.
@@ -83,12 +82,12 @@ public class Blackboard {
      *
      */
     public synchronized ACLMessage getMessage(final Device device) {
-        return getMessage(device.getId());
+	return getMessage(device.getId());
     }
 
     public void shutdown() {
-        blackboard.clear();
-        blackboard = null;
+	blackboard.clear();
+	blackboard = null;
     }
 
 }

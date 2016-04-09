@@ -12,17 +12,17 @@ import upm_ublox6.Ublox6;
 
 public class GPSDevice extends Device {
 
-    private Ublox6 gps; 
+    private Ublox6 gps;
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     private byte[] nmeaBuffer = new byte[Constants.NMEA_BUFF_SIZE];
-    
+
     public GPSDevice(final Controller c) {
 	super(c, DeviceID.GPS_DEVICE);
     }
 
     @Override
     protected void update() {
-	if(gps.dataAvailable()) {
+	if (gps.dataAvailable()) {
 	    gps.readData(nmeaBuffer);
 	}
     }

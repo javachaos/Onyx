@@ -48,7 +48,7 @@ public enum MessageType {
      * 
      */
     private MessageType(final int idx) {
-        id = idx;
+	id = idx;
     }
 
     /**
@@ -60,6 +60,6 @@ public enum MessageType {
      * @return the ordinal value of the MessageType t
      */
     public static int getId(final MessageType t) {
-        return t.id;
+	return t.id;
     }
 }

@@ -11,17 +11,18 @@ import com.onyx.quadcopter.utils.Constants;
 
 /**
  * Camera Device.
+ * 
  * @author fred
  *
  */
 public class CameraDevice extends Device {
 
     static {
-        try {
-            System.load(Constants.CAM_NATIVE_LIB);
-        } catch (final UnsatisfiedLinkError e) {
-            LOGGER.error(e.getMessage());
-        }
+	try {
+	    System.load(Constants.CAM_NATIVE_LIB);
+	} catch (final UnsatisfiedLinkError e) {
+	    LOGGER.error(e.getMessage());
+	}
     }
 
     /**
@@ -30,7 +31,13 @@ public class CameraDevice extends Device {
     private VideoCapture webcam;
 
     /**
+     * The matrix.
+     */
+    private Mat matrix;
+
+    /**
      * Camera Constructor.
+     * 
      * @param c
      */
     public CameraDevice(final Controller c) {
@@ -43,24 +50,22 @@ public class CameraDevice extends Device {
 
     @Override
     protected void init() {
-        webcam = new VideoCapture(0);
+	webcam = new VideoCapture(0);
     }
 
     @Override
     public void shutdown() {
-        webcam.release();
+	webcam.release();
     }
 
     @Override
     protected void alternate() {
-	webcam.open(0);
-        Mat m = new Mat();
-        if (webcam.grab()) {
-            while (webcam.read(m) == false);
-            webcam.release();
-	    String fileName = Constants.IMG_DIR + File.separator + "img_latest.png";
-	    Highgui.imwrite(fileName, m);
-	}
+	matrix = new Mat();
+	while (webcam.read(matrix) == false)
+	    ;
+	String fileName = Constants.IMG_DIR + File.separator + "img_latest.png";
+	Highgui.imwrite(fileName, matrix);
+	matrix.release();
     }
 
     @Override

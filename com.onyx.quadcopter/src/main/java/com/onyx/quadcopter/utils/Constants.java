@@ -32,7 +32,7 @@ public final class Constants {
      * Init the constants.
      */
     public static void init() {
-        new Constants();
+	new Constants();
     }
 
     /**
@@ -74,7 +74,7 @@ public final class Constants {
      * Application directory location.
      */
     public static final String APPLICATION_DIR = File.separator + "opt" + File.separator + APPLICATION_NAME;
-    
+
     /**
      * Directory to store images.
      */
@@ -89,13 +89,13 @@ public final class Constants {
      * Database file.
      */
     public static final File DATABASE_FILE = new File(
-            Constants.APPLICATION_DIR + File.separator + Constants.DATABASE_NAME);
+	    Constants.APPLICATION_DIR + File.separator + Constants.DATABASE_NAME);
 
     /**
      * Recovery file.
      */
     public static final File RECOVERY_FILE = new File(
-            Constants.APPLICATION_DIR + File.separator + Constants.RECOVERY_NAME);
+	    Constants.APPLICATION_DIR + File.separator + Constants.RECOVERY_NAME);
 
     /**
      * Application directory file.
@@ -137,7 +137,7 @@ public final class Constants {
      * monitor.
      */
     public static final long MONITOR_DELAY = PROPERTIES.getLongProperty("com.onyx.quadcopter.monitor.delay",
-            SLEEP_TIME);
+	    SLEEP_TIME);
 
     /**
      * The number of milliseconds to delay before the next update call.
@@ -158,7 +158,7 @@ public final class Constants {
      * Controller update frequency in microseconds.
      */
     public static final long CONTROLLER_PERIOD = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.controller.period",
-            5000);
+	    5000);
 
     /**
      * Time unit for controller update period.
@@ -169,14 +169,14 @@ public final class Constants {
      * Database create statement.
      */
     public static final String DATABASE_CREATE = "CREATE TABLE IF NOT EXISTS blackboard ("
-            + "ID INTEGER PRIMARY KEY AUTOINCREMENT, TO_DEVICE_ID INTEGER, FROM_DEVICE_ID INTEGER,"
-            + "ACTION_ID INTEGER, MSG_TYPE INTEGER, CONTENT VARCHAR(32), VALUE REAL);";
+	    + "ID INTEGER PRIMARY KEY AUTOINCREMENT, TO_DEVICE_ID INTEGER, FROM_DEVICE_ID INTEGER,"
+	    + "ACTION_ID INTEGER, MSG_TYPE INTEGER, CONTENT VARCHAR(32), VALUE REAL);";
 
     /**
      * Create add message statment.
      */
     public static final String ADD_MESSAGE_STATEMENT = "INSERT INTO blackboard (TO_DEVICE_ID, FROM_DEVICE_ID, "
-            + "ACTION_ID, MSG_TYPE, CONTENT, VALUE) VALUES (?,?,?,?,?,?);";
+	    + "ACTION_ID, MSG_TYPE, CONTENT, VALUE) VALUES (?,?,?,?,?,?);";
 
     /**
      * Create get message statement.
@@ -201,10 +201,14 @@ public final class Constants {
     /**
      * PWM GPIO Pins.
      */
-    public static final short GPIO_MOTOR1 = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor1.pin", 0);
-    public static final short GPIO_MOTOR2 = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor2.pin", 1);
-    public static final short GPIO_MOTOR3 = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor3.pin", 2);
-    public static final short GPIO_MOTOR4 = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.devices.motor4.pin", 3);
+    public static final short GPIO_MOTOR1 = (short) PROPERTIES
+	    .getIntegerProperty("com.onyx.quadcopter.devices.motor1.pin", 0);
+    public static final short GPIO_MOTOR2 = (short) PROPERTIES
+	    .getIntegerProperty("com.onyx.quadcopter.devices.motor2.pin", 1);
+    public static final short GPIO_MOTOR3 = (short) PROPERTIES
+	    .getIntegerProperty("com.onyx.quadcopter.devices.motor3.pin", 2);
+    public static final short GPIO_MOTOR4 = (short) PROPERTIES
+	    .getIntegerProperty("com.onyx.quadcopter.devices.motor4.pin", 3);
 
     /**
      * True if this is a simulation run.
@@ -215,7 +219,7 @@ public final class Constants {
      * Number of threads to use.
      */
     public static final int NUM_THREADS = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.numthreads",
-            Runtime.getRuntime().availableProcessors());
+	    Runtime.getRuntime().availableProcessors());
 
     /**
      * Maximum Blackboard size.
@@ -231,7 +235,7 @@ public final class Constants {
      * Send and recieve buffer size.
      */
     public static final int NETWORK_BUFFER_SIZE = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.nio.buffer.size",
-            1024);
+	    1024);
 
     /**
      * Number of threads to dedicate to network IO.
@@ -242,14 +246,14 @@ public final class Constants {
      * CommServer initialization delay in Seconds.
      */
     public static final long COMM_SERVER_INIT_DELAY = PROPERTIES
-            .getIntegerProperty("com.onyx.quadcopter.nio.commserver.startdelay", 5);
+	    .getIntegerProperty("com.onyx.quadcopter.nio.commserver.startdelay", 5);
 
     /**
      * Native libraries directory
      */
     public static final String NATIVES_DIR = PROPERTIES.getStringProperty("com.onyx.quadcopter.natives.dir",
 	    APPLICATION_DIR + File.separator + "natives");
-    
+
     /**
      * Java native library name.
      */
@@ -260,7 +264,7 @@ public final class Constants {
      * MRAA Java native library.
      */
     public static final String MRAA_NATIVE_LIB = PROPERTIES.getStringProperty("com.onyx.quadcopter.natives.mraa",
-	    NATIVES_DIR + File.separator +  "libmraajava.so");
+	    NATIVES_DIR + File.separator + "libmraajava.so");
 
     /**
      * The i2c bus ID.
@@ -268,10 +272,11 @@ public final class Constants {
     public static final int I2C_BUS_ID = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.bus.id", 0);
 
     /**
-     * Orientation change threashold. 
-     * Any data which changes by a factor of this value after a single update is discarded.
+     * Orientation change threashold. Any data which changes by a factor of this
+     * value after a single update is discarded.
      */
-    public static final float ORIENTATION_THRESHOLD = PROPERTIES.getFloatProperty("com.onyx.quadcopter.orient.threshold", 1000.0f);
+    public static final float ORIENTATION_THRESHOLD = PROPERTIES
+	    .getFloatProperty("com.onyx.quadcopter.orient.threshold", 1000.0f);
 
     /**
      * Initial speed of the motors.
@@ -279,9 +284,11 @@ public final class Constants {
     public static final int MOTOR_INIT_SPEED = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.motor.init.speed", 0);
 
     /**
-     * Amount of time to delay the start of the controller thread. In milliseconds.
+     * Amount of time to delay the start of the controller thread. In
+     * milliseconds.
      */
-    public static final long CONTROLLER_DELAY = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.controller.start.delay", 1000);
+    public static final long CONTROLLER_DELAY = PROPERTIES
+	    .getIntegerProperty("com.onyx.quadcopter.controller.start.delay", 1000);
 
     /**
      * Max number of locally stored messages to keep.
@@ -327,7 +334,7 @@ public final class Constants {
      * OpenCV Java native library.
      */
     public static final String CAM_NATIVE_LIB = PROPERTIES.getStringProperty("com.onyx.quadcopter.natives.webcam",
-            NATIVES_DIR + File.separator +  "libopencv_java2412.so");
+	    NATIVES_DIR + File.separator + "libopencv_java2412.so");
 
     /**
      * Display font for OLED Display.
@@ -337,7 +344,8 @@ public final class Constants {
     /**
      * PCA9685 I2C Address.
      */
-    public static final short PCA9685_I2C_ADDRESS = (short) PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.addr.pca9685", 0x40);
+    public static final short PCA9685_I2C_ADDRESS = (short) PROPERTIES
+	    .getIntegerProperty("com.onyx.quadcopter.i2c.addr.pca9685", 0x40);
 
     /**
      * Maximum percentage speed of the motors.
@@ -353,7 +361,7 @@ public final class Constants {
      * X start position for OLED graphics.
      */
     public static final int OLED_X_START = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.oled.x", 0);
-    
+
     /**
      * Y start position for OLED graphics.
      */

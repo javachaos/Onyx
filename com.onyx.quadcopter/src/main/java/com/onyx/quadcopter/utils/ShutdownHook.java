@@ -43,17 +43,17 @@ public class ShutdownHook extends Thread {
      *            the main thread.
      */
     public ShutdownHook(final Thread main) {
-        mainThread = main;
+	mainThread = main;
     }
 
     @Override
     public final void run() {
-        try {
-            StateMonitor.shutdownState();
-            Main.COORDINATOR.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
-            mainThread.join();
-        } catch (final InterruptedException e) {
-            ExceptionUtils.logError(ShutdownHook.class, e);
-        }
+	try {
+	    StateMonitor.shutdownState();
+	    Main.COORDINATOR.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
+	    mainThread.join();
+	} catch (final InterruptedException e) {
+	    ExceptionUtils.logError(ShutdownHook.class, e);
+	}
     }
 }

@@ -11,12 +11,12 @@ import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 public class RedButton extends Device implements GpioPinListenerDigital {
-    
+
     /**
      * Push Button.
      */
     private GpioPinDigitalInput button;
-    
+
     public RedButton(final Controller c) {
 	super(c, DeviceID.RED_BUTTON);
     }
@@ -27,9 +27,10 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 
     @Override
     protected void init() {
-        // provision gpio pin #02 as an input pin with its internal pull down resistor enabled
-        button = getController().getGpio().provisionDigitalInputPin(RaspiPin.GPIO_21, PinPullResistance.PULL_UP);
-        button.addListener(this);
+	// provision gpio pin #02 as an input pin with its internal pull down
+	// resistor enabled
+	button = getController().getGpio().provisionDigitalInputPin(RaspiPin.GPIO_21, PinPullResistance.PULL_UP);
+	button.addListener(this);
     }
 
     @Override

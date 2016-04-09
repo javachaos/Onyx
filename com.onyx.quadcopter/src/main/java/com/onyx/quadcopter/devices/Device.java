@@ -45,28 +45,30 @@ public abstract class Device implements Executable {
 
     /**
      * Create a new device.
+     * 
      * @param c
      * @param id
      */
     public Device(final Controller c, final DeviceID id) {
-        setId(id);
-        setName(id.toString());
-        if (c != null) {
-            controller = c;
-        } else {
-            LOGGER.error("Device could not be constructed, controller null.");
-            throw new OnyxException("Device could not be constructed, controller null.", LOGGER);
-        }
+	setId(id);
+	setName(id.toString());
+	if (c != null) {
+	    controller = c;
+	} else {
+	    LOGGER.error("Device could not be constructed, controller null.");
+	    throw new OnyxException("Device could not be constructed, controller null.", LOGGER);
+	}
     }
 
     /**
      * Set the name of this device.
+     * 
      * @param n
      */
     private void setName(final String n) {
-        if ((n != null) && (n.length() > 0)) {
-            name = n;
-        }
+	if ((n != null) && (n.length() > 0)) {
+	    name = n;
+	}
     }
 
     /**
@@ -80,27 +82,27 @@ public abstract class Device implements Executable {
 
     @Override
     public synchronized void execute() {
-        previousMessage = lastMessage;
-        lastMessage = getController().getBlackboard().getMessage(this);
-        update();
-        runCounter++;
-        if (runCounter == Constants.ALTERNATE_SPEED) {
-            runCounter = 0;
-            LOGGER.debug("Device heartbeat: " + getName() + ".");
-            alternate();
-        }
+	previousMessage = lastMessage;
+	lastMessage = getController().getBlackboard().getMessage(this);
+	update();
+	runCounter++;
+	if (runCounter == Constants.ALTERNATE_SPEED) {
+	    runCounter = 0;
+	    LOGGER.debug("Device heartbeat: " + getName() + ".");
+	    alternate();
+	}
     }
 
     /**
      * Return true if there is a new message.
+     * 
      * @return
      */
     protected boolean isNewMessage() {
-        if ((previousMessage == null) && (lastMessage instanceof ACLMessage)) {
-            return lastMessage.isValid() && lastMessage.getReciever() == getId();
-        }
-        return !previousMessage.equals(lastMessage) 
-        	&& lastMessage.isValid();
+	if ((previousMessage == null) && (lastMessage instanceof ACLMessage)) {
+	    return lastMessage.isValid() && lastMessage.getReciever() == getId();
+	}
+	return !previousMessage.equals(lastMessage) && lastMessage.isValid();
     }
 
     /**
@@ -109,7 +111,7 @@ public abstract class Device implements Executable {
      * @return the most recent ACL message.
      */
     public ACLMessage getLastACLMessage() {
-        return lastMessage;
+	return lastMessage;
     }
 
     /**
@@ -118,7 +120,7 @@ public abstract class Device implements Executable {
      * @return if the init() method has been called at least once.
      */
     public boolean isInitialized() {
-        return initialized;
+	return initialized;
     }
 
     /**
@@ -139,33 +141,34 @@ public abstract class Device implements Executable {
     /**
      * Run self test code to ensure everything works.
      * 
-     * Note: Only called during live tests.
-     * if Constants.SIMULATION is set to true this will not be run.
+     * Note: Only called during live tests. if Constants.SIMULATION is set to
+     * true this will not be run.
      *
      * @return true if everything is OK
      */
     public abstract boolean selfTest();
-    
+
     /**
      * Return the device ID.
      *
      * @return
      */
     public DeviceID getId() {
-        return id;
+	return id;
     }
-    
+
     /**
      * Send a message to receiver.
      * 
      * @param receiver
-     * 		the message recipient
+     *            the message recipient
      * @param content
-     *          the contents of the message
+     *            the contents of the message
      * @param action
-     *          the actionId
+     *            the actionId
      */
-    protected void sendMessage(final MessageType type, final DeviceID receiver, final String content, final double value, final ActionId action) {
+    protected void sendMessage(final MessageType type, final DeviceID receiver, final String content,
+	    final double value, final ActionId action) {
 	final ACLMessage m = new ACLMessage(type);
 	m.setActionID(action);
 	m.setContent(content);
@@ -174,35 +177,36 @@ public abstract class Device implements Executable {
 	m.setValue(value);
 	getController().getBlackboard().addMessage(m);
     }
-    
+
     /**
      * Send a message to receiver.
      * 
      * @param receiver
-     * 		the message recipient
+     *            the message recipient
      * @param content
-     *          the contents of the message
+     *            the contents of the message
      * @param action
-     *          the actionId
+     *            the actionId
      */
-    protected void sendMessage(final DeviceID receiver, final String content, final double value, final ActionId action) {
+    protected void sendMessage(final DeviceID receiver, final String content, final double value,
+	    final ActionId action) {
 	sendMessage(MessageType.SEND, receiver, content, value, action);
     }
-    
+
     /**
      * Send a message to receiver.
      * 
      * @param receiver
-     * 		the message recipient
+     *            the message recipient
      * @param content
-     *          the contents of the message
+     *            the contents of the message
      * @param action
-     *          the actionId
+     *            the actionId
      */
     protected void sendMessage(final DeviceID receiver, final String content, final ActionId action) {
 	sendMessage(receiver, content, 0.0, action);
     }
-    
+
     /**
      * Send a reply to the last sender.
      * 
@@ -223,7 +227,7 @@ public abstract class Device implements Executable {
     protected void sendReply(final String content, final ActionId action) {
 	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, action);
     }
-    
+
     /**
      * Send a reply to the last sender.
      * 
@@ -233,7 +237,7 @@ public abstract class Device implements Executable {
     protected void sendReply(final String content) {
 	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, lastMessage.getActionID());
     }
-    
+
     /**
      * Send a reply to the last sender.
      * 
@@ -244,46 +248,48 @@ public abstract class Device implements Executable {
     protected void sendReply(final String content, final double value) {
 	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value, lastMessage.getActionID());
     }
-    
+
     /**
      * Set the device id.
      *
      * @param id
      */
     private void setId(final DeviceID id) {
-        this.id = id;
+	this.id = id;
     }
 
     @Override
     public String toString() {
-        return getName();
+	return getName();
     }
 
     /**
      * Get the name of this device.
+     * 
      * @return
      */
     private String getName() {
-        return name;
+	return name;
     }
 
     /**
      * Get a reference to the controller.
+     * 
      * @return
      */
     protected Controller getController() {
-        return controller;
+	return controller;
     }
 
     /**
      * Initialize this device.
      */
     public void initialize() {
-        if (!isInitialized()) {
-            LOGGER.debug("Initializing " + getName());
-            init();
-            LOGGER.debug("Device: " + getName() + " initialized.");
-            initialized = true;
-        }
+	if (!isInitialized()) {
+	    LOGGER.debug("Initializing " + getName());
+	    init();
+	    LOGGER.debug("Device: " + getName() + " initialized.");
+	    initialized = true;
+	}
     }
 }

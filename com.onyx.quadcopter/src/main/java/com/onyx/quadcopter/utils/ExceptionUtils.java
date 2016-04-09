@@ -38,9 +38,9 @@ public final class ExceptionUtils {
      *            the exception thrown.
      */
     public static void fatalError(final Class<?> c, final Exception e) {
-        e.printStackTrace();
-        logError(c, e);
-        StateMonitor.errorState();
+	e.printStackTrace();
+	logError(c, e);
+	StateMonitor.errorState();
     }
 
     /**
@@ -52,8 +52,8 @@ public final class ExceptionUtils {
      *            the exception thrown.
      */
     public static void logError(final Class<?> c, final Exception e) {
-        Logger logger = LoggerFactory.getLogger(c);
-        logger.error(e.getMessage());
+	Logger logger = LoggerFactory.getLogger(c);
+	logger.error(e.getMessage());
     }
 
 }

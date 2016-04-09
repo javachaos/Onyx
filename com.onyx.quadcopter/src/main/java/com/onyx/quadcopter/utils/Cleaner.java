@@ -28,7 +28,7 @@ public class Cleaner {
      * Constructor.
      */
     public Cleaner() {
-        items = new ArrayList<Object>();
+	items = new ArrayList<Object>();
     }
 
     /**
@@ -38,29 +38,29 @@ public class Cleaner {
      *            the object to be cleaned.
      */
     public final void cleanUp(final Object toClean) {
-        if (toClean != null) {
-            items.add(toClean);
-        }
+	if (toClean != null) {
+	    items.add(toClean);
+	}
     }
 
     /**
      * Clean up items. Avoid calling in large loops (calls GC).
      */
     public final void doClean() {
-        for (Object c : items) {
-            if (c != null) {
-                c = null;
-            }
-        }
-        items.clear();
-        items = null;
-        gc();
+	for (Object c : items) {
+	    if (c != null) {
+		c = null;
+	    }
+	}
+	items.clear();
+	items = null;
+	gc();
     }
 
     /**
      * Call Garbage collector.
      */
     public final void gc() {
-        System.gc();
+	System.gc();
     }
 }

@@ -42,23 +42,23 @@ public class CommunicationHandler extends SimpleChannelInboundHandler<ACLMessage
      *            The data to send to clients
      */
     public CommunicationHandler(final Controller c) {
-        controller = c;
-        dataStack = new ConcurrentStack<ACLMessage>();
+	controller = c;
+	dataStack = new ConcurrentStack<ACLMessage>();
     }
 
     @Override
     public void channelReadComplete(final ChannelHandlerContext ctx) {
-        ctx.flush();
+	ctx.flush();
     }
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        final ACLMessage msg = dataStack.pop();
-        if (msg != null) {
-            final ChannelFuture f = ctx.writeAndFlush(msg);
-            f.addListener(ChannelFutureListener.CLOSE);
-        }
-        try {
+	final ACLMessage msg = dataStack.pop();
+	if (msg != null) {
+	    final ChannelFuture f = ctx.writeAndFlush(msg);
+	    f.addListener(ChannelFutureListener.CLOSE);
+	}
+	try {
 	    super.channelActive(ctx);
 	} catch (Exception e) {
 	    e.printStackTrace();
@@ -68,21 +68,21 @@ public class CommunicationHandler extends SimpleChannelInboundHandler<ACLMessage
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
-        cause.printStackTrace();
-        ctx.close();
-        LOGGER.error(cause.getMessage());
-        throw new OnyxException(cause.getMessage(), LOGGER);
+	cause.printStackTrace();
+	ctx.close();
+	LOGGER.error(cause.getMessage());
+	throw new OnyxException(cause.getMessage(), LOGGER);
     }
 
     public synchronized void addData(final ACLMessage data) {
-        if (data.isValid()) {
-            dataStack.push(data);
-        }
+	if (data.isValid()) {
+	    dataStack.push(data);
+	}
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ACLMessage msg) throws Exception {
-        controller.getBlackboard().addMessage(msg);
-        ctx.close();
+	controller.getBlackboard().addMessage(msg);
+	ctx.close();
     }
 }

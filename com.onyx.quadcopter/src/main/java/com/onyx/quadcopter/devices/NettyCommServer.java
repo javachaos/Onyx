@@ -53,8 +53,8 @@ public class NettyCommServer extends Device implements Runnable {
     private ACLMessage pingRequest;
 
     public NettyCommServer(final Controller c) {
-        super(c, DeviceID.COMM_SERVER);
-        handler = new CommunicationHandler(getController());
+	super(c, DeviceID.COMM_SERVER);
+	handler = new CommunicationHandler(getController());
     }
 
     @Override
@@ -68,54 +68,56 @@ public class NettyCommServer extends Device implements Runnable {
 
     @Override
     public void run() {
-        LOGGER.debug("Starting CommServer.");
-        try {
-            final ServerBootstrap b = new ServerBootstrap();
-            b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-                        @Override
-                        public void initChannel(final SocketChannel ch) throws Exception {
-                            ch.pipeline().addLast(new ObjectEncoder(), new ObjectDecoder(
-                        	    ClassResolvers.softCachingConcurrentResolver(getClass().getClassLoader())), handler);
-                        }
-                    }).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
+	LOGGER.debug("Starting CommServer.");
+	try {
+	    final ServerBootstrap b = new ServerBootstrap();
+	    b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
+		    .childHandler(new ChannelInitializer<SocketChannel>() {
+			@Override
+			public void initChannel(final SocketChannel ch) throws Exception {
+			    ch.pipeline().addLast(new ObjectEncoder(),
+				    new ObjectDecoder(
+					    ClassResolvers.softCachingConcurrentResolver(getClass().getClassLoader())),
+				    handler);
+			}
+		    }).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
 
-            LOGGER.debug("CommServer Started.");
-            // Bind and start to accept incoming connections.
-            final ChannelFuture f = b.bind(PORT).sync();
+	    LOGGER.debug("CommServer Started.");
+	    // Bind and start to accept incoming connections.
+	    final ChannelFuture f = b.bind(PORT).sync();
 
-            // Wait until the server socket is closed.
-            // In this example, this does not happen, but you can do that to
-            // gracefully
-            // shut down your server.
-            f.channel().closeFuture().sync();
-        } catch (final InterruptedException e) {
-            LOGGER.error(e.getMessage());
-            throw new OnyxException(e.getMessage(), LOGGER);
-        } finally {
-            workerGroup.shutdownGracefully();
-            bossGroup.shutdownGracefully();
-        }
+	    // Wait until the server socket is closed.
+	    // In this example, this does not happen, but you can do that to
+	    // gracefully
+	    // shut down your server.
+	    f.channel().closeFuture().sync();
+	} catch (final InterruptedException e) {
+	    LOGGER.error(e.getMessage());
+	    throw new OnyxException(e.getMessage(), LOGGER);
+	} finally {
+	    workerGroup.shutdownGracefully();
+	    bossGroup.shutdownGracefully();
+	}
     }
 
     @Override
     protected void update() {
-	//Send client a request for data.
-        handler.addData(pingRequest);
-        switch (lastMessage.getActionID()) {
-        case SEND_DATA:
-            handler.addData(lastMessage);
-        default:
-            break;
-        }
+	// Send client a request for data.
+	handler.addData(pingRequest);
+	switch (lastMessage.getActionID()) {
+	case SEND_DATA:
+	    handler.addData(lastMessage);
+	default:
+	    break;
+	}
     }
 
     @Override
     public void shutdown() {
-        LOGGER.debug("CommServer shutdown initiated.");
-        workerGroup.shutdownGracefully();
-        bossGroup.shutdownGracefully();
-        LOGGER.debug("CommServer shutdown complete.");
+	LOGGER.debug("CommServer shutdown initiated.");
+	workerGroup.shutdownGracefully();
+	bossGroup.shutdownGracefully();
+	LOGGER.debug("CommServer shutdown complete.");
     }
 
     @Override
@@ -124,7 +126,7 @@ public class NettyCommServer extends Device implements Runnable {
 
     @Override
     public boolean selfTest() {
-        return true;// TODO complete NettyCommServer selfTest.
+	return true;// TODO complete NettyCommServer selfTest.
     }
 
 }

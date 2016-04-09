@@ -63,10 +63,10 @@ public final class StateMonitor implements Runnable {
      * State monitor constructor.
      */
     public StateMonitor(final Controller c) {
-        if (c != null) {
-            controller = c;
-        }
-        init();
+	if (c != null) {
+	    controller = c;
+	}
+	init();
     }
 
     /**
@@ -75,16 +75,16 @@ public final class StateMonitor implements Runnable {
      * @return true if the monitor is running.
      */
     public boolean isRunning() {
-        return isRunning;
+	return isRunning;
     }
 
     /**
      * Initialize the state monitor.
      */
     private void init() {
-        isRunning = true;
-        state = OnyxState.STARTUP;
-        previousState = OnyxState.SHUTDOWN;
+	isRunning = true;
+	state = OnyxState.STARTUP;
+	previousState = OnyxState.SHUTDOWN;
     }
 
     /**
@@ -92,36 +92,36 @@ public final class StateMonitor implements Runnable {
      * correct.
      */
     public void update() {
-        checkState();
-        switch (state) {
-        case AIRBORNE:
-            doAirborne();
-            break;
-        case LANDED:
-            doLanded();
-            break;
-        case LANDING:
-            doLanding();
-            break;
-        case ERROR:
-            doError();
-            break;
-        case RECOVERY:
-            doRecover();
-            break;
-        case SHUTDOWN:
-            doShutdown();
-            break;
-        case STARTUP:
-            doStartup();
-            break;
-        default:
-            break;
-        }
+	checkState();
+	switch (state) {
+	case AIRBORNE:
+	    doAirborne();
+	    break;
+	case LANDED:
+	    doLanded();
+	    break;
+	case LANDING:
+	    doLanding();
+	    break;
+	case ERROR:
+	    doError();
+	    break;
+	case RECOVERY:
+	    doRecover();
+	    break;
+	case SHUTDOWN:
+	    doShutdown();
+	    break;
+	case STARTUP:
+	    doStartup();
+	    break;
+	default:
+	    break;
+	}
 
-        if (isStateChanged()) {
-            previousState = state;
-        }
+	if (isStateChanged()) {
+	    previousState = state;
+	}
     }
 
     /**
@@ -129,9 +129,9 @@ public final class StateMonitor implements Runnable {
      */
     @Override
     public void run() {
-        if (isRunning) {
-            update();
-        }
+	if (isRunning) {
+	    update();
+	}
     }
 
     /**
@@ -140,7 +140,7 @@ public final class StateMonitor implements Runnable {
      * @return true if the state has changed.
      */
     public boolean isStateChanged() {
-        return stateChanged;
+	return stateChanged;
     }
 
     /**
@@ -150,7 +150,7 @@ public final class StateMonitor implements Runnable {
      *            the state to be set.
      */
     private void setStateChanged(final boolean s) {
-        stateChanged = s;
+	stateChanged = s;
     }
 
     /**
@@ -159,181 +159,182 @@ public final class StateMonitor implements Runnable {
      * @return the state of the application.
      */
     public static OnyxState getState() {
-        return state;
+	return state;
     }
 
     /**
      * The aircraft in landed.
      */
     public static void landedState() {
-        state = OnyxState.LANDED;
+	state = OnyxState.LANDED;
     }
 
     /**
      * The aircraft is landing.
      */
     public static void landingState() {
-        state = OnyxState.LANDING;
+	state = OnyxState.LANDING;
     }
 
     /**
      * The aircraft is in flight.
      */
     public static void airborneState() {
-        state = OnyxState.AIRBORNE;
+	state = OnyxState.AIRBORNE;
     }
 
     /**
      * Shutdown state.
      */
     public static void shutdownState() {
-        state = OnyxState.SHUTDOWN;
+	state = OnyxState.SHUTDOWN;
     }
 
     /**
      * Error state.
      */
     public static void errorState() {
-        state = OnyxState.ERROR;
+	state = OnyxState.ERROR;
     }
 
     /**
      * Startup state.
      */
     public static void startupState() {
-        state = OnyxState.STARTUP;
+	state = OnyxState.STARTUP;
     }
 
     /**
      * Startup state.
      */
     public static void recoveryState() {
-        state = OnyxState.RECOVERY;
+	state = OnyxState.RECOVERY;
     }
 
     /**
      * Error state.
      */
     private void doError() {
-        status = -1;
-        state = OnyxState.RECOVERY;
+	status = -1;
+	state = OnyxState.RECOVERY;
     }
 
     /**
      * Shutdown the application.
      */
     private void doShutdown() {
-        switch (previousState) {
-        case AIRBORNE:
-            if (state == OnyxState.LANDED) {
-                controller.stop();
-                exit();
-            }
-            break;
-        case ERROR:
-            doRecover();
-            break;
-        case LANDED:
-            if (state == previousState) {
-                controller.stop();
-                exit();
-            }
-            break;
-        case LANDING:
-            if (state == OnyxState.LANDED) {
-                controller.stop();
-                exit();
-            }
-            break;
-        case RECOVERY:
-            break;
-        case SHUTDOWN:
-            if (state == previousState) {
-                controller.stop();
-                exit();
-            }
-            break;
-        case STARTUP:
-            break;
-        default:
-            break;
-        }
+	switch (previousState) {
+	case AIRBORNE:
+	    if (state == OnyxState.LANDED) {
+		controller.stop();
+		exit();
+	    }
+	    break;
+	case ERROR:
+	    doRecover();
+	    break;
+	case LANDED:
+	    if (state == previousState) {
+		controller.stop();
+		exit();
+	    }
+	    break;
+	case LANDING:
+	    if (state == OnyxState.LANDED) {
+		controller.stop();
+		exit();
+	    }
+	    break;
+	case RECOVERY:
+	    break;
+	case SHUTDOWN:
+	    if (state == previousState) {
+		controller.stop();
+		exit();
+	    }
+	    break;
+	case STARTUP:
+	    break;
+	default:
+	    break;
+	}
     }
 
     /**
      * Attempt to recover from database corruption error.
      */
     private void doRecover() {
-        if (isStateChanged()) {
-            switch (previousState) {
-            case AIRBORNE:
-                break;
-            case ERROR:
-                break;
-            case LANDED:
-                break;
-            case LANDING:
-                break;
-            case RECOVERY:
-                break;
-            case SHUTDOWN:
-                break;
-            case STARTUP:
-                break;
-            default:
-                break;
+	if (isStateChanged()) {
+	    switch (previousState) {
+	    case AIRBORNE:
+		break;
+	    case ERROR:
+		break;
+	    case LANDED:
+		break;
+	    case LANDING:
+		break;
+	    case RECOVERY:
+		break;
+	    case SHUTDOWN:
+		break;
+	    case STARTUP:
+		break;
+	    default:
+		break;
 
-            }
-        }
+	    }
+	}
     }
 
     /**
      * Do Startup state.
      */
     private void doStartup() {
-        if (isStateChanged()) {
-            Main.appStart(controller);
-        }
+	if (isStateChanged()) {
+	    Main.appStart(controller);
+	}
     }
 
     private void doLanding() {
-        if (isStateChanged()) {
+	if (isStateChanged()) {
 
-        }
+	}
     }
 
     private void doLanded() {
-        if (isStateChanged()) {
-            // TODO Complete
-        }
+	if (isStateChanged()) {
+	    // TODO Complete
+	}
     }
 
     private void doAirborne() {
-        if (isStateChanged()) {
-            // TODO Complete
-        }
+	if (isStateChanged()) {
+	    // TODO Complete
+	}
     }
 
     /**
      * Check if the state has changed.
      */
     private void checkState() {
-        if (state != previousState) {
-            setStateChanged(true);
-            LOGGER.debug("Entering " + state.name() + " state.");
-        } else if (state == previousState) {
-            setStateChanged(false);
-        }
+	if (state != previousState) {
+	    setStateChanged(true);
+	    LOGGER.debug("Entering " + state.name() + " state.");
+	} else if (state == previousState) {
+	    setStateChanged(false);
+	}
     }
 
     /**
      * Exit the application normally.
      */
     public void exit() {
-        isRunning = false;
-        LOGGER.info("Application exiting.");
-        ThreadUtils.shutdown();
-        Main.COORDINATOR.schedule(new ShutdownAgent(Main.COORDINATOR),Constants.SLEEP_TIME, Constants.MONITOR_TIMEUNIT);
-        System.exit(status);
+	isRunning = false;
+	LOGGER.info("Application exiting.");
+	ThreadUtils.shutdown();
+	Main.COORDINATOR.schedule(new ShutdownAgent(Main.COORDINATOR), Constants.SLEEP_TIME,
+		Constants.MONITOR_TIMEUNIT);
+	System.exit(status);
     }
 }

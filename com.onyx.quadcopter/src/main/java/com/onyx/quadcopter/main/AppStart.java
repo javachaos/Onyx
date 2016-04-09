@@ -35,9 +35,9 @@ public final class AppStart extends Thread {
     private Controller controller;
 
     public AppStart(final Controller c) {
-        if (c != null) {
-            controller = c;
-        }
+	if (c != null) {
+	    controller = c;
+	}
     }
 
     /**
@@ -46,7 +46,7 @@ public final class AppStart extends Thread {
      * @return an instance of the gui.
      */
     public Controller getController() {
-        return controller;
+	return controller;
     }
 
     /**
@@ -55,8 +55,8 @@ public final class AppStart extends Thread {
      * @return sucess or fail.
      */
     public StartupState init() {
-        LOGGER.info("Begin Init.");
-        return powerOnSelfTest();
+	LOGGER.info("Begin Init.");
+	return powerOnSelfTest();
     }
 
     /**
@@ -65,18 +65,18 @@ public final class AppStart extends Thread {
      * @return machine state, SUCCESSFUL or UNSUCCESSFUL
      */
     private StartupState powerOnSelfTest() {
-        final PowerOnSelfTest startTest = new PowerOnSelfTest(controller);
-        return startTest.test();
+	final PowerOnSelfTest startTest = new PowerOnSelfTest(controller);
+	return startTest.test();
     }
 
     @Override
     public void run() {
-        final StartupState state = init();
-        if (state == null) {
-            return;
-        }
-        checkExitState(state);
-        switchState(state);
+	final StartupState state = init();
+	if (state == null) {
+	    return;
+	}
+	checkExitState(state);
+	switchState(state);
     }
 
     /**
@@ -86,9 +86,9 @@ public final class AppStart extends Thread {
      *            the startup state.
      */
     private void checkExitState(final StartupState state) {
-        if (state == StartupState.EXIT) {
-            StateMonitor.shutdownState();
-        }
+	if (state == StartupState.EXIT) {
+	    StateMonitor.shutdownState();
+	}
     }
 
     /**
@@ -98,24 +98,24 @@ public final class AppStart extends Thread {
      *            the startup state.
      */
     private void switchState(final StartupState state) {
-        switch (state) {
-        case SUCCESSFUL:
-            successState();
-            break;
-        case UNSUCCESSFUL:
-            StateMonitor.errorState();
-            break;
-        default:
-            break;
-        }
+	switch (state) {
+	case SUCCESSFUL:
+	    successState();
+	    break;
+	case UNSUCCESSFUL:
+	    StateMonitor.errorState();
+	    break;
+	default:
+	    break;
+	}
     }
 
     /**
      * Success state.
      */
     private void successState() {
-        controller.start();
-        LOGGER.info("Controller start successful.");
-        StateMonitor.landedState();
+	controller.start();
+	LOGGER.info("Controller start successful.");
+	StateMonitor.landedState();
     }
 }

@@ -53,53 +53,53 @@ public final class PropertyManager {
      * Private PropertyManager constructor, not used.
      */
     public PropertyManager() {
-        init();
+	init();
     }
 
     /**
      * Initialize the property manager.
      */
     public void init() {
-        loadProperties();
-        Constants.init();
+	loadProperties();
+	Constants.init();
     }
 
     /**
      * Load properties into memory from file.
      */
     private void loadProperties() {
-        try {
-            if (!Constants.APP_DIRECTORY.exists()) {
-                Constants.APP_DIRECTORY.mkdirs();
-            }
-            new File(fileName).createNewFile();
-            props.load(new FileInputStream(fileName));
-            PropertyManager.LOGGER.debug("Properties loaded into memory.");
-            LOGGER.debug(props.stringPropertyNames().toString());
-        } catch (final FileNotFoundException e) {
-            PropertyManager.LOGGER.error(e.getMessage());
-            e.printStackTrace();
-        } catch (final IOException e) {
-            PropertyManager.LOGGER.error(e.getMessage());
-            e.printStackTrace();
-        }
-        isLoaded = true;
+	try {
+	    if (!Constants.APP_DIRECTORY.exists()) {
+		Constants.APP_DIRECTORY.mkdirs();
+	    }
+	    new File(fileName).createNewFile();
+	    props.load(new FileInputStream(fileName));
+	    PropertyManager.LOGGER.debug("Properties loaded into memory.");
+	    LOGGER.debug(props.stringPropertyNames().toString());
+	} catch (final FileNotFoundException e) {
+	    PropertyManager.LOGGER.error(e.getMessage());
+	    e.printStackTrace();
+	} catch (final IOException e) {
+	    PropertyManager.LOGGER.error(e.getMessage());
+	    e.printStackTrace();
+	}
+	isLoaded = true;
     }
 
     /**
      * Write properties to file.
      */
     private void writeProperties() {
-        try {
-            props.store(new FileOutputStream(fileName), null);
-            PropertyManager.LOGGER.debug("Properties written to disk.");
-        } catch (final FileNotFoundException e) {
-            PropertyManager.LOGGER.error(e.getMessage());
-            e.printStackTrace();
-        } catch (final IOException e) {
-            PropertyManager.LOGGER.error(e.getMessage());
-            e.printStackTrace();
-        }
+	try {
+	    props.store(new FileOutputStream(fileName), null);
+	    PropertyManager.LOGGER.debug("Properties written to disk.");
+	} catch (final FileNotFoundException e) {
+	    PropertyManager.LOGGER.error(e.getMessage());
+	    e.printStackTrace();
+	} catch (final IOException e) {
+	    PropertyManager.LOGGER.error(e.getMessage());
+	    e.printStackTrace();
+	}
     }
 
     /**
@@ -115,11 +115,11 @@ public final class PropertyManager {
      *            the type of the value to store
      */
     public <T extends Number> void addProperty(final String key, final T value) {
-        if (!isLoaded) {
-            loadProperties();
-        }
-        props.put(key, value);
-        writeProperties();
+	if (!isLoaded) {
+	    loadProperties();
+	}
+	props.put(key, value);
+	writeProperties();
     }
 
     /**
@@ -133,11 +133,11 @@ public final class PropertyManager {
      *
      */
     public void addProperty(final String key, final String value) {
-        if (!isLoaded) {
-            loadProperties();
-        }
-        props.put(key, value);
-        writeProperties();
+	if (!isLoaded) {
+	    loadProperties();
+	}
+	props.put(key, value);
+	writeProperties();
     }
 
     /**
@@ -148,13 +148,13 @@ public final class PropertyManager {
      * @return the value assigned the key key
      */
     public String getStringProperty(final String key) {
-        if (!isLoaded) {
-            loadProperties();
-        }
-        if ((key == null) || (key.length() <= 0)) {
-            throw new IllegalArgumentException("Key was null or zero length.");
-        }
-        return props.getProperty(key);
+	if (!isLoaded) {
+	    loadProperties();
+	}
+	if ((key == null) || (key.length() <= 0)) {
+	    throw new IllegalArgumentException("Key was null or zero length.");
+	}
+	return props.getProperty(key);
     }
 
     /**
@@ -170,19 +170,19 @@ public final class PropertyManager {
      *         defaultValue.
      */
     public String getStringProperty(final String key, final String defaultValue) {
-        String temp;
-        if (!isLoaded) {
-            loadProperties();
-        }
-        if ((key == null) || (key.length() <= 0)) {
-            return defaultValue;
-        }
-        temp = props.getProperty(key);
-        if ((temp == null) || (temp.length() <= 0)) {
-            return defaultValue;
-        }
+	String temp;
+	if (!isLoaded) {
+	    loadProperties();
+	}
+	if ((key == null) || (key.length() <= 0)) {
+	    return defaultValue;
+	}
+	temp = props.getProperty(key);
+	if ((temp == null) || (temp.length() <= 0)) {
+	    return defaultValue;
+	}
 
-        return temp;
+	return temp;
     }
 
     /**
@@ -195,7 +195,7 @@ public final class PropertyManager {
      *         as a float an exception is thrown.
      */
     public float getFloatProperty(final String key) {
-        return Float.parseFloat(getStringProperty(key));
+	return Float.parseFloat(getStringProperty(key));
     }
 
     /**
@@ -211,7 +211,7 @@ public final class PropertyManager {
      *         returns the defaultValue.
      */
     public float getFloatProperty(final String key, final float defaultValue) {
-        return Float.parseFloat(getStringProperty(key, defaultValue + ""));
+	return Float.parseFloat(getStringProperty(key, defaultValue + ""));
     }
 
     /**
@@ -224,7 +224,7 @@ public final class PropertyManager {
      *         recognizable as an Integer an exception is thrown.
      */
     public int getIntegerProperty(final String key) {
-        return Integer.parseInt(getStringProperty(key));
+	return Integer.parseInt(getStringProperty(key));
     }
 
     /**
@@ -240,7 +240,7 @@ public final class PropertyManager {
      *         returns the defaultValue.
      */
     public int getIntegerProperty(final String key, final int defaultValue) {
-        return Integer.parseInt(getStringProperty(key, defaultValue + ""));
+	return Integer.parseInt(getStringProperty(key, defaultValue + ""));
     }
 
     /**
@@ -255,8 +255,8 @@ public final class PropertyManager {
      *         returns the defaultValue.
      */
     public boolean getBooleanProperty(final String key, final boolean defaultValue) {
-        final String s = getStringProperty(key, defaultValue + "");
-        return (s.equals("1") || s.equals("true"));
+	final String s = getStringProperty(key, defaultValue + "");
+	return (s.equals("1") || s.equals("true"));
     }
 
     /**
@@ -267,7 +267,7 @@ public final class PropertyManager {
      * @return the value of the property
      */
     public long getLongProperty(final String key) {
-        return Long.parseLong(getStringProperty(key));
+	return Long.parseLong(getStringProperty(key));
     }
 
     /**
@@ -285,7 +285,7 @@ public final class PropertyManager {
      *         returned
      */
     public long getLongProperty(final String key, final long defaultValue) {
-        return Long.parseLong(getStringProperty(key, defaultValue + ""));
+	return Long.parseLong(getStringProperty(key, defaultValue + ""));
     }
 
 }

@@ -15,43 +15,43 @@ public class OnyxScheduledExecutor extends ScheduledThreadPoolExecutor {
     public static final Logger LOGGER = LoggerFactory.getLogger(OnyxScheduledExecutor.class);
 
     public OnyxScheduledExecutor(final int corePoolSize) {
-        super(corePoolSize);
-        setRemoveOnCancelPolicy(true);
+	super(corePoolSize);
+	setRemoveOnCancelPolicy(true);
     }
 
     @Override
     public ScheduledFuture<?> scheduleAtFixedRate(final Runnable command, final long initialDelay, final long period,
-            final TimeUnit unit) {
-        return super.scheduleAtFixedRate(wrapRunnable(command), initialDelay, period, unit);
+	    final TimeUnit unit) {
+	return super.scheduleAtFixedRate(wrapRunnable(command), initialDelay, period, unit);
     }
 
     @Override
     public ScheduledFuture<?> scheduleWithFixedDelay(final Runnable command, final long initialDelay, final long delay,
-            final TimeUnit unit) {
-        return super.scheduleWithFixedDelay(wrapRunnable(command), initialDelay, delay, unit);
+	    final TimeUnit unit) {
+	return super.scheduleWithFixedDelay(wrapRunnable(command), initialDelay, delay, unit);
     }
 
     private Runnable wrapRunnable(final Runnable command) {
-        return new LogOnExceptionRunnable(command);
+	return new LogOnExceptionRunnable(command);
     }
 
     private class LogOnExceptionRunnable implements Runnable {
-        private final Runnable theRunnable;
+	private final Runnable theRunnable;
 
-        public LogOnExceptionRunnable(final Runnable theRunnable) {
-            super();
-            this.theRunnable = theRunnable;
-        }
+	public LogOnExceptionRunnable(final Runnable theRunnable) {
+	    super();
+	    this.theRunnable = theRunnable;
+	}
 
-        @Override
-        public void run() {
-            try {
-                theRunnable.run();
-            } catch (final Throwable e) {
-                LOGGER.error("Error: " + e.getCause());
-                throw new RuntimeException(e);
-            }
-        }
+	@Override
+	public void run() {
+	    try {
+		theRunnable.run();
+	    } catch (final Throwable e) {
+		LOGGER.error("Error: " + e.getCause());
+		throw new RuntimeException(e);
+	    }
+	}
     }
 
 }

@@ -19,12 +19,12 @@ public class OLEDDevice extends Device {
      * Message index.
      */
     private int msgIndex = 0;
-    
+
     /**
      * Display counter.
      */
     private int msgDispIndex = 0;
-    
+
     /**
      * Small message buffer.
      */
@@ -36,10 +36,10 @@ public class OLEDDevice extends Device {
 
     @Override
     protected void update() {
-	if(msgIndex >= Constants.OLED_MAX_MSGS) {
+	if (msgIndex >= Constants.OLED_MAX_MSGS) {
 	    msgIndex = 0;
 	}
-	if(isNewMessage()) {
+	if (isNewMessage()) {
 	    msgs[msgIndex++] = lastMessage.getContent();
 	}
     }
@@ -47,10 +47,7 @@ public class OLEDDevice extends Device {
     @Override
     protected void init() {
 	try {
-	    oled = new Display(128, 32,
-		    getController().getGpio(),
-		    I2CBusImpl.getBus(1),
-		    0x3c, RaspiPin.GPIO_25);
+	    oled = new Display(128, 32, getController().getGpio(), I2CBusImpl.getBus(1), 0x3c, RaspiPin.GPIO_25);
 	    oled.begin();
 	    oled.dim(false);
 	    oled.write("OLED Initialized.");
@@ -70,13 +67,13 @@ public class OLEDDevice extends Device {
     private void show() {
 	String msg = msgs[msgDispIndex];
 	if (msg != null && !msg.isEmpty()) {
-            oled.write(msg);
-            if(++msgDispIndex >= msgs.length) {
-                msgDispIndex = 0;
-            }
+	    oled.write(msg);
+	    if (++msgDispIndex >= msgs.length) {
+		msgDispIndex = 0;
+	    }
 	}
     }
-    
+
     @Override
     protected void alternate() {
 	show();

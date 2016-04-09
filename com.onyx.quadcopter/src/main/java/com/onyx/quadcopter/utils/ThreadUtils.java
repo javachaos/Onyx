@@ -47,40 +47,40 @@ public final class ThreadUtils {
      *            the number of countdowns to wait for.
      */
     public static void await(final int waitCount) {
-        try {
-            LOGGER.debug("Latch awaiting count down.");
-            CountDownLatch latch = new CountDownLatch(waitCount);
-            latchStack.push(latch);
-            latch.await();
-        } catch (InterruptedException e) {
-            ExceptionUtils.fatalError(ThreadUtils.class, e);
-        }
+	try {
+	    LOGGER.debug("Latch awaiting count down.");
+	    CountDownLatch latch = new CountDownLatch(waitCount);
+	    latchStack.push(latch);
+	    latch.await();
+	} catch (InterruptedException e) {
+	    ExceptionUtils.fatalError(ThreadUtils.class, e);
+	}
     }
 
     /**
      * Countdown.
      */
     public static void countDown() {
-        if (!latchStack.isEmpty()) {
-            CountDownLatch l = latchStack.pop();
-            l.countDown();
-            if (l.getCount() != 0) {
-                latchStack.push(l);
-            }
-            LOGGER.debug("Latch count down complete.");
-        }
+	if (!latchStack.isEmpty()) {
+	    CountDownLatch l = latchStack.pop();
+	    l.countDown();
+	    if (l.getCount() != 0) {
+		latchStack.push(l);
+	    }
+	    LOGGER.debug("Latch count down complete.");
+	}
     }
 
     /**
      * Release all latches and shutdown.
      */
     public static void shutdown() {
-        while (!latchStack.isEmpty()) {
-            CountDownLatch l = latchStack.pop();
-            while (l.getCount() > 0) {
-                l.countDown();
-            }
-            l = null;
-        }
+	while (!latchStack.isEmpty()) {
+	    CountDownLatch l = latchStack.pop();
+	    while (l.getCount() > 0) {
+		l.countDown();
+	    }
+	    l = null;
+	}
     }
 }

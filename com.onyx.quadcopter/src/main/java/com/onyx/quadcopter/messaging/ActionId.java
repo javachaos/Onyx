@@ -72,8 +72,8 @@ public enum ActionId {
     /**
      * No action is performed on the contents of the message.
      */
-    NO_ACTION(12), 
-    
+    NO_ACTION(12),
+
     /**
      * Change the pulse width
      */
@@ -91,7 +91,7 @@ public enum ActionId {
      *            the id of the enum type.
      */
     private ActionId(final int i) {
-        id = i;
+	id = i;
     }
 
     /**
@@ -103,6 +103,6 @@ public enum ActionId {
      * @return the ordinal value of the ActionID t
      */
     public static int getId(final ActionId t) {
-        return t.id;
+	return t.id;
     }
 }

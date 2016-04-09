@@ -32,13 +32,13 @@ public class ShutdownAgent extends Thread {
      *            the scheduled executor service
      */
     public ShutdownAgent(final ScheduledExecutorService ses) {
-        this.coordinator = ses;
+	this.coordinator = ses;
     }
 
     @Override
     public final void run() {
-        coordinator.shutdown();
-        coordinator.shutdownNow();
+	coordinator.shutdown();
+	coordinator.shutdownNow();
     }
 
 }

@@ -10,13 +10,13 @@ public class OnyxException extends RuntimeException {
     private static final long serialVersionUID = -2201072108555626457L;
 
     public OnyxException(final String errorMsg, final Logger l) {
-        super(errorMsg);
-        l.error(errorMsg);
+	super(errorMsg);
+	l.error(errorMsg);
     }
 
     public OnyxException(final Throwable t, final Logger l) {
-        super(t);
-        l.error(t.getMessage());
+	super(t);
+	l.error(t.getMessage());
     }
 
 }

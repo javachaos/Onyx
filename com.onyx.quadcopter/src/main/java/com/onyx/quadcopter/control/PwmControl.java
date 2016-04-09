@@ -26,7 +26,7 @@ public class PwmControl {
      * Maps from 0-4095 to 0-20000.
      */
     private double scale = 4.884004884;
-    
+
     /**
      * Logger.
      */
@@ -40,7 +40,7 @@ public class PwmControl {
      */
     public PwmControl(final short pinNum) {
 	if (pinNum > 15 || pinNum < 0) {
-	    LOGGER.error("Pin number out of range. "+ pinNum);
+	    LOGGER.error("Pin number out of range. " + pinNum);
 	    pin = -1;
 	} else {
 	    pin = pinNum;
@@ -60,39 +60,40 @@ public class PwmControl {
     }
 
     /**
-     * Write pulseWidth to the PWM pin. (In microseconds)
-     * Range must be between 1000us and 2000us.
+     * Write pulseWidth to the PWM pin. (In microseconds) Range must be between
+     * 1000us and 2000us.
      *
      * @param pulseWidth
      *            the pulseWidth to be written.
      */
     public void pwmWrite(final int pulseWidth) {
-	//TODO Test PWMWrite
+	// TODO Test PWMWrite
 	if (pulseWidth > 2000 || pulseWidth < 1000) {
 	    LOGGER.error("Pulse width is out of range. [1000us - 2000us] expected.");
-	}else {
+	} else {
 	    pwm.ledFullOn(pin, false);
-            pwm.ledOnTime(pin, 0);
-            pwm.ledOffTime(pin, (int) (period - (pulseWidth / scale)));
+	    pwm.ledOnTime(pin, 0);
+	    pwm.ledOffTime(pin, (int) (period - (pulseWidth / scale)));
 	}
     }
-    
+
     /**
      * Set the speed from [0-100].
+     * 
      * @param percent
-     * 		the speed from 0 - 100.
+     *            the speed from 0 - 100.
      */
     public void setSpeed(final int percent) {
-	pwmWrite((10*percent) + 1000);
+	pwmWrite((10 * percent) + 1000);
     }
-    
+
     /**
      * Enable this PWM Control.
      */
     public void enable() {
 	pwm.ledFullOff(pin, false);
     }
-    
+
     /**
      * Enable this PWM Control.
      */

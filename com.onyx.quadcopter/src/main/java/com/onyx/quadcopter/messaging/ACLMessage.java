@@ -62,11 +62,11 @@ public final class ACLMessage implements Serializable {
      *            the ActionID of this message
      */
     public ACLMessage(final MessageType type, final ActionId id) {
-        if (type == MessageType.EMPTY) {
-            isEmpty = true;
-        }
-        setId(type);
-        setActionID(id);
+	if (type == MessageType.EMPTY) {
+	    isEmpty = true;
+	}
+	setId(type);
+	setActionID(id);
     }
 
     /**
@@ -77,7 +77,7 @@ public final class ACLMessage implements Serializable {
      *            the MessageType for this ACL message
      */
     public ACLMessage(final MessageType id) {
-        this(id, ActionId.NULL);
+	this(id, ActionId.NULL);
     }
 
     /**
@@ -86,7 +86,7 @@ public final class ACLMessage implements Serializable {
      * @return true if the message is empty
      */
     public boolean isEmpty() {
-        return isEmpty;
+	return isEmpty;
     }
 
     /**
@@ -96,7 +96,7 @@ public final class ACLMessage implements Serializable {
      *            the ActionID to set.
      */
     public void setActionID(final ActionId id) {
-        actionId = id;
+	actionId = id;
     }
 
     /**
@@ -105,7 +105,7 @@ public final class ACLMessage implements Serializable {
      * @return the ActionID for this ACLMessage
      */
     public ActionId getActionID() {
-        return actionId;
+	return actionId;
     }
 
     /**
@@ -115,7 +115,7 @@ public final class ACLMessage implements Serializable {
      *            the MessageType to set
      */
     private void setId(final MessageType id) {
-        messageType = id;
+	messageType = id;
     }
 
     /**
@@ -125,7 +125,7 @@ public final class ACLMessage implements Serializable {
      *            the content to be set
      */
     public void setContent(final String c) {
-        content = c;
+	content = c;
     }
 
     /**
@@ -134,7 +134,7 @@ public final class ACLMessage implements Serializable {
      * @return the contents of this message
      */
     public String getContent() {
-        return content;
+	return content;
     }
 
     /**
@@ -144,7 +144,7 @@ public final class ACLMessage implements Serializable {
      *            the senders AgentID to be set
      */
     public void setSender(final DeviceID id) {
-        sender = id;
+	sender = id;
     }
 
     /**
@@ -153,7 +153,7 @@ public final class ACLMessage implements Serializable {
      * @return the sender of this ACL message
      */
     public DeviceID getSender() {
-        return sender;
+	return sender;
     }
 
     /**
@@ -162,7 +162,7 @@ public final class ACLMessage implements Serializable {
      * @return the expected receiver of this ACL message
      */
     public DeviceID getReciever() {
-        return reciever;
+	return reciever;
     }
 
     /**
@@ -172,7 +172,7 @@ public final class ACLMessage implements Serializable {
      *            the id of the reciever to be set
      */
     public void setReciever(final DeviceID id) {
-        reciever = id;
+	reciever = id;
     }
 
     /**
@@ -181,12 +181,12 @@ public final class ACLMessage implements Serializable {
      * @return the message type of this ACL message.
      */
     public MessageType getMessageType() {
-        return messageType;
+	return messageType;
     }
 
     @Override
     public String toString() {
-        return "{" + messageType.name() + "," + sender.name() + "," + reciever.name() + "," + content + "}";
+	return "{" + messageType.name() + "," + sender.name() + "," + reciever.name() + "," + content + "}";
     }
 
     /**
@@ -196,18 +196,18 @@ public final class ACLMessage implements Serializable {
      * @return true if this message is valid.
      */
     public boolean isValid() {
-        if ((messageType != null) && (sender != null) && (reciever != null) && (actionId != null)) {
-            return !isEmpty();
-        }
-        return false;
+	if ((messageType != null) && (sender != null) && (reciever != null) && (actionId != null)) {
+	    return !isEmpty();
+	}
+	return false;
     }
 
     public double getValue() {
-        return value;
+	return value;
     }
 
     public void setValue(final double value) {
-        this.value = value;
+	this.value = value;
     }
 
     /*
@@ -217,18 +217,18 @@ public final class ACLMessage implements Serializable {
      */
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = (prime * result) + ((actionId == null) ? 0 : actionId.hashCode());
-        result = (prime * result) + ((content == null) ? 0 : content.hashCode());
-        result = (prime * result) + (isEmpty ? 1231 : 1237);
-        result = (prime * result) + ((messageType == null) ? 0 : messageType.hashCode());
-        result = (prime * result) + ((reciever == null) ? 0 : reciever.hashCode());
-        result = (prime * result) + ((sender == null) ? 0 : sender.hashCode());
-        long temp;
-        temp = Double.doubleToLongBits(value);
-        result = (prime * result) + (int) (temp ^ (temp >>> 32));
-        return result;
+	final int prime = 31;
+	int result = 1;
+	result = (prime * result) + ((actionId == null) ? 0 : actionId.hashCode());
+	result = (prime * result) + ((content == null) ? 0 : content.hashCode());
+	result = (prime * result) + (isEmpty ? 1231 : 1237);
+	result = (prime * result) + ((messageType == null) ? 0 : messageType.hashCode());
+	result = (prime * result) + ((reciever == null) ? 0 : reciever.hashCode());
+	result = (prime * result) + ((sender == null) ? 0 : sender.hashCode());
+	long temp;
+	temp = Double.doubleToLongBits(value);
+	result = (prime * result) + (int) (temp ^ (temp >>> 32));
+	return result;
     }
 
     /*
@@ -238,42 +238,42 @@ public final class ACLMessage implements Serializable {
      */
     @Override
     public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final ACLMessage other = (ACLMessage) obj;
-        if (actionId != other.actionId) {
-            return false;
-        }
-        if (content == null) {
-            if (other.content != null) {
-                return false;
-            }
-        } else if (!content.equals(other.content)) {
-            return false;
-        }
-        if (isEmpty != other.isEmpty) {
-            return false;
-        }
-        if (messageType != other.messageType) {
-            return false;
-        }
-        if (reciever != other.reciever) {
-            return false;
-        }
-        if (sender != other.sender) {
-            return false;
-        }
-        if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value)) {
-            return false;
-        }
-        return true;
+	if (this == obj) {
+	    return true;
+	}
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final ACLMessage other = (ACLMessage) obj;
+	if (actionId != other.actionId) {
+	    return false;
+	}
+	if (content == null) {
+	    if (other.content != null) {
+		return false;
+	    }
+	} else if (!content.equals(other.content)) {
+	    return false;
+	}
+	if (isEmpty != other.isEmpty) {
+	    return false;
+	}
+	if (messageType != other.messageType) {
+	    return false;
+	}
+	if (reciever != other.reciever) {
+	    return false;
+	}
+	if (sender != other.sender) {
+	    return false;
+	}
+	if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value)) {
+	    return false;
+	}
+	return true;
     }
 
 }

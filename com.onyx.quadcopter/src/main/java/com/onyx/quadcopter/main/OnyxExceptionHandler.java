@@ -16,8 +16,8 @@ public class OnyxExceptionHandler implements UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(final Thread t, final Throwable e) {
-        t.interrupt();
-        throw new OnyxException(e.getMessage(), LOGGER);
+	t.interrupt();
+	throw new OnyxException(e.getMessage(), LOGGER);
     }
 
 }

@@ -31,36 +31,36 @@ public class PowerOnSelfTest {
     private final Controller controller;
 
     public PowerOnSelfTest(final Controller c) {
-        if (c != null) {
-            controller = c;
-        } else {
-            throw new OnyxException("Controller null.", LOGGER);
-        }
+	if (c != null) {
+	    controller = c;
+	} else {
+	    throw new OnyxException("Controller null.", LOGGER);
+	}
     }
 
     public StartupState test() {
 	if (Constants.SIMULATION) {
 	    return StartupState.SUCCESSFUL;
 	}
-        for (final Entry<DeviceID, Device> d : controller.getDevices()) {
-            final Device dev = d.getValue();
-            while (!dev.isInitialized()) {
-        	try {
-        	    //Wait for the device to be initialized.
+	for (final Entry<DeviceID, Device> d : controller.getDevices()) {
+	    final Device dev = d.getValue();
+	    while (!dev.isInitialized()) {
+		try {
+		    // Wait for the device to be initialized.
 		    Thread.sleep(100);
 		} catch (InterruptedException e) {
 		    LOGGER.error(e.getMessage());
 		}
-            }
-            if (dev.selfTest()) {
-                continue;
-            } else {
-                LOGGER.debug("Power on self test failed. Device: " + d + " did not pass.");
-                return StartupState.UNSUCCESSFUL;
-            }
-        }
-        LOGGER.debug("Power on self test completed successfully.");
-        return StartupState.SUCCESSFUL;
+	    }
+	    if (dev.selfTest()) {
+		continue;
+	    } else {
+		LOGGER.debug("Power on self test failed. Device: " + d + " did not pass.");
+		return StartupState.UNSUCCESSFUL;
+	    }
+	}
+	LOGGER.debug("Power on self test completed successfully.");
+	return StartupState.SUCCESSFUL;
     }
 
 }

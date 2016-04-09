@@ -2,17 +2,19 @@ package com.onyx.quadcopter.control;
 
 /**
  * Represents a PID along one axis.
+ * 
  * @author fred
  *
  */
 public class Pid {
-    
+
     private float pGain;
     private float iGain;
     private float dGain;
 
     /**
      * Create a new PID for one axis.
+     * 
      * @param pGain
      * @param iGain
      * @param dGain
@@ -31,7 +33,8 @@ public class Pid {
     }
 
     /**
-     * @param pGain the pGain to set
+     * @param pGain
+     *            the pGain to set
      */
     public void setPGain(float pGain) {
 	this.pGain = pGain;
@@ -45,7 +48,8 @@ public class Pid {
     }
 
     /**
-     * @param iGain the iGain to set
+     * @param iGain
+     *            the iGain to set
      */
     public void setIGain(float iGain) {
 	this.iGain = iGain;
@@ -59,7 +63,8 @@ public class Pid {
     }
 
     /**
-     * @param dGain the dGain to set
+     * @param dGain
+     *            the dGain to set
      */
     public void setDGain(float dGain) {
 	this.dGain = dGain;

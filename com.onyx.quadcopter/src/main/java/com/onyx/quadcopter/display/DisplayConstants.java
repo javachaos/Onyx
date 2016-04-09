@@ -1,6 +1,5 @@
 package com.onyx.quadcopter.display;
 
-
 public class DisplayConstants {
     public static final short SSD1306_I2C_ADDRESS = 0x3C;
     public static final short SSD1306_SETCONTRAST = 0x81;

@@ -7,6 +7,7 @@ import com.onyx.quadcopter.utils.Constants;
 
 /**
  * A simple PID Controller.
+ * 
  * @author fred
  *
  */
@@ -15,9 +16,9 @@ public class PIDController extends Device {
     private static final float GAIN_P = Constants.PID_GAIN_P;
     private static final float GAIN_I = Constants.PID_GAIN_I;
     private static final float GAIN_D = Constants.PID_GAIN_D;
-    
+
     private static float prevError = 0;
-    
+
     private static float error = 0;
     private static float errorSum = 0;
 
@@ -32,11 +33,11 @@ public class PIDController extends Device {
     private float xIn = 0;
     private float yIn = 0;
     private float zIn = 0;
-    
+
     /**
      * Default orientation. (Level with respect to ground)
      */
-    private float[] defaultOrient = new float[]{0.0f, 0.0f, 0.0f};
+    private float[] defaultOrient = new float[] { 0.0f, 0.0f, 0.0f };
 
     public PIDController(final Controller c) {
 	super(c, DeviceID.PID);
@@ -44,22 +45,22 @@ public class PIDController extends Device {
 
     @Override
     protected void update() {
-	
+
     }
 
     @Override
     protected void init() {
-	
+
     }
 
     @Override
     public void shutdown() {
-	
+
     }
 
     @Override
     protected void alternate() {
-	
+
     }
 
     @Override
