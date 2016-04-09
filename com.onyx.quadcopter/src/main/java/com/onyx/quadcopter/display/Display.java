@@ -498,23 +498,17 @@ public class Display {
             String[] words = text.split(" ");
             String currentLine = words[0];
             for(int i = 1; i < words.length; i++) {
-                if(m.stringWidth(currentLine+words[i]) < width) {
-                    currentLine += " "+words[i];
+                if(m.stringWidth(currentLine + words[i]) < width) {
+                    currentLine += " " + words[i];
                 } else {
                     g.drawString(currentLine, x, y);
                     y += m.getHeight();
                     currentLine = words[i];
                 }
             }
-            if(currentLine.trim().length() > 0) {
+            
+            if(currentLine.length() > 0) {
                 g.drawString(currentLine, x, y);
-            }
-        }
-        if (text.contains(System.lineSeparator())) {
-            String[] nibbles = text.split(System.lineSeparator());
-            for(String s : nibbles) {
-                y += m.getHeight();
-                drawStringMultiLine(g, s);
             }
         }
     }
