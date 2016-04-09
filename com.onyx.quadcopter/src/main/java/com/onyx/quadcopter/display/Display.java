@@ -498,7 +498,8 @@ public class Display {
         	break;
             }
             drawStringMultiLine(g, line);
-            y += m.getHeight();
+            //y += m.getHeight();
+            
         }
         if(m.stringWidth(text) < width) {
             g.drawString(text, x, y);
