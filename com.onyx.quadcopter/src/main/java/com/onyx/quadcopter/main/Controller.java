@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.MapMaker;
 import com.onyx.quadcopter.control.RedButton;
 import com.onyx.quadcopter.devices.Blackboard;
-import com.onyx.quadcopter.devices.CameraDevice;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.devices.GyroMagAcc;
@@ -90,7 +89,6 @@ public class Controller implements Runnable {
 	addDevice(new Motor(this, DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
 	addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
 	addDevice(new Motor(this, DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
-	addDevice(new CameraDevice(this));
 	LOGGER.debug("Controller Initialized.");
 	for (final Entry<DeviceID, Device> d : devices.entrySet()) {
 	    d.getValue().initialize();
