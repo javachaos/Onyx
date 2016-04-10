@@ -2,7 +2,7 @@
 Description=Onyx Quadcopter Video Stream service
 
 [Service]
-ExecStart=/opt/onyx/video.sh
+ExecStart=/opt/onyx/onyx-video
 Restart=on-failure
 
 [Install]

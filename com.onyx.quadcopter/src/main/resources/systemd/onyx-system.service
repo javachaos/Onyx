@@ -2,7 +2,7 @@
 Description=Onyx Quadcopter service
 
 [Service]
-ExecStart=/opt/onyx/onyx_start
+ExecStart=/opt/onyx/onyx-start
 Restart=on-failure
 
 [Install]
