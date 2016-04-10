@@ -16,6 +16,12 @@ public class RedButton extends Device implements GpioPinListenerDigital {
      * Push Button.
      */
     private GpioPinDigitalInput button;
+    
+    /**
+     * How long the button has been held down for in nanoseconds.
+     */
+    private long holdDownTime = 0;
+    private long startTime = 0;
 
     public RedButton(final Controller c) {
 	super(c, DeviceID.RED_BUTTON);
@@ -50,7 +56,12 @@ public class RedButton extends Device implements GpioPinListenerDigital {
     public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent state) {
 	LOGGER.debug("Button State: " + state.getState().getName());
 	if (state.getState() == PinState.LOW) {
+	    startTime = System.nanoTime();
 	    LOGGER.debug("Button Pressed.");
+	}
+	if (state.getState() == PinState.HIGH) {
+	    holdDownTime = System.nanoTime() - startTime;
+	    LOGGER.debug("Button Released. Held down for "+ holdDownTime + "  nanoseconds.");
 	}
     }
 
