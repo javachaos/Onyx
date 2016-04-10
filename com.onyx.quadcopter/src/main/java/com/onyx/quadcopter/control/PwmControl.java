@@ -10,7 +10,10 @@ import upm_pca9685.PCA9685;
 //TODO Implement
 public class PwmControl {
 
-    private PCA9685 pwm;
+    /**
+     *  PCA9685 pwm driver.
+     */
+    private static PCA9685 pwm = new PCA9685(Constants.I2C_BUS_ID, Constants.PCA9685_I2C_ADDRESS);
 
     /**
      * PWM Address.
@@ -27,6 +30,7 @@ public class PwmControl {
      */
     private double scale = 4.884004884;
 
+    private short PCA9685_ALL_LED  = 0xff;
     /**
      * Logger.
      */
@@ -44,7 +48,6 @@ public class PwmControl {
 	    pin = -1;
 	} else {
 	    pin = pinNum;
-	    pwm = new PCA9685(Constants.I2C_BUS_ID, Constants.PCA9685_I2C_ADDRESS);
 	}
     }
 
@@ -55,7 +58,8 @@ public class PwmControl {
 	pwm.setModeSleep(true);
 	pwm.setPrescaleFromHz(Constants.PWM_FREQ);
 	pwm.setModeSleep(false);
-	pwm.enableRestart(true);
+	disable();
+	pwm.ledOnTime(PCA9685_ALL_LED, 0);
 	enable();
     }
 
@@ -105,6 +109,7 @@ public class PwmControl {
 	disable();
 	pwm.setModeSleep(true);
 	pwm.delete();
+	pwm = null;
     }
 
 }
