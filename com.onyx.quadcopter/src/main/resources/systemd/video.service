@@ -1,0 +1,9 @@
+[Unit]
+Description=Onyx Quadcopter Video Stream service
+
+[Service]
+ExecStart=/opt/onyx/video.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
