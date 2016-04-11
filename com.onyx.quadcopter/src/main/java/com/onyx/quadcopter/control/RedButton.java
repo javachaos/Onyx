@@ -116,7 +116,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
      *         Hold down time, how long this button has been held down for.
      */
     private void handleActionSequence(long hdt) {
-	if (hdt <= DISPLAY_SEQ && hdt < CALIBRATE_SEQ) {
+	if (hdt >= DISPLAY_SEQ && hdt < CALIBRATE_SEQ) {
 	    sendMessage(DeviceID.OLED_DEVICE,"NULL", ActionId.CHANGE_DISPLAY);
 	} else if (hdt > CALIBRATE_SEQ && hdt < SHUTDOWN_SEQ) {
 	    LOGGER.debug("Initiating Calibration Sequence...");

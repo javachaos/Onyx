@@ -53,6 +53,9 @@ public class Blackboard {
 	    if (currentBucket == null) {
 		currentBucket = new ConcurrentStack<ACLMessage>();
 	    }
+	    if (currentBucket.size() > Constants.MAX_BLACKBOARD_BUCKET_SIZE) {
+		currentBucket.clear();
+	    }
 	    currentBucket.push(aclMessage);
 	    blackboard.put(aclMessage.getReciever(), currentBucket);
 	}

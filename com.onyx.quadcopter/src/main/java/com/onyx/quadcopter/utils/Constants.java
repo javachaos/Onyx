@@ -367,4 +367,9 @@ public final class Constants {
      */
     public static final int OLED_Y_START = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.i2c.oled.y", 0);
 
+    /**
+     * Max size of the blackboard Concurrent stack.
+     */
+    public static final int MAX_BLACKBOARD_BUCKET_SIZE = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.blackboard.max.bucket.size", 32);
+
 }
