@@ -47,4 +47,8 @@ public class ConcurrentStack<E> {
     public void clear() {
 	head = new AtomicReference<Node<E>>();
     }
+
+    public E peek() {
+	return head.get().item;
+    }
 }

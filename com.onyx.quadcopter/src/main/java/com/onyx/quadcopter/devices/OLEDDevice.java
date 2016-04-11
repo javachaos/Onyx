@@ -47,6 +47,9 @@ public class OLEDDevice extends Device {
 	    case DISPLAY:
 	        msgs[msgIndex++] = lastMessage.getContent();
 	        break;
+	    case CHANGE_DISPLAY:
+		show();
+		break;
 	    default:
 	        break;
 	    }

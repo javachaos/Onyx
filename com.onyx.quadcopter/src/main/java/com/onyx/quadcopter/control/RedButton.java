@@ -21,7 +21,6 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
  */
 public class RedButton extends Device implements GpioPinListenerDigital {
 
-
     /**
      * Push Button.
      */
@@ -44,6 +43,12 @@ public class RedButton extends Device implements GpioPinListenerDigital {
     // Ex. If this button is held down for between 2seconds and less than
     //     the start of the shutdown_seq time which is 10seconds.
     //     The calibration sequence is entered.
+    
+    /**
+     * Display Time. [0s-2s].
+     */
+    private static final long DISPLAY_SEQ = 0;
+    
     /**
      * Calibration Time. [2s-9s]
      */
@@ -82,6 +87,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 
     @Override
     protected void alternate() {
+	sendMessage(DeviceID.OLED_DEVICE, "Current Button State: "+ button.getState(), ActionId.DISPLAY);
     }
 
     @Override
@@ -103,18 +109,23 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 	handleActionSequence(holdDownTime);
     }
 
+    /**
+     * Handle Action Sequence.
+     * 
+     * @param hdt
+     *         Hold down time, how long this button has been held down for.
+     */
     private void handleActionSequence(long hdt) {
-	if(hdt > CALIBRATE_SEQ && hdt < SHUTDOWN_SEQ) {
+	if (hdt <= DISPLAY_SEQ && hdt < CALIBRATE_SEQ) {
+	    sendMessage(DeviceID.OLED_DEVICE,"NULL", ActionId.CHANGE_DISPLAY);
+	} else if (hdt > CALIBRATE_SEQ && hdt < SHUTDOWN_SEQ) {
 	    LOGGER.debug("Initiating Calibration Sequence...");
 	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Calibration Sequence...", ActionId.PRINT);
 	    StateMonitor.calibrationState();
-	}
-	
-	if(hdt >= SHUTDOWN_SEQ) {
+	} else if (hdt >= SHUTDOWN_SEQ) {
 	    LOGGER.debug("Initiating Shutdown Sequence...");
 	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Shutdown Sequence...", ActionId.PRINT);
 	    StateMonitor.shutdownState();
 	}
     }
-
 }

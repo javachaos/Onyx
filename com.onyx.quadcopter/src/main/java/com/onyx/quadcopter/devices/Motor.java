@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.control.PwmControl;
 import com.onyx.quadcopter.main.Controller;
+import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
 
 public class Motor extends Device {
@@ -95,6 +96,7 @@ public class Motor extends Device {
     @Override
     protected void alternate() {
         LOGGER.debug("Current speed of " + getId() + " is: " + currentSpeed + "%.");
+        sendMessage(DeviceID.OLED_DEVICE, "Current speed of " + getId() + " is: " + currentSpeed + "%.", ActionId.DISPLAY);
     }
 
     @Override

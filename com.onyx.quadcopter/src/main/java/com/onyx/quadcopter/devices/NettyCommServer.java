@@ -122,6 +122,7 @@ public class NettyCommServer extends Device implements Runnable {
 
     @Override
     protected void alternate() {
+        sendMessage(DeviceID.OLED_DEVICE, "Latest Comm: "+handler.getDataStack().peek().getContent(), ActionId.DISPLAY);
     }
 
     @Override

@@ -82,7 +82,12 @@ public enum ActionId {
     /**
      * Display message.
      */
-    DISPLAY(14);
+    DISPLAY(14), 
+    
+    /**
+     * Change the display for OLED.
+     */
+    CHANGE_DISPLAY(15);
 
     /**
      * The internal ID field.

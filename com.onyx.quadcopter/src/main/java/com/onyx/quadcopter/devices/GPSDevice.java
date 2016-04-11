@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.main.Controller;
+import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
 
 import upm_ublox6.Ublox6;
@@ -41,6 +42,8 @@ public class GPSDevice extends Device {
     protected void alternate() {
 	try {
 	    LOGGER.debug(new String(nmeaBuffer, Constants.ENCODING));
+	    sendMessage(DeviceID.OLED_DEVICE,
+		    new String(nmeaBuffer, Constants.ENCODING), ActionId.DISPLAY);
 	} catch (UnsupportedEncodingException e) {
 	    LOGGER.error(e.getMessage());
 	}

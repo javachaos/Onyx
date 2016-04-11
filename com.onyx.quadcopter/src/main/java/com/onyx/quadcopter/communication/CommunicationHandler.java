@@ -85,6 +85,14 @@ public class CommunicationHandler extends SimpleChannelInboundHandler<ACLMessage
 	}
     }
 
+    /**
+     * Get this connection handlers data stack.
+     * @return
+     */
+    public ConcurrentStack<ACLMessage> getDataStack() {
+	return dataStack;
+    }
+    
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ACLMessage msg) throws Exception {
 	controller.getBlackboard().addMessage(msg);
