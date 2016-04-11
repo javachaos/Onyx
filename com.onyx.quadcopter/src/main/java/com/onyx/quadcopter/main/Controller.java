@@ -99,9 +99,9 @@ public class Controller implements Runnable {
     private void shutdown() {
 	LOGGER.debug("Starting Controller shutdown...");
 	blackboard.shutdown();
-	GpioFactory.getExecutorServiceFactory().shutdown();
+	GpioFactory.getInstance().shutdown();
 	for (final Entry<DeviceID, Device> d : devices.entrySet()) {
-	    LOGGER.debug("Shuttind down: " + d.getKey().toString());
+	    LOGGER.debug("Shutting down: " + d.getKey().toString());
 	    d.getValue().shutdown();
 	    cleaner.cleanUp(d.getValue());
 	    LOGGER.debug("Shutdown complete for: " + d.getKey().toString());
