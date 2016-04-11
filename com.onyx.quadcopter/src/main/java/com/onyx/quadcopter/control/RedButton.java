@@ -105,8 +105,8 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 	if (state.getState() == PinState.HIGH) {
 	    holdDownTime = System.nanoTime() - startTime;
 	    LOGGER.debug("Button Released. Held down for "+ holdDownTime + "  nanoseconds.");
+	    handleActionSequence(holdDownTime);
 	}
-	handleActionSequence(holdDownTime);
     }
 
     /**
