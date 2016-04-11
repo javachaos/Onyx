@@ -108,8 +108,6 @@ public class PwmControl {
     public void shutdown() {
 	disable();
 	pwm.setModeSleep(true);
-	pwm.delete();
-	pwm = null;
     }
 
 }

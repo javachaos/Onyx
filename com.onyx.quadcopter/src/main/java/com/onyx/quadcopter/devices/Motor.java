@@ -87,26 +87,9 @@ public class Motor extends Device {
     @Override
     public void shutdown() {
         LOGGER.debug("Shutting down " + getId() + "...");
-        int i = getSpeed();
-        while(i > 0) {
-            setSpeed(i--);
-            try {
-		Thread.sleep(100);
-	    } catch (InterruptedException e) {
-		e.printStackTrace();
-		LOGGER.error(e.getMessage());
-	    }
-        }
+        setSpeed(0);
         pwm.shutdown();
         LOGGER.debug("Shutdown complete for " + getId() + ".");
-    }
-
-    /**
-     * Get the current speed.
-     * @return
-     */
-    private int getSpeed() {
-	return currentSpeed;
     }
 
     @Override
