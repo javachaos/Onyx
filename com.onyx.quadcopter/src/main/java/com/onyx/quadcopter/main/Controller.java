@@ -105,8 +105,11 @@ public class Controller implements Runnable {
 	    cleaner.cleanUp(d.getValue());
 	    LOGGER.debug("Shutdown complete for: " + d.getKey().toString());
 	}
-	cleaner.doClean();
+	gpio.shutdown();
 	devices.clear();
+	cleaner.cleanUp(gpio);
+	cleaner.cleanUp(devices);
+	cleaner.doClean();
 	LOGGER.debug("Controller shutdown complete.");
     }
 

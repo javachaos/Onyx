@@ -74,6 +74,8 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 
     @Override
     public void shutdown() {
+	button.removeListener(this);
+	button.clearProperties();
     }
 
     @Override

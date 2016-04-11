@@ -19,7 +19,6 @@ import com.onyx.quadcopter.main.Main;
 import com.onyx.quadcopter.main.StateMonitor;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
-import com.pi4j.io.gpio.GpioFactory;
 
 /**
  * Shutdown hook.
@@ -54,13 +53,6 @@ public class ShutdownHook extends Thread {
 	try {
 	    StateMonitor.shutdownState();
 	    Main.COORDINATOR.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
-	    GpioFactory.getExecutorServiceFactory().getGpioEventExecutorService().awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
-	    GpioFactory.getExecutorServiceFactory().getScheduledExecutorService().awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
-	    GpioFactory.getExecutorServiceFactory().getScheduledExecutorService().shutdown();
-	    GpioFactory.getExecutorServiceFactory().getGpioEventExecutorService().shutdown();
-	    GpioFactory.getExecutorServiceFactory().getScheduledExecutorService().shutdownNow();
-	    GpioFactory.getExecutorServiceFactory().getGpioEventExecutorService().shutdownNow();
-	    GpioFactory.getDefaultProvider().shutdown();
 	    mainThread.join();
 	} catch (final InterruptedException e) {
 	    ExceptionUtils.logError(ShutdownHook.class, e);
