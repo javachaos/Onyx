@@ -115,6 +115,9 @@ public final class StateMonitor implements Runnable {
 	case STARTUP:
 	    doStartup();
 	    break;
+	case CALIBRATION:
+	    doCalibration();
+	    break;
 	default:
 	    break;
 	}
@@ -162,6 +165,10 @@ public final class StateMonitor implements Runnable {
 	return state;
     }
 
+    public static void calibrationState() {
+	state = OnyxState.CALIBRATION;	
+    }
+    
     /**
      * The aircraft in landed.
      */
@@ -211,6 +218,35 @@ public final class StateMonitor implements Runnable {
 	state = OnyxState.RECOVERY;
     }
 
+    private void doCalibration() {
+	switch (previousState) {
+	case AIRBORNE:
+	    state = previousState;
+	    break;
+	case ERROR:
+	    state = previousState;
+	    break;
+	case LANDED:
+	    //controller
+	    state = OnyxState.LANDED;
+	    break;
+	case LANDING:
+	    state = previousState;
+	    break;
+	case RECOVERY:
+	    state = previousState;
+	    break;
+	case SHUTDOWN:
+	    state = previousState;
+	    break;
+	case STARTUP:
+	    state = previousState;
+	    break;
+	default:
+	    break;
+	}
+    }
+    
     /**
      * Error state.
      */
@@ -225,35 +261,26 @@ public final class StateMonitor implements Runnable {
     private void doShutdown() {
 	switch (previousState) {
 	case AIRBORNE:
-	    if (state == OnyxState.LANDED) {
-		controller.stop();
-		exit();
-	    }
+	    state = previousState;
 	    break;
 	case ERROR:
-	    doRecover();
+	    state = previousState;
 	    break;
 	case LANDED:
-	    if (state == previousState) {
-		controller.stop();
-		exit();
-	    }
+	    controller.stop();
+	    exit();
 	    break;
 	case LANDING:
-	    if (state == OnyxState.LANDED) {
-		controller.stop();
-		exit();
-	    }
+	    state = previousState;
 	    break;
 	case RECOVERY:
+	    state = previousState;
 	    break;
 	case SHUTDOWN:
-	    if (state == previousState) {
-		controller.stop();
-		exit();
-	    }
+	    state = previousState;
 	    break;
 	case STARTUP:
+	    state = previousState;
 	    break;
 	default:
 	    break;
@@ -261,7 +288,7 @@ public final class StateMonitor implements Runnable {
     }
 
     /**
-     * Attempt to recover from database corruption error.
+     * Attempt to recover from corruption error.
      */
     private void doRecover() {
 	if (isStateChanged()) {
@@ -298,7 +325,6 @@ public final class StateMonitor implements Runnable {
 
     private void doLanding() {
 	if (isStateChanged()) {
-
 	}
     }
 

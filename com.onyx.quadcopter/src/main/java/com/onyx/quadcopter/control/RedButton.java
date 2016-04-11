@@ -3,6 +3,7 @@ package com.onyx.quadcopter.control;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.main.Controller;
+import com.onyx.quadcopter.main.StateMonitor;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.PinPullResistance;
@@ -11,6 +12,13 @@ import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
+/**
+ * Red Button, housed on the outside of the aircraft for performing
+ * Very simple commands.
+ * 
+ * @author fred
+ *
+ */
 public class RedButton extends Device implements GpioPinListenerDigital {
 
 
@@ -25,12 +33,31 @@ public class RedButton extends Device implements GpioPinListenerDigital {
     private long holdDownTime = 0;
     private long startTime = 0;
     
-    private static final long NANOSECONDS = (long) 1e+9;
-    private static final long MILLIS = NANOSECONDS / 1000000l;
-    private static final long SECONDS = MILLIS / 1000l;
-    private static final long CALIBRATE_SEQ = 2 * SECONDS;
-    private static final long SHUTDOWN_SEQ = 10 * SECONDS;
+    /**
+     * Number of nanoseconds per second.
+     */
+    private static final long NANOSECONDS_PER_SEC = (long) 1e+9;
+    
+    //These _SEQ variables hold the information about which sequence to trigger
+    //given the length of time the operator holds down this button.
+    //
+    // Ex. If this button is held down for between 2seconds and less than
+    //     the start of the shutdown_seq time which is 10seconds.
+    //     The calibration sequence is entered.
+    /**
+     * Calibration Time. [2s-9s]
+     */
+    private static final long CALIBRATE_SEQ = 2 * NANOSECONDS_PER_SEC;
+    
+    /**
+     * Shutdown Time. [10s-infs]
+     */
+    private static final long SHUTDOWN_SEQ = 10 * NANOSECONDS_PER_SEC;
 
+    /**
+     * Creates a red button.
+     * @param c
+     */
     public RedButton(final Controller c) {
 	super(c, DeviceID.RED_BUTTON);
     }
@@ -78,13 +105,13 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 	if(hdt > CALIBRATE_SEQ && hdt < SHUTDOWN_SEQ) {
 	    LOGGER.debug("Initiating Calibration Sequence...");
 	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Calibration Sequence...", ActionId.PRINT);
-	    //TODO Write calibration code.
+	    StateMonitor.calibrationState();
 	}
 	
 	if(hdt >= SHUTDOWN_SEQ) {
 	    LOGGER.debug("Initiating Shutdown Sequence...");
 	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Shutdown Sequence...", ActionId.PRINT);
-	    System.exit(0);
+	    StateMonitor.shutdownState();
 	}
     }
 
