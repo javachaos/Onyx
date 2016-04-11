@@ -56,6 +56,10 @@ public class ShutdownHook extends Thread {
 	    Main.COORDINATOR.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
 	    GpioFactory.getExecutorServiceFactory().getGpioEventExecutorService().awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
 	    GpioFactory.getExecutorServiceFactory().getScheduledExecutorService().awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
+	    GpioFactory.getExecutorServiceFactory().getScheduledExecutorService().shutdown();
+	    GpioFactory.getExecutorServiceFactory().getGpioEventExecutorService().shutdown();
+	    GpioFactory.getExecutorServiceFactory().getScheduledExecutorService().shutdownNow();
+	    GpioFactory.getExecutorServiceFactory().getGpioEventExecutorService().shutdownNow();
 	    GpioFactory.getDefaultProvider().shutdown();
 	    mainThread.join();
 	} catch (final InterruptedException e) {
