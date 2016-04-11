@@ -49,6 +49,7 @@ public class OLEDDevice extends Device {
 		msgs[msgIndex++] = lastMessage.getContent();
 		break;
 	    case CHANGE_DISPLAY:
+		incrementDisplay();
 		show();
 		break;
 	    default:
@@ -81,10 +82,16 @@ public class OLEDDevice extends Device {
 	String msg = msgs[msgDispIndex];
 	if (msg != null && !msg.isEmpty()) {
 	    oled.write(msg);
-	    if (++msgDispIndex >= msgs.length) {
-		msgDispIndex = 0;
-	    }
 	}
+    }
+    
+    /**
+     * Shift to the next message to display.
+     */
+    private void incrementDisplay() {
+        if (++msgDispIndex >= msgs.length) {
+            msgDispIndex = 0;
+        }
     }
 
     @Override
