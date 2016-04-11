@@ -1,10 +1,8 @@
 package com.onyx.quadcopter.devices;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.onyx.quadcopter.display.Display;
 import com.onyx.quadcopter.main.Controller;
@@ -20,8 +18,20 @@ public class OLEDDevice extends Device {
      */
     private Display oled;
     
-    private Set<String> msgs = Collections.synchronizedSet(new HashSet<String>(Constants.OLED_MAX_MSGS));
+    /**
+     * Messages.
+     */
+    private ConcurrentHashMap<DeviceID, String> msgs = new ConcurrentHashMap<DeviceID, String>();
     
+    /**
+     * Current Device to display.
+     */
+    private DeviceID currentDisplay;
+    
+    /**
+     * Iterator.
+     */
+    private Iterator<DeviceID> iterator = msgs.keySet().iterator();
     /**
      * The current string to display.
      */
@@ -42,7 +52,7 @@ public class OLEDDevice extends Device {
 		oled.write(lastMessage.getContent());
 		break;
 	    case DISPLAY:
-		msgs.add(lastMessage.getContent());
+		msgs.put(lastMessage.getSender(), lastMessage.getContent());
 		break;
 	    case CHANGE_DISPLAY:
 		incrementDisplay();
@@ -75,6 +85,7 @@ public class OLEDDevice extends Device {
      * Display the next msg from the msg list.
      */
     private void show() {
+	dispStr = msgs.getOrDefault(currentDisplay, dispStr);
 	if (dispStr != null && !dispStr.isEmpty()) {
 	    oled.write(dispStr);
 	}
@@ -83,13 +94,8 @@ public class OLEDDevice extends Device {
     /**
      * Shift to the next message to display.
      */
-    private void incrementDisplay() {
-	synchronized(msgs) {
-	    Iterator<String> iterator = msgs.iterator();
-	    if(iterator.hasNext()) {
-	        dispStr = iterator.next();
-	    }
-	}
+    private synchronized void incrementDisplay() {
+	currentDisplay = iterator.next();
     }
 
     @Override
