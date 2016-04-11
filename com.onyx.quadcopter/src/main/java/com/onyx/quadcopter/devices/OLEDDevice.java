@@ -1,6 +1,10 @@
 package com.onyx.quadcopter.devices;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.onyx.quadcopter.display.Display;
 import com.onyx.quadcopter.main.Controller;
@@ -15,30 +19,28 @@ public class OLEDDevice extends Device {
      * OLED Device driver.
      */
     private Display oled;
-
-    /**
-     * Message index.
-     */
-    private int msgIndex = 0;
-
-    /**
-     * Display counter.
-     */
-    private int msgDispIndex = 0;
+    
+    private Set<String> msgs = Collections.synchronizedSet(new HashSet<String>(Constants.OLED_MAX_MSGS));
     
     /**
-     * Small message buffer.
+     * Message iterator.
      */
-    private String[] msgs = new String[Constants.OLED_MAX_MSGS];
+    private Iterator<String> iterator;
+    
+    /**
+     * The current string to display.
+     */
+    private String dispStr = null;
 
     public OLEDDevice(final Controller c) {
 	super(c, DeviceID.OLED_DEVICE);
+	iterator = msgs.iterator();
     }
 
     @Override
     protected void update() {
-	if (msgIndex >= Constants.OLED_MAX_MSGS) {
-	    msgIndex = 0;
+	if (msgs.size() >= Constants.OLED_MAX_MSGS) {
+	    msgs.clear();
 	}
 	if (isNewMessage()) {
 	    switch (lastMessage.getActionID()) {
@@ -46,7 +48,7 @@ public class OLEDDevice extends Device {
 		oled.write(lastMessage.getContent());
 		break;
 	    case DISPLAY:
-		msgs[msgIndex++] = lastMessage.getContent();
+		msgs.add(lastMessage.getContent());
 		break;
 	    case CHANGE_DISPLAY:
 		incrementDisplay();
@@ -79,9 +81,8 @@ public class OLEDDevice extends Device {
      * Display the next msg from the msg list.
      */
     private void show() {
-	String msg = msgs[msgDispIndex];
-	if (msg != null && !msg.isEmpty()) {
-	    oled.write(msg);
+	if (dispStr != null && !dispStr.isEmpty()) {
+	    oled.write(dispStr);
 	}
     }
     
@@ -89,9 +90,7 @@ public class OLEDDevice extends Device {
      * Shift to the next message to display.
      */
     private void incrementDisplay() {
-        if (++msgDispIndex >= msgs.length || msgDispIndex >= msgIndex) {
-            msgDispIndex = 0;
-        }
+	dispStr = iterator.next();
     }
 
     @Override
