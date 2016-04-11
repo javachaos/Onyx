@@ -88,7 +88,7 @@ public class OLEDDevice extends Device {
     /**
      * Shift to the next message to display.
      */
-    private synchronized void incrementDisplay() {
+    private void incrementDisplay() {
 	currentDisplay = msgs.keySet().iterator().next();
 	dispStr = msgs.get(currentDisplay);
     }
