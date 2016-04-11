@@ -49,6 +49,9 @@ public class ConcurrentStack<E> {
     }
 
     public E peek() {
-	return head.get().item;
+	Node<E> top = head.get();
+	if (top == null)
+	    return null;
+	return top.item;
     }
 }
