@@ -23,18 +23,12 @@ public class OLEDDevice extends Device {
     private Set<String> msgs = Collections.synchronizedSet(new HashSet<String>(Constants.OLED_MAX_MSGS));
     
     /**
-     * Message iterator.
-     */
-    private Iterator<String> iterator;
-    
-    /**
      * The current string to display.
      */
     private String dispStr = null;
 
     public OLEDDevice(final Controller c) {
 	super(c, DeviceID.OLED_DEVICE);
-	iterator = msgs.iterator();
     }
 
     @Override
@@ -91,7 +85,10 @@ public class OLEDDevice extends Device {
      */
     private void incrementDisplay() {
 	synchronized(msgs) {
-	    dispStr = iterator.next();
+	    Iterator<String> iterator = msgs.iterator();
+	    if(iterator.hasNext()) {
+	        dispStr = iterator.next();
+	    }
 	}
     }
 
