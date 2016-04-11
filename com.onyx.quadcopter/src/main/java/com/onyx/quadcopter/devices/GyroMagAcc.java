@@ -23,7 +23,6 @@ public class GyroMagAcc extends Device {
     }
 
     private upm_lsm9ds0.LSM9DS0 lsm;
-    private float[] last_orient;
 
     public GyroMagAcc(final Controller c) {
 	super(c, DeviceID.GYRO_MAG_ACC);
@@ -33,7 +32,6 @@ public class GyroMagAcc extends Device {
     protected void update() {
 	lsm.update();
 	float[] orient = getRPH();
-	last_orient = orient;
 	if (isNewMessage()) {
 	    switch (lastMessage.getActionID()) {
 	    case GET_ORIENT:
@@ -93,7 +91,7 @@ public class GyroMagAcc extends Device {
 	    String msg = "Yaw: " + rph[0] + System.lineSeparator() + "Pitch: " + rph[1] + System.lineSeparator()
 		    + "Roll: " + rph[2];
 	    LOGGER.debug(msg);
-	    sendMessage(DeviceID.OLED_DEVICE, msg, ActionId.PRINT);
+	    sendMessage(DeviceID.OLED_DEVICE, msg, ActionId.DISPLAY);
 	    shutdown();
 	    init();
 	} else {

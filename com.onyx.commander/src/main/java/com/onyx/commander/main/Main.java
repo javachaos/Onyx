@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.commander.utils.Constants;
-import com.onyx.quadcopter.utils.ShutdownHook;
+import com.onyx.quadcopter.tasks.ShutdownHook;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

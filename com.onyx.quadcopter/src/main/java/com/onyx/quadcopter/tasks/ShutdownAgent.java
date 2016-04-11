@@ -8,7 +8,7 @@
  * Contributors:
  *      Fred Laderoute - initial API and implementation
  ******************************************************************************/
-package com.onyx.quadcopter.utils;
+package com.onyx.quadcopter.tasks;
 
 import java.util.concurrent.ScheduledExecutorService;
 

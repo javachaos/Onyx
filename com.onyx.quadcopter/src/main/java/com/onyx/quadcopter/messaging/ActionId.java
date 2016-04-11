@@ -77,7 +77,12 @@ public enum ActionId {
     /**
      * Change the pulse width
      */
-    CHANGE_PULSE_WIDTH(13);
+    CHANGE_PULSE_WIDTH(13),
+    
+    /**
+     * Display message.
+     */
+    DISPLAY(14);
 
     /**
      * The internal ID field.

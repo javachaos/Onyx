@@ -13,8 +13,8 @@ package com.onyx.quadcopter.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.onyx.quadcopter.tasks.ShutdownAgent;
 import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.ShutdownAgent;
 import com.onyx.quadcopter.utils.ThreadUtils;
 
 /**

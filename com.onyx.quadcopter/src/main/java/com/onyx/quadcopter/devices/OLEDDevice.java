@@ -40,7 +40,16 @@ public class OLEDDevice extends Device {
 	    msgIndex = 0;
 	}
 	if (isNewMessage()) {
-	    msgs[msgIndex++] = lastMessage.getContent();
+	    switch(lastMessage.getActionID()) {
+	    case PRINT:
+		oled.write(lastMessage.getContent());
+		break;
+	    case DISPLAY:
+	        msgs[msgIndex++] = lastMessage.getContent();
+	        break;
+	    default:
+	        break;
+	    }
 	}
     }
 

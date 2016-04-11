@@ -8,7 +8,7 @@
  * Contributors:
  *      Fred Laderoute - initial API and implementation
  ******************************************************************************/
-package com.onyx.quadcopter.utils;
+package com.onyx.quadcopter.tasks;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.main.Main;
 import com.onyx.quadcopter.main.StateMonitor;
+import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 
 /**
  * Shutdown hook.
