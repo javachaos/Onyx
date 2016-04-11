@@ -90,7 +90,9 @@ public class OLEDDevice extends Device {
      * Shift to the next message to display.
      */
     private void incrementDisplay() {
-	dispStr = iterator.next();
+	synchronized(msgs) {
+	    dispStr = iterator.next();
+	}
     }
 
     @Override
