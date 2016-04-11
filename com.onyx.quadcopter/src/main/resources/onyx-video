@@ -1,3 +1,4 @@
 #!/bin/sh
 CONFIGFILE="/etc/uv4l/uv4l-uvc.conf"
-/usr/bin/uv4l --auto-video_nr -f -k --sched-rr --mem-lock --config-file=$CONFIGFILE --driver uvc --device-id "045e:0761"
+LD_PRELOAD=/usr/lib/uv4l/uv4lext/armv6l/libuv4lext.so /usr/bin/uv4l --auto-video_nr -f -k --sched-rr --mem-lock --config-file=$CONFIGFILE --driver uvc --device-id "045e:0761"
+
