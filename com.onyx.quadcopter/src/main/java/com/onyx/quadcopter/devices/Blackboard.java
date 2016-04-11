@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.MessageType;
+import com.onyx.quadcopter.utils.ConcurrentStack;
 import com.onyx.quadcopter.utils.Constants;
 
 /**
@@ -28,10 +29,10 @@ public class Blackboard {
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(Blackboard.class);
 
-    private ConcurrentMap<DeviceID, ACLMessage> blackboard;
+    private ConcurrentMap<DeviceID, ConcurrentStack<ACLMessage>> blackboard;
 
     public Blackboard() {
-	blackboard = new ConcurrentHashMap<DeviceID, ACLMessage>(Constants.BLACKBOARD_SIZE);
+	blackboard = new ConcurrentHashMap<DeviceID, ConcurrentStack<ACLMessage>>(Constants.BLACKBOARD_SIZE);
     }
 
     public void update() {
@@ -48,7 +49,8 @@ public class Blackboard {
      */
     public synchronized void addMessage(final ACLMessage aclMessage) {
 	if (aclMessage.isValid()) {
-	    blackboard.put(aclMessage.getReciever(), aclMessage);
+	    blackboard.get(aclMessage.getReciever()).push(aclMessage);
+	    //blackboard.put(aclMessage.getReciever(), aclMessage);
 	}
     }
 
@@ -63,7 +65,7 @@ public class Blackboard {
      *
      */
     public synchronized ACLMessage getMessage(DeviceID id) {
-	final ACLMessage n = blackboard.get(id);
+	final ACLMessage n = blackboard.get(id).pop();
 	if (n != null && n.isValid()) {
 	    return n;
 	} else {
