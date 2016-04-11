@@ -69,6 +69,11 @@ public class Blackboard {
      *
      */
     public synchronized ACLMessage getMessage(DeviceID id) {
+	ConcurrentStack<ACLMessage> currentBucket = blackboard.get(id);
+	if (currentBucket == null) {
+	    currentBucket = new ConcurrentStack<ACLMessage>();
+	    blackboard.put(id, currentBucket);
+	}
 	final ACLMessage n = blackboard.get(id).pop();
 	if (n != null && n.isValid()) {
 	    return n;
