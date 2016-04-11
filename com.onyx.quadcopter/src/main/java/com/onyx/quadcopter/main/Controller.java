@@ -21,6 +21,7 @@ import com.onyx.quadcopter.devices.OLEDDevice;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.utils.Cleaner;
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 
@@ -161,7 +162,13 @@ public class Controller implements Runnable {
     private synchronized void update() {
 	final Iterator<DeviceID> it = devices.keySet().iterator();
 	while (it.hasNext()) {
-	    getDevice(it.next()).execute();
+	    Device d = getDevice(it.next());
+	    try {
+	        d.execute();
+	    } catch (Throwable t) {
+		ExceptionUtils.logError(d.getClass(), t);
+		throw t;
+	    }
 	}
     }
 

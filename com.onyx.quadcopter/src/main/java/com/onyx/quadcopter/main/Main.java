@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.tasks.ShutdownHook;
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 
 public class Main {
 
@@ -21,6 +22,7 @@ public class Main {
 	    System.load(Constants.MRAA_NATIVE_LIB);
 	} catch (final UnsatisfiedLinkError e) {
 	    LOGGER.error("Could not load link library 'mraajava'.");
+	    ExceptionUtils.logError(Main.class, e);
 	}
     }
     

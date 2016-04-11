@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 
 public class GyroMagAcc extends Device {
 
@@ -18,7 +19,7 @@ public class GyroMagAcc extends Device {
 	try {
 	    System.load(Constants.GYRO_NATIVE_LIB);
 	} catch (final UnsatisfiedLinkError e) {
-	    LOGGER.error(e.getMessage());
+	    ExceptionUtils.logError(GyroMagAcc.class, e);
 	}
     }
 

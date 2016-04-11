@@ -8,6 +8,7 @@ import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.ConcurrentStack;
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -62,8 +63,7 @@ public class CommunicationHandler extends SimpleChannelInboundHandler<ACLMessage
 	try {
 	    super.channelActive(ctx);
 	} catch (Exception e) {
-	    e.printStackTrace();
-	    LOGGER.error(e.getMessage());
+	    ExceptionUtils.logError(getClass(), e);
 	}
     }
 

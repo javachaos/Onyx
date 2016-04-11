@@ -8,6 +8,7 @@ import org.opencv.highgui.VideoCapture;
 
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 
 /**
  * Camera Device.
@@ -21,7 +22,7 @@ public class CameraDevice extends Device {
 	try {
 	    System.load(Constants.CAM_NATIVE_LIB);
 	} catch (final UnsatisfiedLinkError e) {
-	    LOGGER.error(e.getMessage());
+	    ExceptionUtils.logError(CameraDevice.class, e);
 	}
     }
 

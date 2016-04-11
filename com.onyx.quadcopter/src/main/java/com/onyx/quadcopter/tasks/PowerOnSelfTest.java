@@ -10,6 +10,7 @@ import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 import com.onyx.quadcopter.utils.StartupState;
 
 /**
@@ -49,7 +50,7 @@ public class PowerOnSelfTest {
 		    // Wait for the device to be initialized.
 		    Thread.sleep(100);
 		} catch (InterruptedException e) {
-		    LOGGER.error(e.getMessage());
+		    ExceptionUtils.logError(getClass(), e);
 		}
 	    }
 	    if (dev.selfTest()) {

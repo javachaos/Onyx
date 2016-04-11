@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalOutput;
@@ -233,7 +234,7 @@ public class Display {
 	    try {
 		this.spi.write((short) command);
 	    } catch (IOException e) {
-		e.printStackTrace();
+                ExceptionUtils.logError(getClass(), e);
 	    }
 	}
     }
@@ -252,7 +253,7 @@ public class Display {
 		try {
 		    i2c.write(DATA_ADDRESS, buff);
 		} catch (IOException e) {
-		    LOGGER.error(e.getMessage());
+		    ExceptionUtils.logError(getClass(), e);
 		}
 	    }
 	    buff = null;
@@ -261,7 +262,7 @@ public class Display {
 	    try {
 		this.spi.write(data);
 	    } catch (IOException e) {
-		e.printStackTrace();
+		ExceptionUtils.logError(getClass(), e);
 	    }
 	}
     }
@@ -304,7 +305,7 @@ public class Display {
 		Thread.sleep(10);
 		this.rstPin.setState(true);
 	    } catch (InterruptedException e) {
-		e.printStackTrace();
+                ExceptionUtils.logError(getClass(), e);
 	    }
 	}
     }
@@ -533,7 +534,7 @@ public class Display {
 	try {
 	    i2c.write(register, (byte) (value & 0xFF));
 	} catch (IOException e) {
-	    LOGGER.error(e.getMessage());
+	    ExceptionUtils.logError(getClass(), e);
 	}
     }
 

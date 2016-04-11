@@ -10,6 +10,7 @@ import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.messaging.MessageType;
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -92,7 +93,7 @@ public class NettyCommServer extends Device implements Runnable {
 	    // shut down your server.
 	    f.channel().closeFuture().sync();
 	} catch (final InterruptedException e) {
-	    LOGGER.error(e.getMessage());
+	    ExceptionUtils.logError(getClass(), e);
 	    throw new OnyxException(e.getMessage(), LOGGER);
 	} finally {
 	    workerGroup.shutdownGracefully();
@@ -122,7 +123,8 @@ public class NettyCommServer extends Device implements Runnable {
 
     @Override
     protected void alternate() {
-        sendMessage(DeviceID.OLED_DEVICE, "Latest Comm: "+handler.getDataStack().peek().getContent(), ActionId.DISPLAY);
+	sendMessage(DeviceID.OLED_DEVICE, "Latest Comm: " + handler.getDataStack().peek().getContent(),
+		ActionId.DISPLAY);
     }
 
     @Override

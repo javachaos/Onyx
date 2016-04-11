@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.onyx.quadcopter.display.Display;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.impl.I2CBusImpl;
 
@@ -40,18 +41,18 @@ public class OLEDDevice extends Device {
 	    msgIndex = 0;
 	}
 	if (isNewMessage()) {
-	    switch(lastMessage.getActionID()) {
+	    switch (lastMessage.getActionID()) {
 	    case PRINT:
 		oled.write(lastMessage.getContent());
 		break;
 	    case DISPLAY:
-	        msgs[msgIndex++] = lastMessage.getContent();
-	        break;
+		msgs[msgIndex++] = lastMessage.getContent();
+		break;
 	    case CHANGE_DISPLAY:
 		show();
 		break;
 	    default:
-	        break;
+		break;
 	    }
 	}
     }
@@ -64,7 +65,7 @@ public class OLEDDevice extends Device {
 	    oled.dim(false);
 	    oled.write("OLED Initialized.");
 	} catch (IOException | ReflectiveOperationException e) {
-	    LOGGER.error(e.getMessage());
+	    ExceptionUtils.logError(getClass(), e);
 	}
     }
 

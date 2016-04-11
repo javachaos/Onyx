@@ -4,6 +4,6 @@ public interface Executable {
     /**
      * Execute this executable once.
      */
-    void execute();
+    void execute() throws Throwable;
 
 }
