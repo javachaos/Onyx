@@ -1,7 +1,6 @@
 package com.onyx.quadcopter.devices;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.onyx.quadcopter.display.Display;
@@ -17,16 +16,11 @@ public class OLEDDevice extends Device {
      * OLED Device driver.
      */
     private Display oled;
-    
+
     /**
-     * Messages.
+     * Display Messages.
      */
-    private ConcurrentHashMap<DeviceID, String> msgs = new ConcurrentHashMap<DeviceID, String>();
-    
-    /**
-     * Iterator.
-     */
-    private Iterator<DeviceID> iterator = msgs.keySet().iterator();
+    private ConcurrentHashMap<DeviceID, String> msgs = new ConcurrentHashMap<DeviceID, String>(Constants.OLED_MAX_MSGS);
     
     /**
      * Current Device to display.
@@ -86,23 +80,17 @@ public class OLEDDevice extends Device {
      * Display the next msg from the msg list.
      */
     private void show() {
-	if (currentDisplay != null) {
-            dispStr = msgs.getOrDefault(currentDisplay, dispStr);
-            if (dispStr != null && !dispStr.isEmpty()) {
-                oled.write(dispStr);
-            }
-	}
+        if (dispStr != null && !dispStr.isEmpty()) {
+            oled.write(dispStr);
+        }
     }
-    
+
     /**
      * Shift to the next message to display.
      */
     private synchronized void incrementDisplay() {
-	if (iterator.hasNext()) {
-	    currentDisplay = iterator.next();
-	} else {
-	    iterator = msgs.keySet().iterator();
-	}
+	currentDisplay = msgs.keySet().iterator().next();
+	dispStr = msgs.get(currentDisplay);
     }
 
     @Override
