@@ -42,6 +42,8 @@ public class GyroMagAcc extends Device {
 		break;
 	    }
 	}
+	sendMessage(DeviceID.OLED_DEVICE, "Yaw: " + orient[0] + System.lineSeparator() + "Pitch: " + orient[1]
+		+ System.lineSeparator() + "Roll: " + orient[2], ActionId.DISPLAY);
     }
 
     /**
@@ -92,7 +94,6 @@ public class GyroMagAcc extends Device {
 	    String msg = "Yaw: " + rph[0] + System.lineSeparator() + "Pitch: " + rph[1] + System.lineSeparator()
 		    + "Roll: " + rph[2];
 	    LOGGER.debug(msg);
-	    sendMessage(DeviceID.OLED_DEVICE, msg, ActionId.DISPLAY);
 	    shutdown();
 	    init();
 	} else {

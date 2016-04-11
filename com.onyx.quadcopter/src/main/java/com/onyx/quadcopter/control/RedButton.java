@@ -69,6 +69,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 
     @Override
     protected void update() {
+	sendMessage(DeviceID.OLED_DEVICE, "Current Button State: "+ button.getState(), ActionId.DISPLAY);
     }
 
     @Override
@@ -87,7 +88,6 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 
     @Override
     protected void alternate() {
-	sendMessage(DeviceID.OLED_DEVICE, "Current Button State: "+ button.getState(), ActionId.DISPLAY);
     }
 
     @Override

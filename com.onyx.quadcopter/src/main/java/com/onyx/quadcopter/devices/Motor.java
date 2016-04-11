@@ -56,6 +56,8 @@ public class Motor extends Device {
 		break;
 	    }
 	}
+	sendMessage(DeviceID.OLED_DEVICE, "Current speed of " + getId() + " is: " + currentSpeed + "%.",
+		ActionId.DISPLAY);
     }
 
     /**
@@ -97,8 +99,6 @@ public class Motor extends Device {
     @Override
     protected void alternate() {
 	LOGGER.debug("Current speed of " + getId() + " is: " + currentSpeed + "%.");
-	sendMessage(DeviceID.OLED_DEVICE, "Current speed of " + getId() + " is: " + currentSpeed + "%.",
-		ActionId.DISPLAY);
     }
 
     @Override
