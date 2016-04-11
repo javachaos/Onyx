@@ -49,8 +49,10 @@ public class Blackboard {
      */
     public synchronized void addMessage(final ACLMessage aclMessage) {
 	if (aclMessage.isValid()) {
+	    if (blackboard.get(aclMessage.getReciever()) == null) {
+		blackboard.put(aclMessage.getReciever(), new ConcurrentStack<ACLMessage>());
+	    }
 	    blackboard.get(aclMessage.getReciever()).push(aclMessage);
-	    //blackboard.put(aclMessage.getReciever(), aclMessage);
 	}
     }
 
