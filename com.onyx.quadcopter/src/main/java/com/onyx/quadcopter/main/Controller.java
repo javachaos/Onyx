@@ -99,7 +99,6 @@ public class Controller implements Runnable {
     private void shutdown() {
 	LOGGER.debug("Starting Controller shutdown...");
 	blackboard.shutdown();
-	GpioFactory.getInstance().shutdown();
 	for (final Entry<DeviceID, Device> d : devices.entrySet()) {
 	    LOGGER.debug("Shutting down: " + d.getKey().toString());
 	    d.getValue().shutdown();
