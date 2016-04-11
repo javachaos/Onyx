@@ -25,7 +25,7 @@ public class OLEDDevice extends Device {
      * Display counter.
      */
     private int msgDispIndex = 0;
-
+    
     /**
      * Small message buffer.
      */
@@ -89,7 +89,7 @@ public class OLEDDevice extends Device {
      * Shift to the next message to display.
      */
     private void incrementDisplay() {
-        if (++msgDispIndex >= msgs.length) {
+        if (++msgDispIndex >= msgs.length || msgDispIndex >= msgIndex) {
             msgDispIndex = 0;
         }
     }
