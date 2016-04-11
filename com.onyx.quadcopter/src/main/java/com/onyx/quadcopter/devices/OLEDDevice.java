@@ -24,14 +24,15 @@ public class OLEDDevice extends Device {
     private ConcurrentHashMap<DeviceID, String> msgs = new ConcurrentHashMap<DeviceID, String>();
     
     /**
+     * Iterator.
+     */
+    private Iterator<DeviceID> iterator = msgs.keySet().iterator();
+    
+    /**
      * Current Device to display.
      */
     private DeviceID currentDisplay;
     
-    /**
-     * Iterator.
-     */
-    private Iterator<DeviceID> iterator = msgs.keySet().iterator();
     /**
      * The current string to display.
      */
@@ -85,9 +86,11 @@ public class OLEDDevice extends Device {
      * Display the next msg from the msg list.
      */
     private void show() {
-	dispStr = msgs.getOrDefault(currentDisplay, dispStr);
-	if (dispStr != null && !dispStr.isEmpty()) {
-	    oled.write(dispStr);
+	if (currentDisplay != null) {
+            dispStr = msgs.getOrDefault(currentDisplay, dispStr);
+            if (dispStr != null && !dispStr.isEmpty()) {
+                oled.write(dispStr);
+            }
 	}
     }
     
@@ -95,11 +98,16 @@ public class OLEDDevice extends Device {
      * Shift to the next message to display.
      */
     private synchronized void incrementDisplay() {
-	currentDisplay = iterator.next();
+	if (iterator.hasNext()) {
+	    currentDisplay = iterator.next();
+	} else {
+	    iterator = msgs.keySet().iterator();
+	}
     }
 
     @Override
     protected void alternate() {
+	incrementDisplay();
 	show();
     }
 
