@@ -52,10 +52,10 @@ public class OLEDDevice extends Device {
                 ACLMessage msg = getMessages().poll();
 	        switch (msg.getActionID()) {
 	        case PRINT:
-		    oled.write(lastMessage.getContent());
+		    oled.write(msg.getContent());
 		    break;
 	        case DISPLAY:
-	            msgs.put(lastMessage.getSender(), msg.getContent());
+	            msgs.put(msg.getSender(), msg.getContent());
 		    break;
 	        case CHANGE_DISPLAY:
 		    showNext();
