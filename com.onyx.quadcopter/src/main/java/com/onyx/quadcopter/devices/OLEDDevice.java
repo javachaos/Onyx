@@ -2,6 +2,7 @@ package com.onyx.quadcopter.devices;
 
 import java.io.IOException;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.onyx.quadcopter.display.Display;
@@ -28,13 +29,8 @@ public class OLEDDevice extends Device {
      * Display Messages.
      */
     private ConcurrentHashMap<DeviceID, String> msgs = new ConcurrentHashMap<DeviceID, String>(Constants.OLED_MAX_MSGS);
-
-    /**
-     * The current device to show on OLED.
-     */
-    private DeviceID currentDevice;
-    
     private EnumSet<DeviceID> deviceSet = EnumSet.allOf(DeviceID.class);
+    private Iterator<DeviceID> iter = deviceSet.iterator();
 
     /**
      * Creates a new OLED Device.
@@ -90,8 +86,9 @@ public class OLEDDevice extends Device {
      * Display the next msg from the msg list.
      */
     private void showNext() {
-	currentDevice = deviceSet.iterator().next();
-        oled.write(msgs.get(currentDevice));
+	if (iter.hasNext()) {
+            oled.write(msgs.get(iter.next()));
+	}
     }
 
     @Override
