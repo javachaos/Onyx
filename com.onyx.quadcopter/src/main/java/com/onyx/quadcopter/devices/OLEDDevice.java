@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.onyx.quadcopter.display.Display;
 import com.onyx.quadcopter.main.Controller;
+import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
 import com.pi4j.io.gpio.RaspiPin;
@@ -41,20 +42,21 @@ public class OLEDDevice extends Device {
 	    msgs.clear();
 	}
 	if (isNewMessage()) {
-	    switch (lastMessage.getActionID()) {
-	    case PRINT:
-		oled.write(lastMessage.getContent());
-		break;
-	    case DISPLAY:
-		while(getMessages().size() > 0) {
-		    msgs.put(lastMessage.getSender(), getMessages().poll().getContent());
-		}
-		break;
-	    case CHANGE_DISPLAY:
-		showNext();
-		break;
-	    default:
-		break;
+	    while(getMessages().size() > 0) {
+                ACLMessage msg = getMessages().poll();
+	        switch (msg.getActionID()) {
+	        case PRINT:
+		    oled.write(lastMessage.getContent());
+		    break;
+	        case DISPLAY:
+	            msgs.put(lastMessage.getSender(), msg.getContent());
+		    break;
+	        case CHANGE_DISPLAY:
+		    showNext();
+		    break;
+	        default:
+	            break;
+	        }
 	    }
 	}
     }
