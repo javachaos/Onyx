@@ -548,7 +548,7 @@ public class Display {
      * @param string
      */
     public void write(String string) {
-	if (string == null || string.isEmpty()) {
+	if (string != null && !string.isEmpty()) {
             clear();
             getGraphics().setColor(Color.WHITE);
             getGraphics().setFont(new Font("Monospaced", Font.PLAIN, Constants.DISP_FONT));
