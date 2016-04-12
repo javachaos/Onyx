@@ -332,6 +332,7 @@ public class Display {
 	this.buffer = new byte[this.width * this.pages];
 	this.img = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_BINARY);
 	this.graphics = this.img.createGraphics();
+	displayImage();
     }
 
     /**
@@ -547,17 +548,17 @@ public class Display {
      * @param string
      */
     public void write(String string) {
-	clear();
-	getGraphics().setColor(Color.WHITE);
-	getGraphics().setFont(new Font("Monospaced", Font.PLAIN, Constants.DISP_FONT));
-	drawStringMultiLine(string);
-	displayImage();
+	if (string == null || string.isEmpty()) {
+            clear();
+            getGraphics().setColor(Color.WHITE);
+            getGraphics().setFont(new Font("Monospaced", Font.PLAIN, Constants.DISP_FONT));
+            drawStringMultiLine(string);
+            displayImage();
+	}
     }
 
     /**
      * Draw a string to the graphics for this display.
-     * 
-     * The
      */
     private void drawString(String str, int x, int y) {
 	FontMetrics m = getGraphics().getFontMetrics();

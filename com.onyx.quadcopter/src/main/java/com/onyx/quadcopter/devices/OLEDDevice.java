@@ -10,6 +10,11 @@ import com.onyx.quadcopter.utils.ExceptionUtils;
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.impl.I2CBusImpl;
 
+/**
+ * Represents an OLED Device.
+ * @author fred
+ *
+ */
 public class OLEDDevice extends Device {
 
     /**
@@ -21,17 +26,11 @@ public class OLEDDevice extends Device {
      * Display Messages.
      */
     private ConcurrentHashMap<DeviceID, String> msgs = new ConcurrentHashMap<DeviceID, String>(Constants.OLED_MAX_MSGS);
-    
-    /**
-     * Current Device to display.
-     */
-    private DeviceID currentDisplay;
-    
-    /**
-     * The current string to display.
-     */
-    private String dispStr = null;
 
+    /**
+     * Creates a new OLED Device.
+     * @param c controller.
+     */
     public OLEDDevice(final Controller c) {
 	super(c, DeviceID.OLED_DEVICE);
     }
@@ -50,8 +49,7 @@ public class OLEDDevice extends Device {
 		msgs.put(lastMessage.getSender(), lastMessage.getContent());
 		break;
 	    case CHANGE_DISPLAY:
-		incrementDisplay();
-		show();
+		showNext();
 		break;
 	    default:
 		break;
@@ -79,24 +77,13 @@ public class OLEDDevice extends Device {
     /**
      * Display the next msg from the msg list.
      */
-    private void show() {
-        if (dispStr != null && !dispStr.isEmpty()) {
-            oled.write(dispStr);
-        }
-    }
-
-    /**
-     * Shift to the next message to display.
-     */
-    private void incrementDisplay() {
-	currentDisplay = msgs.keySet().iterator().next();
-	dispStr = msgs.get(currentDisplay);
+    private void showNext() {
+        oled.write(msgs.get(msgs.keySet().iterator().next()));
     }
 
     @Override
     protected void alternate() {
-	incrementDisplay();
-	show();
+	showNext();
     }
 
     @Override

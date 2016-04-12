@@ -8,6 +8,7 @@ import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.messaging.MessageType;
+import com.onyx.quadcopter.utils.ConcurrentStack;
 import com.onyx.quadcopter.utils.Constants;
 
 public abstract class Device implements Executable {
@@ -42,6 +43,11 @@ public abstract class Device implements Executable {
      * The human readable name for this device.
      */
     private String name;
+
+    /**
+     * Stack of ACL Messages.
+     */
+    private ConcurrentStack<ACLMessage> messages;
 
     /**
      * Create a new device.
@@ -82,8 +88,7 @@ public abstract class Device implements Executable {
 
     @Override
     public synchronized void execute() {
-	previousMessage = lastMessage;
-	lastMessage = getController().getBlackboard().getMessage(this);
+	gatherMessages();
 	update();
 	runCounter++;
 	if (runCounter == Constants.ALTERNATE_SPEED) {
@@ -91,6 +96,28 @@ public abstract class Device implements Executable {
 	    LOGGER.debug("Device heartbeat: " + getName() + ".");
 	    alternate();
 	}
+    }
+
+    /**
+     * Get the message stack.
+     * @return
+     * 		the messages.
+     */
+    protected ConcurrentStack<ACLMessage> getMessages() {
+	return messages;
+    }
+
+    /**
+     * Accumulate all messages from the blackboard for this device.
+     */
+    private void gatherMessages() {
+	ACLMessage m = getController().getBlackboard().getMessage(this);
+	while(m != null && m.isValid()) {
+	    messages.push(m);
+	    m = getController().getBlackboard().getMessage(this);
+	}
+	previousMessage = lastMessage;
+	lastMessage = m;
     }
 
     /**

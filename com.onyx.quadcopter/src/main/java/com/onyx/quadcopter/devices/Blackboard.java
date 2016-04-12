@@ -30,10 +30,6 @@ public class Blackboard {
     public static final Logger LOGGER = LoggerFactory.getLogger(Blackboard.class);
 
     private ConcurrentMap<DeviceID, ConcurrentStack<ACLMessage>> blackboard;
-    
-    public ConcurrentMap<DeviceID, ConcurrentStack<ACLMessage>> getBlackboard() {
-	return blackboard;
-    }
 
     public Blackboard() {
 	blackboard = new ConcurrentHashMap<DeviceID, ConcurrentStack<ACLMessage>>(Constants.BLACKBOARD_SIZE);
