@@ -2,13 +2,13 @@ package com.onyx.quadcopter.devices;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.MessageType;
-import com.onyx.quadcopter.utils.ConcurrentStack;
 import com.onyx.quadcopter.utils.Constants;
 
 /**
@@ -29,10 +29,10 @@ public class Blackboard {
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(Blackboard.class);
 
-    private ConcurrentMap<DeviceID, ConcurrentStack<ACLMessage>> blackboard;
+    private ConcurrentMap<DeviceID, PriorityBlockingQueue<ACLMessage>> blackboard;
 
     public Blackboard() {
-	blackboard = new ConcurrentHashMap<DeviceID, ConcurrentStack<ACLMessage>>(Constants.BLACKBOARD_SIZE);
+	blackboard = new ConcurrentHashMap<DeviceID, PriorityBlockingQueue<ACLMessage>>(Constants.BLACKBOARD_SIZE);
     }
 
     public void update() {
@@ -49,14 +49,14 @@ public class Blackboard {
      */
     public synchronized void addMessage(final ACLMessage aclMessage) {
 	if (aclMessage.isValid()) {
-	    ConcurrentStack<ACLMessage> currentBucket = blackboard.get(aclMessage.getReciever());
+	    PriorityBlockingQueue<ACLMessage> currentBucket = blackboard.get(aclMessage.getReciever());
 	    if (currentBucket == null) {
-		currentBucket = new ConcurrentStack<ACLMessage>();
+		currentBucket = new PriorityBlockingQueue<ACLMessage>();
 	    }
 	    if (currentBucket.size() > Constants.MAX_BLACKBOARD_BUCKET_SIZE) {
 		currentBucket.clear();
 	    }
-	    currentBucket.push(aclMessage);
+	    currentBucket.offer(aclMessage);
 	    blackboard.put(aclMessage.getReciever(), currentBucket);
 	}
     }
@@ -72,12 +72,12 @@ public class Blackboard {
      *
      */
     public synchronized ACLMessage getMessage(DeviceID id) {
-	ConcurrentStack<ACLMessage> currentBucket = blackboard.get(id);
+	PriorityBlockingQueue<ACLMessage> currentBucket = blackboard.get(id);
 	if (currentBucket == null) {
-	    currentBucket = new ConcurrentStack<ACLMessage>();
+	    currentBucket = new PriorityBlockingQueue<ACLMessage>();
 	    blackboard.put(id, currentBucket);
 	}
-	final ACLMessage n = blackboard.get(id).pop();
+	final ACLMessage n = blackboard.get(id).poll();
 	if (n != null && n.isValid()) {
 	    return n;
 	} else {

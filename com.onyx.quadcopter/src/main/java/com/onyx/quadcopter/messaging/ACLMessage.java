@@ -10,7 +10,7 @@ import com.onyx.quadcopter.devices.DeviceID;
  * @author fredladeroute
  */
 
-public final class ACLMessage implements Serializable {
+public final class ACLMessage implements Serializable, Comparable<ACLMessage> {
 
     /**
      * Generated UID
@@ -51,6 +51,11 @@ public final class ACLMessage implements Serializable {
      * A value stored in this message.
      */
     private double value;
+
+    /**
+     * The priority of this ACLMessage.
+     */
+    private ACLPriority priority = ACLPriority.MEDIUM;
 
     /**
      * Contruct a new ACL message given a message type and an ActionID.
@@ -210,6 +215,24 @@ public final class ACLMessage implements Serializable {
 	this.value = value;
     }
 
+    /**
+     * Get the priority of this ACLMessage in relation to all other messages.
+     * @return
+     * 		the priority of this ACLMessage.
+     */
+    public ACLPriority getPriority() {
+	return priority;
+    }
+    
+    /**
+     * Set the priority of this ACLMessage.
+     * @param priority
+     * 		The priority of this ACLMessage to be set.
+     */
+    public void setPriority(final ACLPriority priority) {
+	this.priority = priority;
+    }
+    
     /*
      * (non-Javadoc)
      * 
@@ -274,6 +297,11 @@ public final class ACLMessage implements Serializable {
 	    return false;
 	}
 	return true;
+    }
+
+    @Override
+    public int compareTo(ACLMessage o) {
+	return getPriority().compareTo(o.getPriority());
     }
 
 }

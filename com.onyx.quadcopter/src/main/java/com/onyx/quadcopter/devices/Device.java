@@ -1,14 +1,16 @@
 package com.onyx.quadcopter.devices;
 
+import java.util.concurrent.PriorityBlockingQueue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
+import com.onyx.quadcopter.messaging.ACLPriority;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.messaging.MessageType;
-import com.onyx.quadcopter.utils.ConcurrentStack;
 import com.onyx.quadcopter.utils.Constants;
 
 public abstract class Device implements Executable {
@@ -47,7 +49,7 @@ public abstract class Device implements Executable {
     /**
      * Stack of ACL Messages.
      */
-    private ConcurrentStack<ACLMessage> messages;
+    private PriorityBlockingQueue<ACLMessage> messages;
 
     /**
      * Create a new device.
@@ -97,16 +99,7 @@ public abstract class Device implements Executable {
 	    alternate();
 	}
     }
-
-    /**
-     * Get the message stack.
-     * @return
-     * 		the messages.
-     */
-    protected ConcurrentStack<ACLMessage> getMessages() {
-	return messages;
-    }
-
+    
     /**
      * Accumulate all messages from the blackboard for this device.
      */
@@ -115,9 +108,20 @@ public abstract class Device implements Executable {
 	previousMessage = lastMessage;
 	lastMessage = m;
 	while(m != null && m.isValid()) {
-	    messages.push(m);
+	    messages.offer(m);
 	    m = getController().getBlackboard().getMessage(this);
 	}
+	if (messages.size() > Constants.MAX_BLACKBOARD_BUCKET_SIZE) {
+	    messages.clear();
+	}
+    }
+    
+    /**
+     * Get the messages for this device.
+     * @return
+     */
+    public PriorityBlockingQueue<ACLMessage> getMessages() {
+	return messages;
     }
 
     /**
@@ -195,13 +199,14 @@ public abstract class Device implements Executable {
      *            the actionId
      */
     protected void sendMessage(final MessageType type, final DeviceID receiver, final String content,
-	    final double value, final ActionId action) {
+	    final double value, final ActionId action, final ACLPriority priority) {
 	final ACLMessage m = new ACLMessage(type);
 	m.setActionID(action);
 	m.setContent(content);
 	m.setReciever(receiver);
 	m.setSender(getId());
 	m.setValue(value);
+	m.setPriority(priority);
 	getController().getBlackboard().addMessage(m);
     }
 
@@ -216,8 +221,8 @@ public abstract class Device implements Executable {
      *            the actionId
      */
     protected void sendMessage(final DeviceID receiver, final String content, final double value,
-	    final ActionId action) {
-	sendMessage(MessageType.SEND, receiver, content, value, action);
+	    final ActionId action, final ACLPriority priority) {
+	sendMessage(MessageType.SEND, receiver, content, value, action, priority);
     }
 
     /**
@@ -230,10 +235,53 @@ public abstract class Device implements Executable {
      * @param action
      *            the actionId
      */
+    protected void sendMessage(final DeviceID receiver, final String content, final ActionId action, final ACLPriority priority) {
+	sendMessage(receiver, content, 0.0, action, priority);
+    }
+    
+    /**
+     * Send a message to receiver. (ACLPriority.MEDIUM)
+     * 
+     * @param receiver
+     *            the message recipient
+     * @param content
+     *            the contents of the message
+     * @param action
+     *            the actionId
+     */
     protected void sendMessage(final DeviceID receiver, final String content, final ActionId action) {
-	sendMessage(receiver, content, 0.0, action);
+	sendMessage(receiver, content, 0.0, action, ACLPriority.MEDIUM);
     }
 
+    /**
+     * Send a message to receiver. (ACLPriority.HIGH)
+     * 
+     * @param receiver
+     *            the message recipient
+     * @param content
+     *            the contents of the message
+     * @param action
+     *            the actionId
+     */
+    protected void sendMessageHigh(final DeviceID receiver, final String content, final ActionId action) {
+	sendMessage(receiver, content, 0.0, action, ACLPriority.HIGH);
+    }
+
+    /**
+     * Send a message to receiver. (ACLPriority.LOW)
+     * 
+     * @param receiver
+     *            the message recipient
+     * @param content
+     *            the contents of the message
+     * @param action
+     *            the actionId
+     */
+    protected void sendMessageLow(final DeviceID receiver, final String content, final ActionId action) {
+	sendMessage(receiver, content, 0.0, action, ACLPriority.LOW);
+    }
+
+    
     /**
      * Send a reply to the last sender.
      * 
@@ -241,8 +289,8 @@ public abstract class Device implements Executable {
      * @param value
      * @param action
      */
-    protected void sendReply(final String content, final double value, final ActionId action) {
-	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value, action);
+    protected void sendReply(final String content, final double value, final ActionId action, final ACLPriority priority) {
+	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value, action, priority);
     }
 
     /**
@@ -251,8 +299,8 @@ public abstract class Device implements Executable {
      * @param content
      * @param action
      */
-    protected void sendReply(final String content, final ActionId action) {
-	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, action);
+    protected void sendReply(final String content, final ActionId action, final ACLPriority priority) {
+	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, action, priority);
     }
 
     /**
@@ -262,7 +310,7 @@ public abstract class Device implements Executable {
      * @param action
      */
     protected void sendReply(final String content) {
-	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, lastMessage.getActionID());
+	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, lastMessage.getActionID(), lastMessage.getPriority());
     }
 
     /**
@@ -273,7 +321,7 @@ public abstract class Device implements Executable {
      * @param action
      */
     protected void sendReply(final String content, final double value) {
-	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value, lastMessage.getActionID());
+	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value, lastMessage.getActionID(), lastMessage.getPriority());
     }
 
     /**

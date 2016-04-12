@@ -46,8 +46,10 @@ public class OLEDDevice extends Device {
 		oled.write(lastMessage.getContent());
 		break;
 	    case DISPLAY:
-		while(getMessages().size() > 0)
-		msgs.put(lastMessage.getSender(), getMessages().pop().getContent());
+		while(getMessages().size() > 0) {
+		    msgs.put(lastMessage.getSender(), 
+			    getMessages().poll().getContent());
+		}
 		break;
 	    case CHANGE_DISPLAY:
 		showNext();

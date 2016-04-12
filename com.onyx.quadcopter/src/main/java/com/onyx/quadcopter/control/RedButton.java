@@ -4,6 +4,7 @@ import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.main.StateMonitor;
+import com.onyx.quadcopter.messaging.ACLPriority;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.PinPullResistance;
@@ -69,7 +70,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 
     @Override
     protected void update() {
-	sendMessage(DeviceID.OLED_DEVICE, "Current Button State: "+ button.getState(), ActionId.DISPLAY);
+	sendMessage(DeviceID.OLED_DEVICE, "Current Button State: "+ button.getState(), ActionId.DISPLAY, ACLPriority.MEDIUM);
     }
 
     @Override
@@ -117,14 +118,14 @@ public class RedButton extends Device implements GpioPinListenerDigital {
      */
     private void handleActionSequence(long hdt) {
 	if (hdt >= DISPLAY_SEQ && hdt < CALIBRATE_SEQ) {
-	    sendMessage(DeviceID.OLED_DEVICE,"NULL", ActionId.CHANGE_DISPLAY);
+	    sendMessage(DeviceID.OLED_DEVICE,"NULL", ActionId.CHANGE_DISPLAY, ACLPriority.MAX);
 	} else if (hdt > CALIBRATE_SEQ && hdt < SHUTDOWN_SEQ) {
 	    LOGGER.debug("Initiating Calibration Sequence...");
-	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Calibration Sequence...", ActionId.PRINT);
+	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Calibration Sequence...", ActionId.PRINT, ACLPriority.MAX);
 	    StateMonitor.calibrationState();
 	} else if (hdt >= SHUTDOWN_SEQ) {
 	    LOGGER.debug("Initiating Shutdown Sequence...");
-	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Shutdown Sequence...", ActionId.PRINT);
+	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Shutdown Sequence...", ActionId.PRINT, ACLPriority.MAX);
 	    StateMonitor.shutdownState();
 	}
     }
