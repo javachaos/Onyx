@@ -1,9 +1,8 @@
 package com.onyx.quadcopter.devices;
 
 import java.io.IOException;
-import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.onyx.quadcopter.display.Display;
 import com.onyx.quadcopter.main.Controller;
@@ -29,8 +28,11 @@ public class OLEDDevice extends Device {
      * Display Messages.
      */
     private ConcurrentHashMap<DeviceID, String> msgs = new ConcurrentHashMap<DeviceID, String>(Constants.OLED_MAX_MSGS);
-    private EnumSet<DeviceID> deviceSet = EnumSet.allOf(DeviceID.class);
-    private Iterator<DeviceID> iter = deviceSet.iterator();
+
+    /**
+     * Thread safe counter.
+     */
+    private AtomicInteger counter = new AtomicInteger();
 
     /**
      * Creates a new OLED Device.
@@ -86,9 +88,10 @@ public class OLEDDevice extends Device {
      * Display the next msg from the msg list.
      */
     private void showNext() {
-	if (iter.hasNext()) {
-            oled.write(msgs.get(iter.next()));
+	if (counter.get() >= DeviceID.values().length) {
+	    counter.set(0);
 	}
+        oled.write(msgs.get(DeviceID.values()[counter.incrementAndGet()]));
     }
 
     @Override
