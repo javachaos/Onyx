@@ -132,10 +132,7 @@ public abstract class Device implements Executable {
      * @return
      */
     protected boolean isNewMessage() {
-	if ((previousMessage == null) && (lastMessage instanceof ACLMessage)) {
-	    return lastMessage.isValid() && lastMessage.getReciever() == getId();
-	}
-	return !previousMessage.equals(lastMessage) && lastMessage.isValid();
+	return messages.size() > 0;
     }
 
     /**
