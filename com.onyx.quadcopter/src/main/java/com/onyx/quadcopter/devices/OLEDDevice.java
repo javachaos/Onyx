@@ -88,10 +88,10 @@ public class OLEDDevice extends Device {
      * Display the next msg from the msg list.
      */
     private void showNext() {
-	if (counter.get() >= DeviceID.values().length) {
+	if (counter.incrementAndGet() >= DeviceID.values().length) {
 	    counter.set(0);
 	}
-        oled.write(msgs.get(DeviceID.values()[counter.incrementAndGet()]));
+        oled.write(msgs.get(DeviceID.values()[counter.get()]));
     }
 
     @Override
