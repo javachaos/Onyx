@@ -11,6 +11,7 @@
   
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <git.repo.id>git-onyx</git.repo.id>
   </properties>
 
   <modules>
