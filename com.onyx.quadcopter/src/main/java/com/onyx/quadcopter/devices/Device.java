@@ -112,12 +112,12 @@ public abstract class Device implements Executable {
      */
     private void gatherMessages() {
 	ACLMessage m = getController().getBlackboard().getMessage(this);
+	previousMessage = lastMessage;
+	lastMessage = m;
 	while(m != null && m.isValid()) {
 	    messages.push(m);
 	    m = getController().getBlackboard().getMessage(this);
 	}
-	previousMessage = lastMessage;
-	lastMessage = m;
     }
 
     /**
