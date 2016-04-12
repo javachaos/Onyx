@@ -103,7 +103,7 @@ public abstract class Device implements Executable {
     /**
      * Accumulate all messages from the blackboard for this device.
      */
-    private void gatherMessages() {
+    private synchronized void gatherMessages() {
 	ACLMessage m = getController().getBlackboard().getMessage(this);
 	previousMessage = lastMessage;
 	lastMessage = m;
