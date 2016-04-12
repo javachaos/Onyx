@@ -84,19 +84,29 @@ public class OLEDDevice extends Device {
 	oled.clear();
     }
 
+    private void incrementCounter() {
+        if (counter.incrementAndGet() >= DeviceID.values().length) {
+	    counter.set(0);
+        }
+    }
     /**
      * Display the next msg from the msg list.
      */
     private void showNext() {
-	if (counter.incrementAndGet() >= DeviceID.values().length) {
-	    counter.set(0);
+	incrementCounter();
+	while (msgs.get(DeviceID.values()[counter.get()]) == null) {
+	    incrementCounter();
 	}
+	show();
+    }
+    
+    private void show() {
         oled.write(msgs.get(DeviceID.values()[counter.get()]));
     }
 
     @Override
     protected void alternate() {
-	showNext();
+	show();
     }
 
     @Override
