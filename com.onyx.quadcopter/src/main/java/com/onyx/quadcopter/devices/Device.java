@@ -49,7 +49,7 @@ public abstract class Device implements Executable {
     /**
      * Stack of ACL Messages.
      */
-    private PriorityBlockingQueue<ACLMessage> messages;
+    private PriorityBlockingQueue<ACLMessage> messages = new PriorityBlockingQueue<ACLMessage>();
 
     /**
      * Create a new device.
