@@ -3,11 +3,11 @@
   <parent>
 	<groupId>com.onyx</groupId>
 	<artifactId>com.onyx</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.0-SNAPSHOT</version>
   </parent>
   <groupId>com.onyx.quadcopter</groupId>
   <artifactId>onyx</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.1-SNAPSHOT</version>
   <name>Quadcopter project.</name>
   <description>Quadcopter control software.</description>
   

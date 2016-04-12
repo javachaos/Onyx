@@ -4,7 +4,7 @@
 
   <groupId>com.onyx</groupId>
   <artifactId>com.onyx</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Project Onyx</name>
@@ -38,6 +38,11 @@
 		          <shortRevisionLength>4</shortRevisionLength>
 		        </configuration>
 		      </plugin>
+                      <plugin>
+                          <groupId>org.apache.maven.plugins</groupId>
+                          <artifactId>maven-release-plugin</artifactId>
+                          <version>2.5.3</version>
+                      </plugin>
 		</plugins>
 	</build>
 	<scm>
