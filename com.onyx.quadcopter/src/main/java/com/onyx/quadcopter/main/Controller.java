@@ -102,7 +102,7 @@ public class Controller extends Device implements Runnable, StartStopable {
     /**
      * Singleton Reference.
      */
-    private static Controller reference;
+    private static volatile Controller reference;
 
     /**
      * Private Controller ctor.
