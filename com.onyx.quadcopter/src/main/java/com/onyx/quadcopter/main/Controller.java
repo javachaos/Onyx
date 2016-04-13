@@ -66,10 +66,10 @@ public class Controller extends Device implements Runnable, StartStopable {
      */
     private boolean isRunning = false;
 
-    /**
-     * True if and only if init() has been called.
-     */
-    private volatile boolean initialized = false;
+//    /**
+//     * True if and only if init() has been called.
+//     */
+//    private volatile boolean initialized = false;
 
     /**
      * GPIO Controller.
@@ -144,7 +144,6 @@ public class Controller extends Device implements Runnable, StartStopable {
 	for (final Entry<DeviceID, Device> d : devices.entrySet()) {
 	    d.getValue().initialize();
 	}
-	initialized = true;
     }
 
     @Override
@@ -252,9 +251,7 @@ public class Controller extends Device implements Runnable, StartStopable {
 
     @Override
     public synchronized void start() {
-	if (!initialized) {
-	    init();
-	}
+	initialize();
 	isRunning = true;
     }
 
@@ -279,7 +276,7 @@ public class Controller extends Device implements Runnable, StartStopable {
 
     @Override
     public void run() {
-	if (isRunning() && initialized) {
+	if (isRunning() && isInitialized()) {
 	    update();
 	    blackboard.update();
 	}
