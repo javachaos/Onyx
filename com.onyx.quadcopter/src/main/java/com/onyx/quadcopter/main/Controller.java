@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.Future;
-import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -66,11 +64,6 @@ public class Controller extends Device implements Runnable, StartStopable {
      */
     private boolean isRunning = false;
 
-//    /**
-//     * True if and only if init() has been called.
-//     */
-//    private volatile boolean initialized = false;
-
     /**
      * GPIO Controller.
      */
@@ -80,24 +73,6 @@ public class Controller extends Device implements Runnable, StartStopable {
      * Communications server reference.
      */
     private NettyCommServer commServer;
-    
-    /**
-     * The task queue. All tasks are executed in sequence.
-     * This queue is a priority queue those tasks with the next highest priority
-     * are executed first. Tasks are scheduled for execution after the last task executed
-     * is complete upon each and every call to update. (As the last operation after update has completed)
-     */
-    private PriorityBlockingQueue<Task<?>> tasks = new PriorityBlockingQueue<Task<?>>();
-
-    /**
-     * The current high level task being performed.
-     */
-    private Task<?> currentTask;
-    
-    /**
-     * Result of the most recent executed task.
-     */
-    private Future<?> currentFuture;
     
     /**
      * Singleton Reference.
@@ -234,21 +209,6 @@ public class Controller extends Device implements Runnable, StartStopable {
 		Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
 	    }
 	}
-        if (currentFuture == null && !tasks.isEmpty()) {
-            queueNextTask();
-        } else if(currentFuture != null && currentFuture.isDone()) {
-            queueNextTask();
-        }
-    }
-
-    /**
-     * Queue the next task for execution.
-     */
-    private void queueNextTask() {
-	currentTask = tasks.poll();
-	if (currentTask != null) {
-	    currentFuture = Main.COORDINATOR.submit(currentTask);
-	}
     }
 
     @Override
@@ -263,6 +223,14 @@ public class Controller extends Device implements Runnable, StartStopable {
 	shutdown();
     }
 
+    public synchronized void pause() {
+	isRunning = false;
+    }
+    
+    public synchronized void resume() {
+	isRunning = true;
+    }
+    
     public Set<Entry<DeviceID, Device>> getDevices() {
 	return devices.entrySet();
     }
@@ -300,11 +268,13 @@ public class Controller extends Device implements Runnable, StartStopable {
     }
 
     /**
-     * Add a high level task to the controller task queue.
+     * Execute a high level Task.
+     * Future is discarded.
      * @param t
+     * 		the task to execute.
      */
-    public void addTask(Task<?> t) {
-	tasks.add(t);
+    public void executeTask(Task<?> t) {
+	Main.COORDINATOR.submit(t);
     }
 
     @Override

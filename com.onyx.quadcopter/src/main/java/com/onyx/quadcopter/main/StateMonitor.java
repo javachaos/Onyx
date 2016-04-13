@@ -228,7 +228,7 @@ public final class StateMonitor implements Runnable {
 	    state = previousState;
 	    break;
 	case LANDED:
-	    controller.addTask(new CalibrationTask());
+	    controller.executeTask(new CalibrationTask());
 	    break;
 	case LANDING:
 	    state = previousState;
@@ -330,7 +330,6 @@ public final class StateMonitor implements Runnable {
 
     private void doLanded() {
 	if (isStateChanged()) {
-	    // TODO Complete
 	}
     }
 
