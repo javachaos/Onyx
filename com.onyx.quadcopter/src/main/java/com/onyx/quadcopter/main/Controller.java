@@ -102,7 +102,7 @@ public class Controller extends Device implements Runnable, StartStopable {
     /**
      * Singleton Reference.
      */
-    private static volatile Controller reference;
+    private static Controller reference;
 
     /**
      * Private Controller ctor.
@@ -121,7 +121,7 @@ public class Controller extends Device implements Runnable, StartStopable {
      * Get a reference to this controller.
      * @return
      */
-    public static Controller getInstance() {
+    public static synchronized Controller getInstance() {
 	if (reference == null) {
 	    reference = new Controller();
 	}
