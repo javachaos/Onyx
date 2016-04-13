@@ -111,9 +111,6 @@ public class Controller extends Device implements Runnable, StartStopable {
 	super();
 	devices = new MapMaker().concurrencyLevel(Constants.NUM_THREADS).initialCapacity(Constants.MAX_DEVICES)
 		.makeMap();
-	blackboard = new Blackboard();
-	commServer = new NettyCommServer();
-	Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
     }
     
     /**
@@ -130,6 +127,9 @@ public class Controller extends Device implements Runnable, StartStopable {
     @Override
     protected void init() {
 	LOGGER.debug("Initializing Controller...");
+	blackboard = new Blackboard();
+	commServer = new NettyCommServer();
+	Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
 	setGpio(GpioFactory.getInstance());
 	cleaner = new Cleaner();
 	addDevice(commServer);
