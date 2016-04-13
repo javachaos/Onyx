@@ -42,6 +42,13 @@ public class Motor extends Device {
     }
 
     @Override
+    protected void update() {
+	super.update();
+	sendMessage(DeviceID.OLED_DEVICE, "Current speed of " + getId() + " is: " + currentSpeed + "%.",
+		ActionId.DISPLAY);
+    }
+    
+    @Override
     public void update(final ACLMessage msg) {
 	switch (msg.getActionID()) {
 	case CHANGE_PULSE_WIDTH:
@@ -54,8 +61,6 @@ public class Motor extends Device {
 	default:
 	    break;
 	}
-	sendMessage(DeviceID.OLED_DEVICE, "Current speed of " + getId() + " is: " + currentSpeed + "%.",
-		ActionId.DISPLAY);
     }
 
     /**
