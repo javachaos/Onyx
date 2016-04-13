@@ -13,6 +13,7 @@ package com.onyx.quadcopter.main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.onyx.quadcopter.tasks.CalibrationTask;
 import com.onyx.quadcopter.tasks.ShutdownAgent;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ThreadUtils;
@@ -227,7 +228,7 @@ public final class StateMonitor implements Runnable {
 	    state = previousState;
 	    break;
 	case LANDED:
-	    //controller
+	    controller.addTask(new CalibrationTask());
 	    state = OnyxState.LANDED;
 	    break;
 	case LANDING:

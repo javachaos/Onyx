@@ -2,7 +2,6 @@ package com.onyx.quadcopter.control;
 
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
-import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
 
 /**
@@ -39,8 +38,8 @@ public class PIDController extends Device {
      */
     private float[] defaultOrient = new float[] { 0.0f, 0.0f, 0.0f };
 
-    public PIDController(final Controller c) {
-	super(c, DeviceID.PID);
+    public PIDController() {
+	super(DeviceID.PID);
     }
 
     @Override

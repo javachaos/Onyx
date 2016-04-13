@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.communication.CommunicationHandler;
 import com.onyx.quadcopter.exceptions.OnyxException;
-import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.messaging.MessageType;
@@ -53,8 +52,8 @@ public class NettyCommServer extends Device implements Runnable {
      */
     private ACLMessage pingRequest;
 
-    public NettyCommServer(final Controller c) {
-	super(c, DeviceID.COMM_SERVER);
+    public NettyCommServer() {
+	super(DeviceID.COMM_SERVER);
 	handler = new CommunicationHandler(getController());
     }
 

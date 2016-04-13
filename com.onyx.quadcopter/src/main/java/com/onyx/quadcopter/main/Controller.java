@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Future;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import com.onyx.quadcopter.devices.Motor;
 import com.onyx.quadcopter.devices.NettyCommServer;
 import com.onyx.quadcopter.devices.OLEDDevice;
 import com.onyx.quadcopter.exceptions.OnyxException;
+import com.onyx.quadcopter.tasks.Task;
 import com.onyx.quadcopter.utils.Cleaner;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
@@ -31,7 +34,7 @@ import com.pi4j.io.gpio.GpioFactory;
  * @author fred
  *
  */
-public class Controller implements Runnable {
+public class Controller extends Device implements Runnable, StartStopable {
 
     /**
      * Logger.
@@ -49,14 +52,23 @@ public class Controller implements Runnable {
     private int deviceCount = 0;
 
     /**
-     * Blackbaord instance.
+     * Blackboard instance.
      */
     private final Blackboard blackboard;
 
+    /**
+     * Object tasked with cleanup after shutdown.
+     */
     private Cleaner cleaner;
 
+    /**
+     * True if the controller is running.
+     */
     private boolean isRunning = false;
 
+    /**
+     * True if and only if init() has been called.
+     */
     private volatile boolean initialized = false;
 
     /**
@@ -68,28 +80,67 @@ public class Controller implements Runnable {
      * Communications server reference.
      */
     private final NettyCommServer commServer;
+    
+    /**
+     * The task queue. All tasks are executed in sequence.
+     * This queue is a priority queue those tasks with the next highest priority
+     * are executed first. Tasks are scheduled for execution after the last task executed
+     * is complete upon each and every call to update. (As the last operation after update has completed)
+     */
+    private PriorityBlockingQueue<Task<?>> tasks = new PriorityBlockingQueue<Task<?>>();
 
-    public Controller() {
+    /**
+     * The current high level task being performed.
+     */
+    private Task<?> currentTask;
+    
+    /**
+     * Result of the most recent executed task.
+     */
+    private Future<?> currentFuture;
+    
+    /**
+     * Singleton Reference.
+     */
+    private static Controller reference;
+
+    /**
+     * Private Controller ctor.
+     */
+    private Controller() {
+	super(DeviceID.CONTROLLER);
 	devices = new MapMaker().concurrencyLevel(Constants.NUM_THREADS).initialCapacity(Constants.MAX_DEVICES)
 		.makeMap();
 	blackboard = new Blackboard();
-	commServer = new NettyCommServer(this);
+	commServer = new NettyCommServer();
 	Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
 	init();
     }
+    
+    /**
+     * Get a reference to this controller.
+     * @return
+     */
+    public static Controller getInstance() {
+	if (reference == null) {
+	    reference = new Controller();
+	}
+	return reference;
+    }
 
-    private void init() {
+    @Override
+    protected void init() {
 	LOGGER.debug("Initializing Controller...");
 	setGpio(GpioFactory.getInstance());
 	cleaner = new Cleaner();
 	addDevice(commServer);
-	addDevice(new RedButton(this));
-	addDevice(new OLEDDevice(this));
-	addDevice(new GyroMagAcc(this));
-	addDevice(new Motor(this, DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
-	addDevice(new Motor(this, DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
-	addDevice(new Motor(this, DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
-	addDevice(new Motor(this, DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
+	addDevice(new RedButton());
+	addDevice(new OLEDDevice());
+	addDevice(new GyroMagAcc());
+	addDevice(new Motor(DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
+	addDevice(new Motor(DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
+	addDevice(new Motor(DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
+	addDevice(new Motor(DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
 	LOGGER.debug("Controller Initialized.");
 	for (final Entry<DeviceID, Device> d : devices.entrySet()) {
 	    d.getValue().initialize();
@@ -97,7 +148,8 @@ public class Controller implements Runnable {
 	initialized = true;
     }
 
-    private void shutdown() {
+    @Override
+    public void shutdown() {
 	LOGGER.debug("Starting Controller shutdown...");
 	blackboard.shutdown();
 	for (final Entry<DeviceID, Device> d : devices.entrySet()) {
@@ -127,6 +179,7 @@ public class Controller implements Runnable {
      * Add a device to the devices list.
      *
      * @param d
+     * 		the device to add.
      */
     public void addDevice(final Device d) {
 	if (d != null) {
@@ -141,6 +194,13 @@ public class Controller implements Runnable {
 	}
     }
 
+    /**
+     * Get a device instance from this controller
+     * @param d
+     * 		the deviceid for the device returned.
+     * @return
+     * 		the device associated with deviceId d.
+     */
     public Device getDevice(final DeviceID d) {
 	final Device dev = devices.get(d);
 	if (dev != null) {
@@ -150,6 +210,11 @@ public class Controller implements Runnable {
 	}
     }
 
+    /**
+     * Remove a device from this Controller.
+     * @param deviceId
+     * 		the device to be removed.
+     */
     public void removeDevice(final DeviceID deviceId) {
 	if (devices.containsKey(deviceId)) {
 	    LOGGER.info("Removed device, " + getDevice(deviceId) + " from Controller.");
@@ -159,7 +224,8 @@ public class Controller implements Runnable {
 	}
     }
 
-    private synchronized void update() {
+    @Override
+    protected synchronized void update() {
 	final Iterator<DeviceID> it = devices.keySet().iterator();
 	while (it.hasNext()) {
 	    Device d = getDevice(it.next());
@@ -167,11 +233,25 @@ public class Controller implements Runnable {
 	        d.execute();
 	    } catch (Throwable t) {
 		ExceptionUtils.logError(d.getClass(), t);
-		throw t;
+		Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
+	    }
+	    if (currentFuture != null && currentFuture.isDone()) {
+	        queueNextTask();
 	    }
 	}
     }
 
+    /**
+     * Queue the next task for execution.
+     */
+    private void queueNextTask() {
+	currentTask = tasks.poll();
+	if (currentTask != null) {
+	    currentFuture = Main.COORDINATOR.submit(currentTask);
+	}
+    }
+
+    @Override
     public synchronized void start() {
 	if (!initialized) {
 	    init();
@@ -179,6 +259,7 @@ public class Controller implements Runnable {
 	isRunning = true;
     }
 
+    @Override
     public synchronized void stop() {
 	isRunning = false;
 	shutdown();
@@ -218,5 +299,22 @@ public class Controller implements Runnable {
      */
     public void setGpio(GpioController gpio) {
 	this.gpio = gpio;
+    }
+
+    /**
+     * Add a high level task to the controller task queue.
+     * @param t
+     */
+    public void addTask(Task<?> t) {
+	tasks.add(t);
+    }
+
+    @Override
+    protected void alternate() {
+    }
+
+    @Override
+    public boolean selfTest() {
+	return isInitialized();
     }
 }

@@ -2,7 +2,6 @@ package com.onyx.quadcopter.control;
 
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
-import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.main.StateMonitor;
 import com.onyx.quadcopter.messaging.ACLPriority;
 import com.onyx.quadcopter.messaging.ActionId;
@@ -64,8 +63,8 @@ public class RedButton extends Device implements GpioPinListenerDigital {
      * Creates a red button.
      * @param c
      */
-    public RedButton(final Controller c) {
-	super(c, DeviceID.RED_BUTTON);
+    public RedButton() {
+	super(DeviceID.RED_BUTTON);
     }
 
     @Override

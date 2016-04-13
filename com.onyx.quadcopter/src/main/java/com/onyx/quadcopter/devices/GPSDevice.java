@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
@@ -18,8 +17,8 @@ public class GPSDevice extends Device {
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     private byte[] nmeaBuffer = new byte[Constants.NMEA_BUFF_SIZE];
 
-    public GPSDevice(final Controller c) {
-	super(c, DeviceID.GPS_DEVICE);
+    public GPSDevice() {
+	super(DeviceID.GPS_DEVICE);
     }
 
     @Override

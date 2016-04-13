@@ -6,7 +6,6 @@ import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 
-import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
 
@@ -41,8 +40,8 @@ public class CameraDevice extends Device {
      * 
      * @param c
      */
-    public CameraDevice(final Controller c) {
-	super(c, DeviceID.CAMERA);
+    public CameraDevice() {
+	super(DeviceID.CAMERA);
     }
 
     @Override

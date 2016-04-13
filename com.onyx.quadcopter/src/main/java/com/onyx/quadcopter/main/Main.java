@@ -30,7 +30,7 @@ public class Main {
 
     public static void main(final String[] args) {
 	Thread.setDefaultUncaughtExceptionHandler(new OnyxExceptionHandler());
-	final Controller controller = new Controller();
+	final Controller controller = Controller.getInstance();
 	final StateMonitor monitor = new StateMonitor(controller);
 	Main.COORDINATOR.scheduleWithFixedDelay(monitor, Constants.MONITOR_DELAY, Constants.MONITOR_PERIOD,
 		Constants.MONITOR_TIMEUNIT);

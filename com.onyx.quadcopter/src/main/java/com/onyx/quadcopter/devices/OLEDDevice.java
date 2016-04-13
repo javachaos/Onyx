@@ -5,7 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.onyx.quadcopter.display.Display;
-import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
@@ -38,8 +37,8 @@ public class OLEDDevice extends Device {
      * Creates a new OLED Device.
      * @param c controller.
      */
-    public OLEDDevice(final Controller c) {
-	super(c, DeviceID.OLED_DEVICE);
+    public OLEDDevice() {
+	super(DeviceID.OLED_DEVICE);
     }
 
     @Override

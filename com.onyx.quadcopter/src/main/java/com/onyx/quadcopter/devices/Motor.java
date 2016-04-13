@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.control.PwmControl;
-import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
@@ -36,8 +35,8 @@ public class Motor extends Device {
      * @param pwmPin
      *            the GPIO pin for this Motor.
      */
-    public Motor(final Controller c, final DeviceID id, final short pwmPin) {
-	super(c, id);
+    public Motor(final DeviceID id, final short pwmPin) {
+	super(id);
 	pwm = new PwmControl(pwmPin);
     }
 

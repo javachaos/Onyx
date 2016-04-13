@@ -372,4 +372,9 @@ public final class Constants {
      */
     public static final int MAX_BLACKBOARD_BUCKET_SIZE = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.blackboard.max.bucket.size", 32);
 
+    /**
+     * The default task priority.
+     */
+    public static final int DEFAULT_TASK_PRIORITY = 0;
+
 }
