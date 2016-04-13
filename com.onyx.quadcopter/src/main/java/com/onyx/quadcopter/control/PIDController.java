@@ -2,6 +2,7 @@ package com.onyx.quadcopter.control;
 
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
+import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.Constants;
 
 /**
@@ -43,11 +44,6 @@ public class PIDController extends Device {
     }
 
     @Override
-    protected void update() {
-
-    }
-
-    @Override
     protected void init() {
 
     }
@@ -65,5 +61,10 @@ public class PIDController extends Device {
     @Override
     public boolean selfTest() {
 	return false;
+    }
+
+    @Override
+    public void update(ACLMessage msg) {
+	//TODO Implement if needed.
     }
 }

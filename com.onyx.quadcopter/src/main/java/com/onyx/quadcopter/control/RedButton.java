@@ -4,6 +4,7 @@ import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.main.OnyxState;
 import com.onyx.quadcopter.main.StateMonitor;
+import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.ACLPriority;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
@@ -69,11 +70,6 @@ public class RedButton extends Device implements GpioPinListenerDigital {
     }
 
     @Override
-    protected void update() {
-	sendMessage(DeviceID.OLED_DEVICE, "Current Button State: "+ button.getState(), ActionId.DISPLAY, ACLPriority.MEDIUM);
-    }
-
-    @Override
     protected void init() {
 	button = getController().getGpio().provisionDigitalInputPin(RaspiPin.GPIO_21, PinPullResistance.PULL_UP);
 	button.addListener(this);
@@ -108,6 +104,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 	    LOGGER.debug("Button Released. Held down for "+ holdDownTime + "  nanoseconds.");
 	    handleActionSequence(holdDownTime);
 	}
+	sendMessage(DeviceID.OLED_DEVICE, "Current Button State: "+ button.getState(), ActionId.DISPLAY, ACLPriority.MEDIUM);
     }
 
     /**
@@ -131,5 +128,10 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Shutdown Sequence...", ActionId.PRINT, ACLPriority.MAX);
 	    StateMonitor.shutdownState();
 	}
+    }
+
+    @Override
+    public void update(ACLMessage msg) {
+	//TODO Implement if needed.
     }
 }

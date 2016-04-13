@@ -19,6 +19,7 @@ import com.onyx.quadcopter.devices.Motor;
 import com.onyx.quadcopter.devices.NettyCommServer;
 import com.onyx.quadcopter.devices.OLEDDevice;
 import com.onyx.quadcopter.exceptions.OnyxException;
+import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.tasks.Task;
 import com.onyx.quadcopter.utils.Cleaner;
 import com.onyx.quadcopter.utils.Constants;
@@ -199,6 +200,7 @@ public class Controller extends Device implements Runnable, StartStopable {
 
     @Override
     protected synchronized void update() {
+	//No call to super.update() for we do not wish to adapt our behavior from super.
 	final Iterator<DeviceID> it = devices.keySet().iterator();
 	while (it.hasNext()) {
 	    Device d = getDevice(it.next());
@@ -284,5 +286,10 @@ public class Controller extends Device implements Runnable, StartStopable {
     @Override
     public boolean selfTest() {
 	return isInitialized();
+    }
+
+    @Override
+    public void update(ACLMessage msg) {
+	//UNUSED
     }
 }

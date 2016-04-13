@@ -102,11 +102,17 @@ public class NettyCommServer extends Device implements Runnable {
 
     @Override
     protected void update() {
+	super.update();
+
 	// Send client a request for data.
 	handler.addData(pingRequest);
-	switch (lastMessage.getActionID()) {
+    }
+    
+    @Override
+    public  void update(final ACLMessage msg) {
+	switch (msg.getActionID()) {
 	case SEND_DATA:
-	    handler.addData(lastMessage);
+	    handler.addData(msg);
 	default:
 	    break;
 	}

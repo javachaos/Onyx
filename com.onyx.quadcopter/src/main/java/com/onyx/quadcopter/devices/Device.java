@@ -12,7 +12,7 @@ import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.messaging.MessageType;
 import com.onyx.quadcopter.utils.Constants;
 
-public abstract class Device implements Executable {
+public abstract class Device implements Executable, Updateable {
 
     /**
      * Logger.
@@ -74,13 +74,16 @@ public abstract class Device implements Executable {
     }
 
     /**
-     * Update this device given a reference to the blackboard.
-     *
-     * @param b
-     *            Reference to the blackboard.
-     *
+     * Update this device once every Controller update.
      */
-    protected abstract void update();
+    protected void update() {
+	if (isNewMessage()) {
+	    while(getMessages().size() > 0) {
+                ACLMessage msg = getMessages().poll();
+                this.update(msg);
+	    }
+	}
+    }
 
     @Override
     public synchronized void execute() {

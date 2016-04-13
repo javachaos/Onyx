@@ -6,6 +6,7 @@ import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 
+import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
 
@@ -45,7 +46,7 @@ public class CameraDevice extends Device {
     }
 
     @Override
-    protected void update() {
+    public void update(ACLMessage msg) {
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.onyx.quadcopter.devices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
@@ -30,16 +31,19 @@ public class GyroMagAcc extends Device {
 
     @Override
     protected void update() {
+	super.update();
 	lsm.update();
+    }
+    
+    @Override
+    public void update(final ACLMessage msg) {
 	float[] orient = getRPH();
-	if (isNewMessage()) {
-	    switch (lastMessage.getActionID()) {
-	    case GET_ORIENT:
-	    case SEND_DATA:
-		sendReply(orient[0] + ":" + orient[1] + ":" + orient[2], lsm.getTemperature());
-	    default:
-		break;
-	    }
+	switch (msg.getActionID()) {
+	case GET_ORIENT:
+	case SEND_DATA:
+	    sendReply(orient[0] + ":" + orient[1] + ":" + orient[2], lsm.getTemperature());
+	default:
+	    break;
 	}
 	sendMessage(DeviceID.OLED_DEVICE, "Yaw: " + orient[0] + System.lineSeparator() + "Pitch: " + orient[1]
 		+ System.lineSeparator() + "Roll: " + orient[2], ActionId.DISPLAY);

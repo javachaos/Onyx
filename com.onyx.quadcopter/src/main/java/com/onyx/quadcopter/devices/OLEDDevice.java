@@ -42,28 +42,23 @@ public class OLEDDevice extends Device {
     }
 
     @Override
-    protected void update() {
+    public void update(final ACLMessage msg) {
 	if (msgs.size() >= Constants.OLED_MAX_MSGS) {
 	    msgs.clear();
 	}
-	if (isNewMessage()) {
-	    while(getMessages().size() > 0) {
-                ACLMessage msg = getMessages().poll();
-	        switch (msg.getActionID()) {
-	        case PRINT:
-		    oled.write(msg.getContent());
-		    break;
-	        case DISPLAY:
-	            msgs.put(msg.getSender(), msg.getContent());
-		    break;
-	        case CHANGE_DISPLAY:
-		    showNext();
-		    break;
-	        default:
-	            break;
-	        }
-	    }
-	}
+	switch (msg.getActionID()) {
+        case PRINT:
+	    oled.write(msg.getContent());
+	    break;
+        case DISPLAY:
+            msgs.put(msg.getSender(), msg.getContent());
+	    break;
+        case CHANGE_DISPLAY:
+	    showNext();
+	    break;
+        default:
+            break;
+        }
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.control.PwmControl;
+import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
@@ -41,19 +42,17 @@ public class Motor extends Device {
     }
 
     @Override
-    protected void update() {
-	if (isNewMessage()) {
-	    switch (lastMessage.getActionID()) {
-	    case CHANGE_PULSE_WIDTH:
-		setPulseWidth((int) lastMessage.getValue());
-		LOGGER.debug("PWM Speed changed to " + currentSpeed + "%.");
-	    case CHANGE_MOTOR_SPEED:
-		setSpeed((int) lastMessage.getValue());
-		LOGGER.debug("PWM Speed changed to " + currentSpeed + "%.");
-		break;
-	    default:
-		break;
-	    }
+    public void update(final ACLMessage msg) {
+	switch (msg.getActionID()) {
+	case CHANGE_PULSE_WIDTH:
+	    setPulseWidth((int) msg.getValue());
+	    LOGGER.debug("PWM Speed changed to " + currentSpeed + "%.");
+	case CHANGE_MOTOR_SPEED:
+	    setSpeed((int) msg.getValue());
+	    LOGGER.debug("PWM Speed changed to " + currentSpeed + "%.");
+	    break;
+	default:
+	    break;
 	}
 	sendMessage(DeviceID.OLED_DEVICE, "Current speed of " + getId() + " is: " + currentSpeed + "%.",
 		ActionId.DISPLAY);

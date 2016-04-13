@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
@@ -26,6 +27,11 @@ public class GPSDevice extends Device {
 	if (gps.dataAvailable()) {
 	    gps.readData(nmeaBuffer);
 	}
+    }
+    
+    @Override
+    public void update(ACLMessage msg) {
+	//TODO Complete msg handling.
     }
 
     @Override
