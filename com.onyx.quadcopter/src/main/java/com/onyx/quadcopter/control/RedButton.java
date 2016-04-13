@@ -57,9 +57,9 @@ public class RedButton extends Device implements GpioPinListenerDigital {
     private static final long CALIBRATE_SEQ = 2 * NANOSECONDS_PER_SEC;
     
     /**
-     * Shutdown Time. [10s-infs]
+     * Shutdown Time. [5s-infs]
      */
-    private static final long SHUTDOWN_SEQ = 10 * NANOSECONDS_PER_SEC;
+    private static final long SHUTDOWN_SEQ = 5 * NANOSECONDS_PER_SEC;
 
     /**
      * Creates a red button.
@@ -104,7 +104,6 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 	    LOGGER.debug("Button Released. Held down for "+ holdDownTime + "  nanoseconds.");
 	    handleActionSequence(holdDownTime);
 	}
-	sendMessage(DeviceID.OLED_DEVICE, "Current Button State: "+ button.getState(), ActionId.DISPLAY, ACLPriority.MEDIUM);
     }
 
     /**
@@ -132,6 +131,6 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 
     @Override
     public void update(ACLMessage msg) {
-	//TODO Implement if needed.
+	sendMessage(DeviceID.OLED_DEVICE, "Current Button State: "+ button.getState(), ActionId.DISPLAY, ACLPriority.MEDIUM);
     }
 }
