@@ -25,11 +25,9 @@ public class CalibrationTask extends Task<ACLMessage> {
 
     @Override
     public void perform() {
-	//TODO Fix something on the next line is NULL fix this.
 	    getDev().sendMessage(DeviceID.OLED_DEVICE,
 		    "Initiating calibration sequence. Attach battery and hold red button for 3 seconds when ready.",
 		    ActionId.PRINT, ACLPriority.MAX);
-       //TODO Fix
 	    setAllSpeed(100.0);
 	    while(!pressed) {
 		//Pause this thread but sleep it to avoid busy waiting.
