@@ -59,7 +59,7 @@ public class PwmControl {
 	pwm.setPrescaleFromHz(Constants.PWM_FREQ);
 	pwm.setModeSleep(false);
 	disable();
-	pwm.ledOnTime(PCA9685_ALL_LED, 0);
+	pwm.ledOffTime(PCA9685_ALL_LED, 0);
 	enable();
     }
 
@@ -76,8 +76,8 @@ public class PwmControl {
 	    LOGGER.error("Pulse width is out of range. [1000us - 2000us] expected.");
 	} else {
 	    pwm.ledFullOn(pin, false);
-	    pwm.ledOnTime(pin, 0);
-	    pwm.ledOffTime(pin, (int) (period - (pulseWidth / scale)));
+	    pwm.ledOffTime(pin, 0);
+	    pwm.ledOnTime(pin, (int) (period - (pulseWidth / scale)));
 	}
     }
 
