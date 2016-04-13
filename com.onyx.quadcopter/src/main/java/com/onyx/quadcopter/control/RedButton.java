@@ -2,6 +2,7 @@ package com.onyx.quadcopter.control;
 
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
+import com.onyx.quadcopter.main.OnyxState;
 import com.onyx.quadcopter.main.StateMonitor;
 import com.onyx.quadcopter.messaging.ACLPriority;
 import com.onyx.quadcopter.messaging.ActionId;
@@ -119,9 +120,12 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 	if (hdt >= DISPLAY_SEQ && hdt < CALIBRATE_SEQ) {
 	    sendMessage(DeviceID.OLED_DEVICE,"NULL", ActionId.CHANGE_DISPLAY, ACLPriority.MAX);
 	} else if (hdt > CALIBRATE_SEQ && hdt < SHUTDOWN_SEQ) {
-	    LOGGER.debug("Initiating Calibration Sequence...");
-	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Calibration Sequence...", ActionId.PRINT, ACLPriority.MAX);
-	    StateMonitor.calibrationState();
+	    LOGGER.debug("Calibration sequence timing entered.");
+	    if (StateMonitor.getState() == OnyxState.CALIBRATION) {
+		StateMonitor.landedState();
+	    } else {
+	        StateMonitor.calibrationState();
+	    }
 	} else if (hdt >= SHUTDOWN_SEQ) {
 	    LOGGER.debug("Initiating Shutdown Sequence...");
 	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Shutdown Sequence...", ActionId.PRINT, ACLPriority.MAX);

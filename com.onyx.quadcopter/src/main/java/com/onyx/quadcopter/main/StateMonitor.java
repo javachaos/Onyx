@@ -229,7 +229,6 @@ public final class StateMonitor implements Runnable {
 	    break;
 	case LANDED:
 	    controller.addTask(new CalibrationTask());
-	    state = OnyxState.LANDED;
 	    break;
 	case LANDING:
 	    state = previousState;

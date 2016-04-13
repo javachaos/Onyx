@@ -69,7 +69,9 @@ public abstract class Task<T> implements Callable<T>, Comparable<T> {
     
     @Override
     public T call() throws Exception {
+	LOGGER.debug("Executing task: " + getName());
 	perform();
+	LOGGER.debug("Execution complete for task: " + getName());
 	return complete();
     }
     /**
@@ -151,6 +153,14 @@ public abstract class Task<T> implements Callable<T>, Comparable<T> {
      */
     public void setDev(Device dev) {
 	this.dev = dev;
+    }
+
+    /**
+     * Return the name of this task
+     * @return
+     */
+    public String getName() {
+	return id.name();
     }
 
 }
