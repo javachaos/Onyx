@@ -22,7 +22,7 @@ public abstract class Device implements Executable, Updateable {
     /**
      * Controller reference.
      */
-    private final Controller controller;
+    private Controller controller;
 
     /**
      * Keep track of the number of loops.
@@ -53,13 +53,13 @@ public abstract class Device implements Executable, Updateable {
     public Device(final DeviceID id) {
 	setId(id);
 	setName(id.toString());
-	controller = Controller.getInstance();
+	//controller = Controller.getInstance();
     }
     
     public Device() {
 	setId(DeviceID.CONTROLLER);
 	setName(DeviceID.CONTROLLER.name());
-	controller = null;
+	//controller = null;
     }
 
     /**
@@ -380,6 +380,7 @@ public abstract class Device implements Executable, Updateable {
 	if (!isInitialized()) {
 	    LOGGER.debug("Initializing " + getName());
 	    init();
+	    controller = Controller.getInstance();
 	    LOGGER.debug("Device: " + getName() + " initialized.");
 	    initialized = true;
 	}
