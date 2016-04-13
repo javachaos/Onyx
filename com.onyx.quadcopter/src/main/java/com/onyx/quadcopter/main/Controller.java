@@ -44,7 +44,7 @@ public class Controller extends Device implements Runnable, StartStopable {
     /**
      * Devices array.
      */
-    private final ConcurrentMap<DeviceID, Device> devices;
+    private ConcurrentMap<DeviceID, Device> devices;
 
     /**
      * Number of devices.
@@ -54,7 +54,7 @@ public class Controller extends Device implements Runnable, StartStopable {
     /**
      * Blackboard instance.
      */
-    private final Blackboard blackboard;
+    private Blackboard blackboard;
 
     /**
      * Object tasked with cleanup after shutdown.
@@ -79,7 +79,7 @@ public class Controller extends Device implements Runnable, StartStopable {
     /**
      * Communications server reference.
      */
-    private final NettyCommServer commServer;
+    private NettyCommServer commServer;
     
     /**
      * The task queue. All tasks are executed in sequence.
@@ -108,13 +108,7 @@ public class Controller extends Device implements Runnable, StartStopable {
      * Private Controller ctor.
      */
     private Controller() {
-	super(DeviceID.CONTROLLER);
-	devices = new MapMaker().concurrencyLevel(Constants.NUM_THREADS).initialCapacity(Constants.MAX_DEVICES)
-		.makeMap();
-	blackboard = new Blackboard();
-	commServer = new NettyCommServer();
-	Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
-	init();
+	super();
     }
     
     /**
@@ -131,6 +125,11 @@ public class Controller extends Device implements Runnable, StartStopable {
     @Override
     protected void init() {
 	LOGGER.debug("Initializing Controller...");
+	devices = new MapMaker().concurrencyLevel(Constants.NUM_THREADS).initialCapacity(Constants.MAX_DEVICES)
+		.makeMap();
+	blackboard = new Blackboard();
+	commServer = new NettyCommServer();
+	Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
 	setGpio(GpioFactory.getInstance());
 	cleaner = new Cleaner();
 	addDevice(commServer);

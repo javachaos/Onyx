@@ -53,11 +53,13 @@ public abstract class Device implements Executable {
     public Device(final DeviceID id) {
 	setId(id);
 	setName(id.toString());
-	if (id != DeviceID.CONTROLLER) {
-	    controller = Controller.getInstance();
-	} else {
-	    controller = null;
-	}// Kludge to avoid stackoverflow.
+	controller = Controller.getInstance();
+    }
+    
+    public Device() {
+	setId(DeviceID.CONTROLLER);
+	setName(DeviceID.CONTROLLER.name());
+	controller = null;
     }
 
     /**
