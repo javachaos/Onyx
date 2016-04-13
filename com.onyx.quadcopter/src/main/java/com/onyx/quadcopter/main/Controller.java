@@ -233,10 +233,12 @@ public class Controller extends Device implements Runnable, StartStopable {
 		ExceptionUtils.logError(d.getClass(), t);
 		Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
 	    }
-	    if (currentFuture != null && currentFuture.isDone()) {
-	        queueNextTask();
-	    }
 	}
+        if (currentFuture == null && !tasks.isEmpty()) {
+            queueNextTask();
+        } else if(currentFuture != null && currentFuture.isDone()) {
+            queueNextTask();
+        }
     }
 
     /**
