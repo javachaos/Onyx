@@ -129,12 +129,14 @@ public class PIDController extends Device {
 	    orientation[0] = Double.parseDouble(d0[0]);
 	    orientation[1] = Double.parseDouble(d0[1]);
 	    orientation[2] = Double.parseDouble(d0[2]);
+	    break;
 	case CHANGE_ORIENT:
 	    String[] d1 = msg.getContent().split(":");
 	    xPid.setPoint(Double.parseDouble(d1[0]));
 	    yPid.setPoint(Double.parseDouble(d1[1]));
 	    zPid.setPoint(Double.parseDouble(d1[2]));
 	    throttle = Double.parseDouble(d1[3]);
+	    break;
 	default:
 	    break;
 	}
