@@ -131,6 +131,6 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 
     @Override
     public void update(ACLMessage msg) {
-	sendMessage(DeviceID.OLED_DEVICE, "Current Button State: "+ button.getState(), ActionId.DISPLAY, ACLPriority.MEDIUM);
+	setDisplay("Current Button State: "+ button.getState());
     }
 }

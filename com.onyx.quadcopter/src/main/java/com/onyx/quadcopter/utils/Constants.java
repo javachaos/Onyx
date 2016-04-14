@@ -308,17 +308,47 @@ public final class Constants {
     /**
      * P Gain for PID controller.
      */
-    public static final float PID_GAIN_P = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gain.p", 0);
+    public static final float PID_GAIN_P_X = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gainx.p", 0);
 
     /**
      * I Gain for PID controller.
      */
-    public static final float PID_GAIN_I = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gain.i", 0);
+    public static final float PID_GAIN_I_X = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gainx.i", 0);
 
     /**
      * D Gain for PID controller.
      */
-    public static final float PID_GAIN_D = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gain.d", 0);
+    public static final float PID_GAIN_D_X = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gainx.d", 0);
+    
+    /**
+     * P Gain for PID controller.
+     */
+    public static final float PID_GAIN_P_Y = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gainy.p", 0);
+
+    /**
+     * I Gain for PID controller.
+     */
+    public static final float PID_GAIN_I_Y = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gainy.i", 0);
+
+    /**
+     * D Gain for PID controller.
+     */
+    public static final float PID_GAIN_D_Y = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gainy.d", 0);
+    
+    /**
+     * P Gain for PID controller.
+     */
+    public static final float PID_GAIN_P_Z = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gainz.p", 0);
+
+    /**
+     * I Gain for PID controller.
+     */
+    public static final float PID_GAIN_I_Z = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gainz.i", 0);
+
+    /**
+     * D Gain for PID controller.
+     */
+    public static final float PID_GAIN_D_Z = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pid.gainz.d", 0);
 
     /**
      * PWM Frequency.
@@ -349,13 +379,25 @@ public final class Constants {
 
     /**
      * Maximum percentage speed of the motors.
+     * (Cannot be changed)
      */
     public static final int MOTOR_MAX_SPEED = 100;
+    
+    /**
+     * Maximum pulse width to send to ESCs for max motor speed.
+     */
+    public static final int MOTOR_MAX_MS = 2000;
+
+    /**
+     * The minimum speed of the motors as a percentage.
+     * (Cannot be changed)
+     */
+    public static final int MOTOR_MIN_SPEED = 0;
 
     /**
      * Initialization delay in milliseconds for the motors.
      */
-    public static final long MOTOR_INIT_DELAY = 2000;
+    public static final long MOTOR_INIT_DELAY = 200;
 
     /**
      * X start position for OLED graphics.
@@ -376,5 +418,16 @@ public final class Constants {
      * The default task priority.
      */
     public static final int DEFAULT_TASK_PRIORITY = 0;
+
+    /**
+     * Speed to maintain rotors spinning.
+     */
+    public static final double DEFAULT_ROTOR_SPEED = 1200;
+
+    /**
+     * Maximum throttle speed.
+     */
+    public static final double MAX_THROTTLE = 1800;
+
 
 }

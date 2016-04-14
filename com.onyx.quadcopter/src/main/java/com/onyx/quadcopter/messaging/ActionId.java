@@ -87,7 +87,12 @@ public enum ActionId {
     /**
      * Change the display for OLED.
      */
-    CHANGE_DISPLAY(15);
+    CHANGE_DISPLAY(15), 
+    
+    /**
+     * Change the orientation.
+     */
+    CHANGE_ORIENT(16);
 
     /**
      * The internal ID field.

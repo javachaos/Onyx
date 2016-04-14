@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.MapMaker;
+import com.onyx.quadcopter.control.PIDController;
 import com.onyx.quadcopter.control.RedButton;
 import com.onyx.quadcopter.devices.Blackboard;
 import com.onyx.quadcopter.devices.Device;
@@ -116,6 +117,7 @@ public class Controller extends Device implements Runnable, StartStopable {
 	addDevice(new Motor(DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
 	addDevice(new Motor(DeviceID.MOTOR3, Constants.GPIO_MOTOR3));
 	addDevice(new Motor(DeviceID.MOTOR4, Constants.GPIO_MOTOR4));
+	addDevice(new PIDController());
 	LOGGER.debug("Controller Initialized.");
 	for (final Entry<DeviceID, Device> d : devices.entrySet()) {
 	    d.getValue().initialize();

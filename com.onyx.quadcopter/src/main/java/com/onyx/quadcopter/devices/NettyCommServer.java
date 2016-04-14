@@ -130,7 +130,7 @@ public class NettyCommServer extends Device implements Runnable {
     protected void alternate() {
 	final ACLMessage peek = handler.getDataStack().peek();
 	if (peek != null && peek.isValid()) {
-	    sendMessage(DeviceID.OLED_DEVICE, "Latest Comm: " + peek.getContent(), ActionId.DISPLAY);
+	    setDisplay("Latest Comm: " + peek.getContent());
 	}
     }
 

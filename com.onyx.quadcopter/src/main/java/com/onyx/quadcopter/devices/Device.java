@@ -235,6 +235,15 @@ public abstract class Device implements Executable, Updateable {
     }
     
     /**
+     * Send a message to the OLED device to display a message.
+     * @param text
+     * 		the text to send to the display.
+     */
+    public void setDisplay(final String text) {
+	sendMessage(DeviceID.OLED_DEVICE, text, ActionId.DISPLAY, ACLPriority.MEDIUM);
+    }
+    
+    /**
      * Send a message to receiver. (ACLPriority.MEDIUM)
      * 
      * @param receiver

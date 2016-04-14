@@ -7,6 +7,7 @@ import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.ACLPriority;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.messaging.MessageType;
+import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
 
 public class CalibrationTask extends Task<ACLMessage> {
@@ -28,17 +29,17 @@ public class CalibrationTask extends Task<ACLMessage> {
 	    getDev().sendMessage(DeviceID.OLED_DEVICE,
 		    "Initiating calibration sequence. Attach battery and hold red button for 3 seconds when ready.",
 		    ActionId.PRINT, ACLPriority.MAX);
-	    setAllSpeed(100.0);
+	    setAllSpeed(Constants.MOTOR_MAX_SPEED);
 	    while(!pressed) {
 		//Pause this thread but sleep it to avoid busy waiting.
 		try {
-		    Thread.sleep(100);
+		    Thread.sleep(Constants.MOTOR_INIT_DELAY);
 		} catch (InterruptedException e) {
 		    ExceptionUtils.logError(getClass(), e);
 		}
 		pressed = (StateMonitor.getState() != OnyxState.CALIBRATION);
 	    }
-	    setAllSpeed(0.0);
+	    setAllSpeed(Constants.MOTOR_MIN_SPEED);
     }
 
     /**
