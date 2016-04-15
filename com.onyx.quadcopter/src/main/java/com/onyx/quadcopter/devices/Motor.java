@@ -51,6 +51,7 @@ public class Motor extends Device {
 	case CHANGE_PULSE_WIDTH:
 	    setPulseWidth((int) msg.getValue());
 	    LOGGER.debug("PWM Speed changed to " + currentSpeed + "%.");
+	    break;
 	case CHANGE_MOTOR_SPEED:
 	    setSpeed((int) msg.getValue());
 	    LOGGER.debug("PWM Speed changed to " + currentSpeed + "%.");
