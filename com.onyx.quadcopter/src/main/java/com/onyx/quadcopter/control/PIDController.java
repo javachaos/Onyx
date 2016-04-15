@@ -78,9 +78,9 @@ public class PIDController extends Device {
     protected void update() {
 	super.update();
 
-	computedGyro[0] = xPid.compute((computedGyro[0] * 0.8)+((gyro[0] / Constants.GYRO_SCALE) * 0.2));
-	computedGyro[1] = yPid.compute((computedGyro[1] * 0.8)+((gyro[1] / Constants.GYRO_SCALE) * 0.2));
-	computedGyro[2] = zPid.compute((computedGyro[2] * 0.8)+((gyro[2] / Constants.GYRO_SCALE) * 0.2));
+	computedGyro[0] = xPid.compute(gyro[0] / Constants.GYRO_SCALE);
+	computedGyro[1] = yPid.compute(gyro[1] / Constants.GYRO_SCALE);
+	computedGyro[2] = zPid.compute(gyro[2] / Constants.GYRO_SCALE);
 	
 	if(orientation[0] >= Constants.MAX_FLIGHT_INCLINE) {
 	    computedGyro[0] = 0;
