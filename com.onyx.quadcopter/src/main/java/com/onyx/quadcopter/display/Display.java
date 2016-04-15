@@ -542,17 +542,20 @@ public class Display {
     private int x = Constants.OLED_X_START;
     private int y = Constants.OLED_Y_START;
 
+    private String displayedString;
+
     /**
      * Write text to the screen.
      * 
      * @param string
      */
     public void write(String string) {
-	if (string != null && !string.isEmpty()) {
+	if (string != null && !string.isEmpty() && !string.equals(displayedString)) {
+	    displayedString = string;
             clear();
             getGraphics().setColor(Color.WHITE);
             getGraphics().setFont(new Font("Monospaced", Font.PLAIN, Constants.DISP_FONT));
-            drawStringMultiLine(string);
+            drawStringMultiLine(displayedString);
             displayImage();
 	}
     }

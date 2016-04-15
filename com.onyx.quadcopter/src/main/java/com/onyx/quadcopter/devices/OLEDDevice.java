@@ -59,6 +59,8 @@ public class OLEDDevice extends Device {
         default:
             break;
         }
+
+	show();
     }
 
     @Override
@@ -100,7 +102,6 @@ public class OLEDDevice extends Device {
 
     @Override
     protected void alternate() {
-	show();
     }
 
     @Override
