@@ -31,11 +31,12 @@ public class PIDController extends Device {
      * The input orientation provided by gyro;
      */
     private double[] orientation = new double[3];
+    private double[] gyro = new double[3];
     
     /**
      * Computed orientation.
      */
-    private double[] computedOrientation = new double[3];
+    private double[] computedGyro = new double[3];
     
     /**
      * The controller throttle.
@@ -47,6 +48,7 @@ public class PIDController extends Device {
 	xPid = new Pid(GAIN_P_X, GAIN_I_X, GAIN_D_X);
 	yPid = new Pid(GAIN_P_Y, GAIN_I_Y, GAIN_D_Y);
 	zPid = new Pid(GAIN_P_Z, GAIN_I_Z, GAIN_D_Z);
+	xPid.setSamplePeriod((Constants.CONTROLLER_PERIOD * 1000));
 	xPid.setPoint(0);
 	yPid.setPoint(0);
 	zPid.setPoint(0);
@@ -76,14 +78,21 @@ public class PIDController extends Device {
     protected void update() {
 	super.update();
 
-	computedOrientation[0] = xPid.compute(orientation[0]);
-	computedOrientation[1] = yPid.compute(orientation[1]);
-	computedOrientation[2] = zPid.compute(orientation[2]);
+	computedGyro[0] = xPid.compute((computedGyro[0] * 0.8)*((gyro[0] / Constants.GYRO_SCALE) * 0.2));
+	computedGyro[1] = yPid.compute((computedGyro[1] * 0.8)*((gyro[1] / Constants.GYRO_SCALE) * 0.2));
+	computedGyro[2] = zPid.compute((computedGyro[2] * 0.8)*((gyro[2] / Constants.GYRO_SCALE) * 0.2));
+	
+	if(orientation[0] >= Constants.MAX_FLIGHT_INCLINE) {
+	    computedGyro[0] = 0;
+	}
+	if(orientation[1] >= Constants.MAX_FLIGHT_INCLINE) {
+	    computedGyro[1] = 0;
+	}
 	throttle = limit(Constants.MAX_THROTTLE, 0, throttle);
-	double esc1 = throttle -  computedOrientation[0] + computedOrientation[1] - computedOrientation[2];
-	double esc2 = throttle +  computedOrientation[0] + computedOrientation[1] + computedOrientation[2];
-	double esc3 = throttle +  computedOrientation[0] - computedOrientation[1] - computedOrientation[2];
-	double esc4 = throttle -  computedOrientation[0] - computedOrientation[1] + computedOrientation[2];
+	double esc1 = throttle -  computedGyro[0] + computedGyro[1] - computedGyro[2];
+	double esc2 = throttle +  computedGyro[0] + computedGyro[1] + computedGyro[2];
+	double esc3 = throttle +  computedGyro[0] - computedGyro[1] - computedGyro[2];
+	double esc4 = throttle -  computedGyro[0] - computedGyro[1] + computedGyro[2];
 	
 	esc1 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc1);
 	esc2 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc2);
@@ -124,18 +133,24 @@ public class PIDController extends Device {
     @Override
     public void update(ACLMessage msg) {
 	switch (msg.getActionID()) {
-	case ORIENT:
+	case GYRO:
 	    String[] d0 = msg.getContent().split(":");
-	    orientation[0] = Double.parseDouble(d0[0]);
-	    orientation[1] = Double.parseDouble(d0[1]);
-	    orientation[2] = Double.parseDouble(d0[2]);
+	    gyro[0] = Double.parseDouble(d0[0]);
+	    gyro[1] = Double.parseDouble(d0[1]);
+	    gyro[2] = Double.parseDouble(d0[2]);
+	    break;
+	case ORIENT:
+	    String[] d1 = msg.getContent().split(":");
+	    orientation[0] = Double.parseDouble(d1[0]);
+	    orientation[1] = Double.parseDouble(d1[1]);
+	    orientation[2] = Double.parseDouble(d1[2]);
 	    break;
 	case CHANGE_ORIENT:
-	    String[] d1 = msg.getContent().split(":");
-	    xPid.setPoint(Double.parseDouble(d1[0]));
-	    yPid.setPoint(Double.parseDouble(d1[1]));
-	    zPid.setPoint(Double.parseDouble(d1[2]));
-	    throttle = Double.parseDouble(d1[3]);
+	    String[] d2 = msg.getContent().split(":");
+	    xPid.setPoint(Double.parseDouble(d2[0]));
+	    yPid.setPoint(Double.parseDouble(d2[1]));
+	    zPid.setPoint(Double.parseDouble(d2[2]));
+	    throttle = Double.parseDouble(d2[3]);
 	    break;
 	default:
 	    break;

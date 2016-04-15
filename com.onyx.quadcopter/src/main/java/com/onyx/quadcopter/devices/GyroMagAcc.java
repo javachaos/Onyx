@@ -38,6 +38,8 @@ public class GyroMagAcc extends Device {
         orient = getRPH();
         setDisplay("Yaw: " + orient[0] + System.lineSeparator() + "Pitch: " + orient[1]
 		+ System.lineSeparator() + "Roll: " + orient[2]);
+        float[] gyro = lsm.getGyroscope();
+	sendMessage(DeviceID.PID, gyro[0] + ":" + gyro[1] +":" + gyro[2], ActionId.GYRO);
 	sendMessage(DeviceID.PID, orient[0] + ":" + orient[1] +":" + orient[2], ActionId.ORIENT);
     }
     

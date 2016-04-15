@@ -158,7 +158,7 @@ public final class Constants {
      * Controller update frequency in microseconds.
      */
     public static final long CONTROLLER_PERIOD = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.controller.period",
-	    5000);
+	    1000);
 
     /**
      * Time unit for controller update period.
@@ -428,6 +428,16 @@ public final class Constants {
      * Maximum throttle speed.
      */
     public static final double MAX_THROTTLE = 1800;
+
+    /**
+     * The maximum inclination angle in degrees
+     */
+    public static final double MAX_FLIGHT_INCLINE = 45;
+
+    /**
+     * Gyroscope scaling factor.
+     */
+    public static final double GYRO_SCALE = 8.75;
 
 
 }

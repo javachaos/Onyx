@@ -92,7 +92,12 @@ public enum ActionId {
     /**
      * Change the orientation.
      */
-    CHANGE_ORIENT(16);
+    CHANGE_ORIENT(16), 
+    
+    /**
+     * Get gyro data
+     */
+    GYRO(17);
 
     /**
      * The internal ID field.

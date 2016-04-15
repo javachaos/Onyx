@@ -118,16 +118,16 @@ public class Pid {
     /**
      * Set the sample period in nanoseconds.
      * 
-     * @param sampleTime the time frame between samples.
+     * @param controllerPeriod the time frame between samples.
      * 
      * If the sampleTime is greater than the controller period
      * the sample rate is set to Default of 1000ns.
      */
-    public void setSamplePeriod(int sampleTime) {
-	if (sampleTime <= Constants.CONTROLLER_PERIOD * 1000) {
-	    this.sampleRate = sampleTime;
+    public void setSamplePeriod(long controllerPeriod) {
+	if (controllerPeriod <= Constants.CONTROLLER_PERIOD * 1000) {
+	    this.sampleRate = controllerPeriod;
 	} else {
-	    this.sampleRate = 1000;
+	    this.sampleRate = Constants.CONTROLLER_PERIOD * 1000;
 	}
 	
     }
