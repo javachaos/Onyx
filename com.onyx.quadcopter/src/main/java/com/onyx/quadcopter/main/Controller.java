@@ -204,7 +204,9 @@ public class Controller extends Device implements Runnable, StartStopable {
 	//No call to super.update() for we do not wish to adapt our behavior from super.
 //	final Iterator<DeviceID> it = devices.keySet().iterator();
 	try {
-	    devices.forEach((id,dev) -> dev.execute());
+	    devices.values().parallelStream().filter(e -> e.isInitialized())
+	                                     .forEach(e -> e.execute());                               
+	    //devices.forEach((id,dev) -> dev.execute());
 	} catch (Throwable t) {
             ExceptionUtils.logError(getClass(), t);
             Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
