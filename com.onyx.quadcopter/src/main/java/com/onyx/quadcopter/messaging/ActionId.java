@@ -97,7 +97,12 @@ public enum ActionId {
     /**
      * Get gyro data
      */
-    GYRO(17);
+    GYRO(17), 
+    
+    /**
+     * Start motors in preparation for flight.
+     */
+    START_MOTORS(18);
 
     /**
      * The internal ID field.

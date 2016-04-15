@@ -1,6 +1,5 @@
 package com.onyx.quadcopter.main;
 
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
@@ -203,16 +202,22 @@ public class Controller extends Device implements Runnable, StartStopable {
     @Override
     protected synchronized void update() {
 	//No call to super.update() for we do not wish to adapt our behavior from super.
-	final Iterator<DeviceID> it = devices.keySet().iterator();
-	while (it.hasNext()) {
-	    Device d = getDevice(it.next());
-	    try {
-	        d.execute();
-	    } catch (Throwable t) {
-		ExceptionUtils.logError(d.getClass(), t);
-		Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
-	    }
+//	final Iterator<DeviceID> it = devices.keySet().iterator();
+	try {
+	    devices.forEach((id,dev) -> dev.execute());
+	} catch (Throwable t) {
+            ExceptionUtils.logError(getClass(), t);
+            Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
 	}
+//	while (it.hasNext()) {
+//	    Device d = getDevice(it.next());
+//	    try {
+//	        d.execute();
+//	    } catch (Throwable t) {
+//		ExceptionUtils.logError(d.getClass(), t);
+//		Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
+//	    }
+//	}
     }
 
     @Override

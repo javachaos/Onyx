@@ -3,6 +3,7 @@ package com.onyx.quadcopter.control;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.messaging.ACLMessage;
+import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
 
 /**
@@ -42,6 +43,11 @@ public class PIDController extends Device {
      * The controller throttle.
      */
     private double throttle;
+    private double esc1;
+    private double esc2;
+    private double esc3;
+    private double esc4;
+    private boolean started;
 
     public PIDController() {
 	super(DeviceID.PID);
@@ -78,32 +84,45 @@ public class PIDController extends Device {
     protected void update() {
 	super.update();
 
-	computedGyro[0] = xPid.compute(gyro[0] / Constants.GYRO_SCALE);
-	computedGyro[1] = yPid.compute(gyro[1] / Constants.GYRO_SCALE);
-	computedGyro[2] = zPid.compute(gyro[2] / Constants.GYRO_SCALE);
-	
+	computedGyro[0] = xPid.compute((computedGyro[0] * 0.8)+((gyro[0] / Constants.GYRO_SCALE) * 0.2));
+	computedGyro[1] = yPid.compute((computedGyro[1] * 0.8)+((gyro[1] / Constants.GYRO_SCALE) * 0.2));
+	computedGyro[2] = zPid.compute((computedGyro[2] * 0.8)+((gyro[2] / Constants.GYRO_SCALE) * 0.2));
+
 	if(orientation[0] >= Constants.MAX_FLIGHT_INCLINE) {
 	    computedGyro[0] = 0;
 	}
 	if(orientation[1] >= Constants.MAX_FLIGHT_INCLINE) {
 	    computedGyro[1] = 0;
 	}
+
 	throttle = limit(Constants.MAX_THROTTLE, 0, throttle);
-	double esc1 = throttle -  computedGyro[0] + computedGyro[1] - computedGyro[2];
-	double esc2 = throttle +  computedGyro[0] + computedGyro[1] + computedGyro[2];
-	double esc3 = throttle +  computedGyro[0] - computedGyro[1] - computedGyro[2];
-	double esc4 = throttle -  computedGyro[0] - computedGyro[1] + computedGyro[2];
+	esc1 = throttle -  computedGyro[0] + computedGyro[1] - computedGyro[2];
+	esc2 = throttle +  computedGyro[0] + computedGyro[1] + computedGyro[2];
+	esc3 = throttle +  computedGyro[0] - computedGyro[1] - computedGyro[2];
+	esc4 = throttle -  computedGyro[0] - computedGyro[1] + computedGyro[2];
+
+	if (started) {//Flight mode started, keep rotors spinning at 1200us.
+            esc1 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc1);
+            esc2 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc2);
+            esc3 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc3);
+            esc4 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc4);
+	} else {// Not in flight mode so keep motors quiet at 1000us.
+	    esc1 = Constants.MOTOR_MIN_MS;
+	    esc2 = Constants.MOTOR_MIN_MS;
+	    esc3 = Constants.MOTOR_MIN_MS;
+	    esc4 = Constants.MOTOR_MIN_MS;
+	}
 	
-	esc1 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc1);
-	esc2 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc2);
-	esc3 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc3);
-	esc4 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc4);
-	
-	//Display the Computed Orientation.
+	//Display the Computed ESC Speeds.
 	setDisplay("ESC1: " + esc1 + System.lineSeparator() + 
 		   "ESC2: " + esc2 + System.lineSeparator() + 
 		   "ESC3: " + esc3 + System.lineSeparator() + 
 		   "ESC4: " + esc4);
+	
+	sendMessageHigh(DeviceID.MOTOR1, "", esc1, ActionId.CHANGE_PULSE_WIDTH);
+	sendMessageHigh(DeviceID.MOTOR2, "", esc2, ActionId.CHANGE_PULSE_WIDTH);
+	sendMessageHigh(DeviceID.MOTOR3, "", esc3, ActionId.CHANGE_PULSE_WIDTH);
+	sendMessageHigh(DeviceID.MOTOR4, "", esc4, ActionId.CHANGE_PULSE_WIDTH);
     }
     
     /**
@@ -152,6 +171,10 @@ public class PIDController extends Device {
 	    zPid.setPoint(Double.parseDouble(d2[2]));
 	    throttle = Double.parseDouble(d2[3]);
 	    break;
+	case START_MOTORS:
+	    started = Boolean.getBoolean(msg.getContent());
+	    throttle = 0;
+	    //Start or stop motors.
 	default:
 	    break;
 	}

@@ -178,6 +178,11 @@
         <artifactId>mraa</artifactId>
         <version>0.0.1</version>
     </dependency>
+    <dependency>
+	    <groupId>org.bitbucket.fwilhelm</groupId>
+	    <artifactId>org.jenetics</artifactId>
+	    <version>3.4.0</version>
+	</dependency>
   </dependencies>
   <repositories>
 	  <repository>

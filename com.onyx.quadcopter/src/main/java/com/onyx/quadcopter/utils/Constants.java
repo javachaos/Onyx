@@ -444,5 +444,10 @@ public final class Constants {
      */
     public static final int OLED_UPDATE_SPEED = 1000;
 
+    /**
+     * Minimum speed of motors. In microsecond pulse width.
+     */
+    public static final double MOTOR_MIN_MS = 1000;
+
 
 }
