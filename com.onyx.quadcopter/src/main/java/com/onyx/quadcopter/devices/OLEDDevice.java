@@ -33,6 +33,8 @@ public class OLEDDevice extends Device {
      */
     private AtomicInteger counter = new AtomicInteger();
 
+    private int iterationCount;
+
     /**
      * Creates a new OLED Device.
      * @param c controller.
@@ -60,7 +62,10 @@ public class OLEDDevice extends Device {
             break;
         }
 
-	show();
+	if (iterationCount++ == Constants.OLED_UPDATE_SPEED) {
+	    iterationCount = 0;
+	    show();
+        }
     }
 
     @Override

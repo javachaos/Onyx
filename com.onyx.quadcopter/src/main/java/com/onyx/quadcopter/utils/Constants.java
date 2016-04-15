@@ -439,5 +439,10 @@ public final class Constants {
      */
     public static final double GYRO_SCALE = 8.75;
 
+    /**
+     * Update OLED display every 1000 updates.
+     */
+    public static final int OLED_UPDATE_SPEED = 1000;
+
 
 }
