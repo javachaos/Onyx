@@ -96,6 +96,12 @@ public class PIDController extends Device {
 	}
 
 	throttle = limit(Constants.MAX_THROTTLE, 0, throttle);
+	
+	double prev_esc1 = esc1;
+	double prev_esc2 = esc2; 
+	double prev_esc3 = esc3; 
+	double prev_esc4 = esc4; 
+	
 	esc1 = throttle -  computedGyro[0] + computedGyro[1] - computedGyro[2];
 	esc2 = throttle +  computedGyro[0] + computedGyro[1] + computedGyro[2];
 	esc3 = throttle +  computedGyro[0] - computedGyro[1] - computedGyro[2];
@@ -119,10 +125,19 @@ public class PIDController extends Device {
 		   "ESC3: " + esc3 + System.lineSeparator() + 
 		   "ESC4: " + esc4);
 	
-	sendMessageHigh(DeviceID.MOTOR1, "", esc1, ActionId.CHANGE_PULSE_WIDTH);
-	sendMessageHigh(DeviceID.MOTOR2, "", esc2, ActionId.CHANGE_PULSE_WIDTH);
-	sendMessageHigh(DeviceID.MOTOR3, "", esc3, ActionId.CHANGE_PULSE_WIDTH);
-	sendMessageHigh(DeviceID.MOTOR4, "", esc4, ActionId.CHANGE_PULSE_WIDTH);
+	//Only update motor speed if there is a noticeable change in value.
+	if (Math.abs(prev_esc1 - esc1) > 0) {
+	    sendMessageHigh(DeviceID.MOTOR1, "", esc1, ActionId.CHANGE_PULSE_WIDTH);
+	}
+	if (Math.abs(prev_esc2 - esc2) > 0) {
+	    sendMessageHigh(DeviceID.MOTOR2, "", esc2, ActionId.CHANGE_PULSE_WIDTH);
+	}
+	if (Math.abs(prev_esc3 - esc3) > 0) {
+	    sendMessageHigh(DeviceID.MOTOR3, "", esc3, ActionId.CHANGE_PULSE_WIDTH);
+	}
+	if (Math.abs(prev_esc4 - esc4) > 0) {
+	    sendMessageHigh(DeviceID.MOTOR4, "", esc4, ActionId.CHANGE_PULSE_WIDTH);
+	}
     }
     
     /**
@@ -172,7 +187,7 @@ public class PIDController extends Device {
 	    throttle = Double.parseDouble(d2[3]);
 	    break;
 	case START_MOTORS:
-	    started = Boolean.getBoolean(msg.getContent());
+	    started = Boolean.parseBoolean(msg.getContent());
 	    throttle = 0;
 	    //Start or stop motors.
 	default:

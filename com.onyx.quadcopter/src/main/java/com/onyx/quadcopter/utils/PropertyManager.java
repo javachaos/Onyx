@@ -256,7 +256,7 @@ public final class PropertyManager {
      */
     public boolean getBooleanProperty(final String key, final boolean defaultValue) {
 	final String s = getStringProperty(key, defaultValue + "");
-	return (s.equals("1") || s.equals("true"));
+	return (s.equals("1") || Boolean.parseBoolean(s));
     }
 
     /**
