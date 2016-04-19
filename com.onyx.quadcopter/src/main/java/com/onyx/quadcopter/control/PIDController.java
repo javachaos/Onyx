@@ -91,6 +91,7 @@ public class PIDController extends Device {
 	if(orientation[0] >= Constants.MAX_FLIGHT_INCLINE) {
 	    computedGyro[0] = 0;
 	}
+	
 	if(orientation[1] >= Constants.MAX_FLIGHT_INCLINE) {
 	    computedGyro[1] = 0;
 	}

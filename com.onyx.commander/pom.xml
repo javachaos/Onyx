@@ -115,7 +115,18 @@
       <dependency>
         <groupId>io.netty</groupId>
         <artifactId>netty-all</artifactId>
-        <version>4.0.25.Final</version>
+        <version>4.1.0.CR7</version>
       </dependency>
+      <dependency>
+	    <groupId>net.sf.jipcam</groupId>
+	    <artifactId>jipcam</artifactId>
+	    <version>0.9.1</version>
+	  </dependency>
+	  <dependency>
+	    <groupId>uk.co.caprica</groupId>
+	    <artifactId>vlcj</artifactId>
+	    <version>3.10.1</version>
+	</dependency>
+	  
   </dependencies>
 </project>

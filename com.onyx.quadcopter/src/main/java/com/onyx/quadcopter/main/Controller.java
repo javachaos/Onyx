@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.MapMaker;
+import com.onyx.quadcopter.communication.OnyxServer;
 import com.onyx.quadcopter.control.PIDController;
 import com.onyx.quadcopter.control.RedButton;
 import com.onyx.quadcopter.devices.Blackboard;
@@ -16,7 +17,6 @@ import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.devices.GyroMagAcc;
 import com.onyx.quadcopter.devices.Motor;
-import com.onyx.quadcopter.devices.NettyCommServer;
 import com.onyx.quadcopter.devices.OLEDDevice;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.messaging.ACLMessage;
@@ -73,7 +73,7 @@ public class Controller extends Device implements Runnable, StartStopable {
     /**
      * Communications server reference.
      */
-    private NettyCommServer commServer;
+    private OnyxServer commServer;
     
     /**
      * Singleton Reference.
@@ -104,7 +104,7 @@ public class Controller extends Device implements Runnable, StartStopable {
     protected void init() {
 	LOGGER.debug("Initializing Controller...");
 	blackboard = new Blackboard();
-	commServer = new NettyCommServer();
+	commServer = new OnyxServer();
 	Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
 	setGpio(GpioFactory.getInstance());
 	cleaner = new Cleaner();
