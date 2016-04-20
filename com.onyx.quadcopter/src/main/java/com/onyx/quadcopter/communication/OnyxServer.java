@@ -11,8 +11,6 @@ import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.messaging.ACLMessage;
-import com.onyx.quadcopter.messaging.ActionId;
-import com.onyx.quadcopter.messaging.MessageType;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
 
@@ -54,7 +52,7 @@ public class OnyxServer extends Device implements Runnable {
     /**
      * Ping clients for data.
      */
-    private ACLMessage pingRequest;
+    private static final String pingRequest = "PING";
 
     public OnyxServer() {
 	super(DeviceID.COMM_SERVER);
@@ -63,16 +61,11 @@ public class OnyxServer extends Device implements Runnable {
 
     @Override
     protected void init() {
-	pingRequest = new ACLMessage(MessageType.RELAY);
-	pingRequest.setActionID(ActionId.SEND_DATA);
-	pingRequest.setSender(getId());
-	pingRequest.setReciever(DeviceID.COMM_CLIENT);
-	pingRequest.setValue(System.currentTimeMillis());
     }
 
     @Override
     public void run() {
-	handler = new OnyxServerChannelHandler(getController());
+	handler = new OnyxServerChannelHandler();
 	LOGGER.debug("Starting CommServer.");
 	try {
 	    SelfSignedCertificate ssc = new SelfSignedCertificate();
@@ -107,7 +100,7 @@ public class OnyxServer extends Device implements Runnable {
     public void update(final ACLMessage msg) {
 	switch (msg.getActionID()) {
 	case SEND_DATA:
-	    handler.addData(msg);
+	    handler.addData(msg.getContent());
 	default:
 	    break;
 	}
@@ -123,9 +116,9 @@ public class OnyxServer extends Device implements Runnable {
 
     @Override
     protected void alternate() {
-	final ACLMessage peek = handler.getDataStack().peek();
-	if (peek != null && peek.isValid()) {
-	    setDisplay("Latest Comm: " + peek.getContent());
+	final String peek = handler.getDataStack().peek();
+	if (peek != null) {
+	    setDisplay("Latest Comm: " + peek);
 	}
     }
 

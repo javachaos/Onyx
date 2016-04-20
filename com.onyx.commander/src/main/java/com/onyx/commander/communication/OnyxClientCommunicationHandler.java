@@ -3,29 +3,27 @@ package com.onyx.commander.communication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.commander.gui.GuiController;
-import com.onyx.quadcopter.devices.DeviceID;
-import com.onyx.quadcopter.messaging.ACLMessage;
+import com.onyx.quadcopter.utils.ConcurrentStack;
+import com.onyx.quadcopter.utils.Constants;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-public class ClientCommunicationHandler extends ChannelInboundHandlerAdapter {
+public class OnyxClientCommunicationHandler extends ChannelInboundHandlerAdapter {
 
     /**
      * Logger.
      */
-    public static final Logger LOGGER = LoggerFactory.getLogger(ClientCommunicationHandler.class);
-    
+    public static final Logger LOGGER = LoggerFactory.getLogger(OnyxClientCommunicationHandler.class);
+    private ConcurrentStack<String> dataStack;
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-	if (msg instanceof ACLMessage) {
-            final ACLMessage m = (ACLMessage) msg;
-            GuiController.getBlackboard().addMessage(m);
-            LOGGER.debug(m.toString());
-            final ACLMessage m1 = GuiController.getBlackboard().getMessage(DeviceID.COMM_CLIENT);
+	if (msg instanceof String) {
+            LOGGER.debug(msg.toString());
+            String m1 = dataStack.pop();
             if (m1 != null) {
                 final ChannelFuture f = ctx.writeAndFlush(m1);
                 f.addListener(ChannelFutureListener.CLOSE);
@@ -33,6 +31,13 @@ public class ClientCommunicationHandler extends ChannelInboundHandlerAdapter {
 	}
     }
 
+    public synchronized void addData(final String data) {
+	if (dataStack.size() >= Constants.NETWORK_BUFFER_SIZE) {
+	    dataStack.clear();
+	}
+        dataStack.push(data);
+    }
+    
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 	LOGGER.debug(cause.getMessage());

@@ -1,5 +1,6 @@
 package com.onyx.commander.communication;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -8,12 +9,17 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.ssl.SslContext;
 
+/**
+ * Onyx Client Channel Initializer.
+ * @author fred
+ *
+ */
 public class OnyxClientChannelInitializer extends ChannelInitializer<SocketChannel> {
     
     private final SslContext sslCtx;
-    
     private final String host;
     private final int port;
+    private ChannelHandler handler;
     
     /**
      * OnyxClientChannelInitializer.
@@ -21,7 +27,8 @@ public class OnyxClientChannelInitializer extends ChannelInitializer<SocketChann
      * @param sslCtx
      * 		the sslCtx
      */
-    public OnyxClientChannelInitializer(SslContext sslCtx, final String host, final int port) {
+    public OnyxClientChannelInitializer(OnyxClientCommunicationHandler handler, SslContext sslCtx, final String host, final int port) {
+	this.handler = handler;
 	this.sslCtx = sslCtx;
 	this.host = host;
 	this.port = port;
@@ -38,6 +45,6 @@ public class OnyxClientChannelInitializer extends ChannelInitializer<SocketChann
         pipeline.addLast(sslCtx.newHandler(ch.alloc(), host, port));
 	pipeline.addLast(new ObjectDecoder(ClassResolvers.softCachingConcurrentResolver(getClass().getClassLoader())));
 	pipeline.addLast(new ObjectEncoder());
-	pipeline.addLast(new ClientCommunicationHandler());
+	pipeline.addLast(handler);
     }
 }

@@ -1,7 +1,5 @@
 package com.onyx.quadcopter.communication;
 
-import com.onyx.quadcopter.messaging.ACLMessage;
-
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -17,9 +15,9 @@ public class OnyxServerChannelInitializer extends ChannelInitializer<SocketChann
      * SSL Ctx
      */
     private final SslContext sslCtx;
-    private final SimpleChannelInboundHandler<ACLMessage> handler;
+    private final SimpleChannelInboundHandler<String> handler;
 
-    public OnyxServerChannelInitializer(SslContext sslCtx, SimpleChannelInboundHandler<ACLMessage> handler) {
+    public OnyxServerChannelInitializer(SslContext sslCtx, SimpleChannelInboundHandler<String> handler) {
 	this.sslCtx = sslCtx;
 	this.handler = handler;
     }
