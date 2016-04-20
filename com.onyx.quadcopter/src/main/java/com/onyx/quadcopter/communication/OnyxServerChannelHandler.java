@@ -84,7 +84,7 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
 	//controller.getBlackboard().addMessage(msg);
 	switch(msg) {
-	    case "CLOSE":
+	    case "COMM:CLOSE":
                 ctx.close();
                 break;
             default:

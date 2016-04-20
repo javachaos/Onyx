@@ -65,7 +65,7 @@ public class OnyxClient implements Runnable {
 		    lastWriteFuture = ch.writeAndFlush(lastMsg = msgs.pop() + System.lineSeparator());
 		}
 
-		if (lastMsg.equals("CLOSE:CLOSE")) {
+		if (lastMsg.equals("COMM:CLOSE")) {
 		    ch.closeFuture().sync();
 		    break;
 		}
