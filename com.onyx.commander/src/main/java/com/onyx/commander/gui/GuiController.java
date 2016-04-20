@@ -93,7 +93,7 @@ public class GuiController {
 	    + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
 	    + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
-    private static final String CMD_REGEX = "[a-zA-Z0-9\\.- ]*";
+    private static final String CMD_REGEX = "[a-zA-Z0-9\\.-]*:[a-zA-Z0-9\\.-]*";
 
     private static Blackboard blackboard = new Blackboard();
 
@@ -143,19 +143,10 @@ public class GuiController {
     protected void sendCommand() {
 	String cmd = commandTextField.getText();
 	if (cmd.matches(CMD_REGEX)) {
-	    sendMessage(cmd);
+            client.addMessage(cmd);
 	} else {
 	    LOGGER.debug("Invalid command format.");
 	}
-    }
-
-    /**
-     * Send an ACLMessage to the connected server.
-     * 
-     * @param m
-     */
-    protected void sendMessage(String m) {
-	client.addMessage(m);
     }
 
     @FXML
