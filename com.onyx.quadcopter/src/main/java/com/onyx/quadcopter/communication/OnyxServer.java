@@ -1,9 +1,14 @@
-package com.onyx.quadcopter.devices;
+package com.onyx.quadcopter.communication;
+
+import java.security.cert.CertificateException;
+
+import javax.net.ssl.SSLException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.quadcopter.communication.CommunicationHandler;
+import com.onyx.quadcopter.devices.Device;
+import com.onyx.quadcopter.devices.DeviceID;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.messaging.ActionId;
@@ -12,23 +17,22 @@ import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.util.SelfSignedCertificate;
 
-public class NettyCommServer extends Device implements Runnable {
+public class OnyxServer extends Device {
 
     /**
      * Logger.
      */
-    public static final Logger LOGGER = LoggerFactory.getLogger(NettyCommServer.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(OnyxServer.class);
 
     static final int PORT = Constants.PORT;
 
@@ -45,53 +49,44 @@ public class NettyCommServer extends Device implements Runnable {
     /**
      * Communication handler.
      */
-    private final CommunicationHandler handler;
+    private OnyxServerChannelHandler handler;
 
     /**
      * Ping clients for data.
      */
     private ACLMessage pingRequest;
 
-    public NettyCommServer() {
+    public OnyxServer() {
 	super(DeviceID.COMM_SERVER);
-	handler = new CommunicationHandler(getController());
+	
     }
 
     @Override
     protected void init() {
+	handler = new OnyxServerChannelHandler(getController());
 	pingRequest = new ACLMessage(MessageType.RELAY);
 	pingRequest.setActionID(ActionId.SEND_DATA);
 	pingRequest.setSender(getId());
 	pingRequest.setReciever(DeviceID.COMM_CLIENT);
 	pingRequest.setValue(System.currentTimeMillis());
-    }
-
-    @Override
-    public void run() {
+	
 	LOGGER.debug("Starting CommServer.");
 	try {
+	    SelfSignedCertificate ssc = new SelfSignedCertificate();
+	    SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey())
+	        .build();
 	    final ServerBootstrap b = new ServerBootstrap();
-	    b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-		    .childHandler(new ChannelInitializer<SocketChannel>() {
-			@Override
-			public void initChannel(final SocketChannel ch) throws Exception {
-			    ch.pipeline().addLast(new ObjectEncoder(),
-				    new ObjectDecoder(
-					    ClassResolvers.softCachingConcurrentResolver(getClass().getClassLoader())),
-				    handler);
-			}
-		    }).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
+	    b.group(bossGroup, workerGroup)
+	    .channel(NioServerSocketChannel.class)
+	    .handler(new LoggingHandler(LogLevel.INFO))
+	    .childHandler(new OnyxServerChannelInitializer(sslCtx, handler))
+	    .option(ChannelOption.SO_BACKLOG, 128)
+	    .childOption(ChannelOption.SO_KEEPALIVE, true);
 
+	    b.bind(PORT).sync().channel().closeFuture().sync();
+	    
 	    LOGGER.debug("CommServer Started.");
-	    // Bind and start to accept incoming connections.
-	    final ChannelFuture f = b.bind(PORT).sync();
-
-	    // Wait until the server socket is closed.
-	    // In this example, this does not happen, but you can do that to
-	    // gracefully
-	    // shut down your server.
-	    f.channel().closeFuture().sync();
-	} catch (final InterruptedException e) {
+	} catch (final InterruptedException | SSLException | CertificateException e) {
 	    ExceptionUtils.logError(getClass(), e);
 	    throw new OnyxException(e.getMessage(), LOGGER);
 	} finally {

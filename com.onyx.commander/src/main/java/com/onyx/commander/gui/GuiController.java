@@ -1,23 +1,13 @@
 package com.onyx.commander.gui;
 
-import java.io.FileInputStream;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
-import java.net.URL;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.onyx.commander.communication.NettyCommClient;
+import com.onyx.commander.communication.OnyxClient;
 import com.onyx.commander.main.Main;
 import com.onyx.commander.utils.Constants;
 import com.onyx.quadcopter.devices.Blackboard;
@@ -34,10 +24,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
+import javafx.scene.layout.VBox;
 
 public class GuiController {
 
@@ -71,9 +61,6 @@ public class GuiController {
     private TitledPane cameraTitledPane;
 
     @FXML
-    private MediaView mediaView;
-
-    @FXML
     private Label orientationLbl;
 
     @FXML
@@ -94,7 +81,18 @@ public class GuiController {
     @FXML
     private TextArea commandOutputTextArea;
 
-    private NettyCommClient client;
+    private OnyxClient client;
+
+    @FXML
+    private VBox cameraVBox;
+
+    @FXML
+    private ImageView cameraImageView;
+
+//    /**
+//     * MJpeg stream.
+//     */
+//    private MjpegInputStream stream;
 
     /**
      * IP Regex.
@@ -106,10 +104,6 @@ public class GuiController {
     private static final String CMD_REGEX = "([0-9]+):[a-zA-Z0-9\\.-]*:([0-9\\.]*):([0-9]+):([0-9]+)";
 
     private static Blackboard blackboard = new Blackboard();
-
-    static {
-	HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> hostname.equals("192.168.1.163"));
-    }
 
     public GuiController() {
     }
@@ -129,33 +123,12 @@ public class GuiController {
 	String ip = ipField.getText();
 	if (ip.matches(IPADDRESS_PATTERN)) {
 	    loadWebview(ip);
-	    client = new NettyCommClient(ip, Constants.SERVER_PORT);
+	    client = new OnyxClient(ip, Constants.SERVER_PORT);
 	    LOGGER.debug("Connecting to " + ip);
 	    Main.COORDINATOR.schedule(client, 0, TimeUnit.SECONDS);
 	} else {
 	    LOGGER.debug("Cannot connect non valid IP address.");
 	}
-    }
-
-    private SSLContext createSSLContext() throws Exception {
-	CertificateFactory cf = CertificateFactory.getInstance("X.509");
-	FileInputStream in = new FileInputStream(
-		"/home/fred/dev/onyx/com.onyx.commander/src/main/resources/onyx_cert.pem");
-	KeyStore trustStore = KeyStore.getInstance("JKS");
-	trustStore.load(null);
-	try {
-	    X509Certificate cacert = (X509Certificate) cf.generateCertificate(in);
-	    trustStore.setCertificateEntry("ca", cacert);
-	} finally {
-	    in.close();
-	}
-
-	TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-	tmf.init(trustStore);
-
-	SSLContext sslContext = SSLContext.getInstance("SSL");
-	sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
-	return sslContext;
     }
 
     /**
@@ -165,23 +138,13 @@ public class GuiController {
      *            the ip address.
      */
     private void loadWebview(String ip) {
-	String url = "https://" + ip + "/stream/video.h264";
-	HttpsURLConnection conn;
-	try {
-	    HttpsURLConnection.setDefaultSSLSocketFactory(createSSLContext().getSocketFactory());
-	    URL u = new URL(url);
-	    conn = (HttpsURLConnection) u.openConnection();
-	    conn.connect();
-	    final Media m = new Media(conn.getURL().toString());
-	    final MediaPlayer media = new MediaPlayer(m);
-	    media.setAutoPlay(true);
-	    media.setCycleCount(MediaPlayer.INDEFINITE);
-
-	    mediaView.setMediaPlayer(media);
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
+	VLCDirectRendering vlcdr = new VLCDirectRendering();
+	cameraVBox.getChildren().clear();
+	cameraVBox.getChildren().add(vlcdr);
+	showFPV(ip, vlcdr);
     }
+    
+    
 
     @FXML
     protected void sendCommand() {
@@ -231,6 +194,11 @@ public class GuiController {
 	m.setSender(DeviceID.COMM_CLIENT);
 	sendMessage(m);
     }
+    
+    private void showFPV(final String ip, VLCDirectRendering vlcdr) {
+	String url = "http://" + ip + ":8080/stream/video.mjpeg";
+	vlcdr.start(url);
+    }
 
     @FXML
     void initialize() {
@@ -242,7 +210,8 @@ public class GuiController {
 	assert passField != null : "fx:id=\"passField\" was not injected: check your FXML file 'commander.fxml'.";
 	assert ipField != null : "fx:id=\"ipField\" was not injected: check your FXML file 'commander.fxml'.";
 	assert cameraTitledPane != null : "fx:id=\"cameraTitledPane\" was not injected: check your FXML file 'commander.fxml'.";
-	assert mediaView != null : "fx:id=\"mediaView\" was not injected: check your FXML file 'commander.fxml'.";
+	assert cameraVBox != null : "fx:id=\"cameraVBox\" was not injected: check your FXML file 'commander.fxml'.";
+	assert cameraImageView != null : "fx:id=\"cameraImageView\" was not injected: check your FXML file 'commander.fxml'.";
 	assert orientationLbl != null : "fx:id=\"orientationLbl\" was not injected: check your FXML file 'commander.fxml'.";
 	assert hspeedLbl != null : "fx:id=\"hspeedLbl\" was not injected: check your FXML file 'commander.fxml'.";
 	assert vspeedLbl != null : "fx:id=\"vspeedLbl\" was not injected: check your FXML file 'commander.fxml'.";
@@ -250,6 +219,8 @@ public class GuiController {
 	assert enterCommandButton != null : "fx:id=\"enterCommandButton\" was not injected: check your FXML file 'commander.fxml'.";
 	assert commandTextField != null : "fx:id=\"commandTextField\" was not injected: check your FXML file 'commander.fxml'.";
 	assert commandOutputTextArea != null : "fx:id=\"commandOutputTextArea\" was not injected: check your FXML file 'commander.fxml'.";
+
+	cameraImageView.setImage(new Image(GuiController.class.getResourceAsStream("/default.jpg")));
 
     }
 

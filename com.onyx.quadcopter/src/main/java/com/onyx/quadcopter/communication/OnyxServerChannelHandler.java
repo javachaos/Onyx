@@ -20,12 +20,12 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * Handles a server-side channel.
  */
 @Sharable
-public class CommunicationHandler extends SimpleChannelInboundHandler<ACLMessage> {
+public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<ACLMessage> {
 
     /**
      * Logger.
      */
-    public static final Logger LOGGER = LoggerFactory.getLogger(CommunicationHandler.class);
+    public static final Logger LOGGER = LoggerFactory.getLogger(OnyxServerChannelHandler.class);
 
     /**
      * The stack of data to push out over the wire as bytes.
@@ -43,7 +43,7 @@ public class CommunicationHandler extends SimpleChannelInboundHandler<ACLMessage
      * @param data
      *            The data to send to clients
      */
-    public CommunicationHandler(final Controller c) {
+    public OnyxServerChannelHandler(final Controller c) {
 	controller = c;
 	dataStack = new ConcurrentStack<ACLMessage>();
     }
