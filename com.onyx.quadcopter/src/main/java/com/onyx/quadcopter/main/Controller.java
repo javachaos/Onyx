@@ -106,7 +106,7 @@ public class Controller extends Device implements Runnable, StartStopable {
 	LOGGER.debug("Initializing Controller...");
 	blackboard = new Blackboard();
 	commServer = new OnyxServer();
-	Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
+	Main.COORDINATOR.schedule(commServer, 0, TimeUnit.SECONDS);
 	setGpio(GpioFactory.getInstance());
 	cleaner = new Cleaner();
 	addDevice(commServer);
@@ -203,26 +203,12 @@ public class Controller extends Device implements Runnable, StartStopable {
 
     @Override
     protected synchronized void update() {
-	// No call to super.update() for we do not wish to adapt our behavior
-	// from super.
-	// final Iterator<DeviceID> it = devices.keySet().iterator();
 	try {
 	    devices.values().parallelStream().filter(e -> e.isInitialized()).forEach(e -> e.execute());
-	    // devices.forEach((id,dev) -> dev.execute());
 	} catch (Throwable t) {
 	    ExceptionUtils.logError(getClass(), t);
 	    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
 	}
-	// while (it.hasNext()) {
-	// Device d = getDevice(it.next());
-	// try {
-	// d.execute();
-	// } catch (Throwable t) {
-	// ExceptionUtils.logError(d.getClass(), t);
-	// Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(),
-	// t);
-	// }
-	// }
     }
 
     @Override

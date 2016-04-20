@@ -28,24 +28,8 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
      * Logger.
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(OnyxServerChannelHandler.class);
-    
     private static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
     private String lastMsg;
-    
-    /**
-     * Handle a connection.
-     *
-     * @param data
-     *            The data to send to clients
-     */
-    public OnyxServerChannelHandler() {
-    }
-
-    @Override
-    public void channelReadComplete(final ChannelHandlerContext ctx) {
-	ctx.flush();
-    }
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
@@ -57,12 +41,11 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
                     @Override
                     public void operationComplete(Future<Channel> future) throws Exception {
                         ctx.writeAndFlush(
-                                "Welcome to " + InetAddress.getLocalHost().getHostName() + " secure Onyx service!\n");
+                                "Welcome to " + InetAddress.getLocalHost().getHostName() + " secure OnyxServer!\n");
                         ctx.writeAndFlush(
                                 "Your session is protected by " +
                                         ctx.pipeline().get(SslHandler.class).engine().getSession().getCipherSuite() +
                                         " cipher suite.\n");
-
                         channels.add(ctx.channel());
                     }
         });
@@ -77,21 +60,20 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
     }
 
     public synchronized void addData(final String data) {
-	channels.parallelStream().forEach(e -> e.writeAndFlush(data));
+	channels.parallelStream().forEach(e -> e.writeAndFlush(data+System.lineSeparator()));
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-	//controller.getBlackboard().addMessage(msg);
 	switch(msg) {
 	    case "COMM:CLOSE":
                 ctx.close();
                 break;
             default:
-        	LOGGER.debug(msg);
-        	lastMsg = msg;
                 break;
 	}
+	LOGGER.debug(msg);
+	lastMsg = msg;
     }
 
     public String getLastMsg() {
