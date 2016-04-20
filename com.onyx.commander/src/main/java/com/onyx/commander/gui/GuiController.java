@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import com.onyx.commander.communication.OnyxClient;
 import com.onyx.commander.main.Main;
 import com.onyx.commander.utils.Constants;
-import com.onyx.quadcopter.devices.Blackboard;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -81,11 +80,6 @@ public class GuiController {
     @FXML
     private ImageView cameraImageView;
 
-//    /**
-//     * MJpeg stream.
-//     */
-//    private MjpegInputStream stream;
-
     /**
      * IP Regex.
      */
@@ -95,23 +89,8 @@ public class GuiController {
 
     private static final String CMD_REGEX = "[a-zA-Z0-9\\.-]*:[a-zA-Z0-9\\.-]*";
 
-    private static Blackboard blackboard = new Blackboard();
-
-    public GuiController() {
-    }
-
-    /**
-     * Return a reference of the blackboard.
-     * 
-     * @return
-     */
-    public static Blackboard getBlackboard() {
-	return blackboard;
-    }
-
     @FXML
     protected void connect(final ActionEvent event) {
-	//Authenticator.setDefault(new HTTPAuthenticator(usernameField.getText(), passField.getText()));
 	String ip = ipField.getText();
 	if (ip.matches(IPADDRESS_PATTERN)) {
 	    client = new OnyxClient(ip, Constants.SERVER_PORT);
