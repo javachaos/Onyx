@@ -26,6 +26,11 @@ public class OnyxClient implements Runnable {
      * Server hostname.
      */
     private String host;
+    
+    /**
+     * Onyx Client Communication Handler.
+     */
+    private OnyxClientCommunicationHandler handler;
 
     /**
      * Server port.
@@ -35,6 +40,15 @@ public class OnyxClient implements Runnable {
     public OnyxClient(final String servHost, final int servPort) {
 	this.host = servHost;
 	this.port = servPort;
+	handler = new OnyxClientCommunicationHandler();
+    }
+    
+    /**
+     * Add Messages.
+     * @param m
+     */
+    public void addMessage(final String m) {
+	handler.addData(m);
     }
 
     @Override
@@ -52,7 +66,7 @@ public class OnyxClient implements Runnable {
 	    b.group(workerGroup);
 	    b.channel(NioSocketChannel.class);
 	    b.option(ChannelOption.SO_KEEPALIVE, true);
-	    b.handler(new OnyxClientChannelInitializer(sslCtx, host, port));
+	    b.handler(new OnyxClientChannelInitializer(handler, sslCtx, host, port));
 
 	    // Start the client.
 	    ChannelFuture f;

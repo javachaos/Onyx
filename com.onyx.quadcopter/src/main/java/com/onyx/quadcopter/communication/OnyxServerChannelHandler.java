@@ -4,8 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.onyx.quadcopter.exceptions.OnyxException;
-import com.onyx.quadcopter.main.Controller;
-import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.utils.ConcurrentStack;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
@@ -20,7 +18,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
  * Handles a server-side channel.
  */
 @Sharable
-public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<ACLMessage> {
+public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String> {
 
     /**
      * Logger.
@@ -30,22 +28,16 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<ACLMes
     /**
      * The stack of data to push out over the wire as bytes.
      */
-    private final ConcurrentStack<ACLMessage> dataStack;
-
-    /**
-     * Controller reference.
-     */
-    private final Controller controller;
-
+    private final ConcurrentStack<String> dataStack;
+    
     /**
      * Handle a connection.
      *
      * @param data
      *            The data to send to clients
      */
-    public OnyxServerChannelHandler(final Controller c) {
-	controller = c;
-	dataStack = new ConcurrentStack<ACLMessage>();
+    public OnyxServerChannelHandler() {
+	dataStack = new ConcurrentStack<String>();
     }
 
     @Override
@@ -55,7 +47,7 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<ACLMes
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-	final ACLMessage msg = dataStack.pop();
+	final String msg = dataStack.pop();
 	if (msg != null) {
 	    final ChannelFuture f = ctx.writeAndFlush(msg);
 	    f.addListener(ChannelFutureListener.CLOSE);
@@ -75,14 +67,11 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<ACLMes
 	throw new OnyxException(cause.getMessage(), LOGGER);
     }
 
-    public synchronized void addData(final ACLMessage data) {
-	if (data.isValid()) {
-	    dataStack.push(data);
-	}
-
+    public synchronized void addData(final String data) {
 	if (dataStack.size() >= Constants.NETWORK_BUFFER_SIZE) {
 	    dataStack.clear();
 	}
+	dataStack.push(data);
     }
 
     /**
@@ -90,13 +79,14 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<ACLMes
      * 
      * @return
      */
-    public ConcurrentStack<ACLMessage> getDataStack() {
+    public ConcurrentStack<String> getDataStack() {
 	return dataStack;
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ACLMessage msg) throws Exception {
-	controller.getBlackboard().addMessage(msg);
+    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+	LOGGER.debug(msg);
+	//controller.getBlackboard().addMessage(msg);
 	ctx.close();
     }
 }

@@ -20,9 +20,8 @@ import uk.co.caprica.vlcj.player.direct.BufferFormat;
 import uk.co.caprica.vlcj.player.direct.BufferFormatCallback;
 import uk.co.caprica.vlcj.player.direct.DefaultDirectMediaPlayer;
 import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
-import uk.co.caprica.vlcj.runtime.streams.NativeStreams;
 
-public class VLCDirectRendering extends BorderPane {
+public class VLCDirectRendering extends BorderPane implements Runnable {
     
     /**
      * Set this to <code>true</code> to resize the display to the dimensions of the
@@ -43,55 +42,52 @@ public class VLCDirectRendering extends BorderPane {
     /**
      * Frames per second
      */
-    private static final double FPS = 15.0;
+    private static final double FPS = 24.0;
 
     /**
      * Lightweight JavaFX canvas, the video is rendered here.
      */
-    private final Canvas canvas;
+    private Canvas canvas;
 
     /**
      * Pixel writer to update the canvas.
      */
-    private final PixelWriter pixelWriter;
+    private PixelWriter pixelWriter;
 
     /**
      * Pixel format.
      */
-    private final WritablePixelFormat<ByteBuffer> pixelFormat;
+    private WritablePixelFormat<ByteBuffer> pixelFormat;
 
     /**
      * The vlcj direct rendering media player component.
      */
-    private final DirectMediaPlayerComponent mediaPlayerComponent;
+    private DirectMediaPlayerComponent mediaPlayerComponent;
 
-    private NativeStreams streams;
+    private boolean isInit = false;
     
-    public VLCDirectRendering() {
+    public VLCDirectRendering(String url) {
 	super();
+	this.url = url;
         canvas = new Canvas();
         pixelWriter = canvas.getGraphicsContext2D().getPixelWriter();
         pixelFormat = PixelFormat.getByteBgraInstance();
         setCenter(canvas);
+    }
+    
+    public void init() {
+	isInit = true;
         mediaPlayerComponent = new FXMediaPlayerComponent();
         timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        streams = new NativeStreams("/dev/null","/dev/null");
         double duration = 1000.0 / FPS;
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(duration), nextFrameHandler));
-    }
-    
-    public void start(String url) {       
-	mediaPlayerComponent.getMediaPlayer().playMedia(url);
-        mediaPlayerComponent.getMediaPlayer().setPosition(0.7f);
-	timeline.playFromStart();
     }
     
     public void stop() {
 	timeline.stop();
 	mediaPlayerComponent.getMediaPlayer().stop();
         mediaPlayerComponent.getMediaPlayer().release();
-        streams.release();
     }
     
     public DirectMediaPlayerComponent getMediaPlayer() {
@@ -155,6 +151,11 @@ public class VLCDirectRendering extends BorderPane {
             }
         }
         mediaPlayerComponent.getMediaPlayer().unlock();
+        try {
+	    Thread.sleep(1);
+	} catch (InterruptedException e) {
+	    e.printStackTrace();
+	}
     }
     
     private final EventHandler<ActionEvent> nextFrameHandler = new EventHandler<ActionEvent>() {
@@ -165,5 +166,16 @@ public class VLCDirectRendering extends BorderPane {
     };
 
     private Timeline timeline;
+    private String url;
+
+    @Override
+    public void run() {
+	if (!isInit) {
+	    init();
+	}
+	mediaPlayerComponent.getMediaPlayer().playMedia(url);
+        mediaPlayerComponent.getMediaPlayer().setPosition(0.7f);
+	timeline.playFromStart();	
+    }
 
 }

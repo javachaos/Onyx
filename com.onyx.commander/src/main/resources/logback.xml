@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/******************************************************************************
+ * Copyright (c) 2016 Fred Laderoute.
+ * All rights reserved. This program and the accompanying
+ * materials are made available under the terms of the GNU 
+ * Public License v3.0 which accompanies this distribution, 
+ * and is available at http://www.gnu.org/licenses/gpl.html
+ *
+ * Contributors:
+ *      Fred Laderoute - initial API and implementation
+ ******************************************************************************/
+ -->
+<configuration>
+  <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!--See also http://logback.qos.ch/manual/appenders.html#RollingFileAppender-->
+    <File>/opt/onyx/onyx.log</File>
+    <encoder>
+      <pattern>%-4relative [%thread] %-5level %logger{35} - [%file:%line] %msg %n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+      <maxIndex>10000000</maxIndex>
+      <FileNamePattern>onyx.log.%i</FileNamePattern>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+      <MaxFileSize>100MB</MaxFileSize>
+    </triggeringPolicy>
+  </appender>
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <Target>System.out</Target>
+    <withJansi>true</withJansi>
+    <encoder>
+      <pattern>%-4relative [%thread] %highlight(%-5level) %logger{35} - [%file:%line] %msg %n</pattern>
+    </encoder>
+  </appender>
+  <root level="DEBUG">
+    <appender-ref ref="file"/>
+    <appender-ref ref="console"/>
+  </root>
+</configuration>

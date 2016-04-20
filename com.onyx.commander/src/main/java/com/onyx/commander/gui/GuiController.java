@@ -1,9 +1,5 @@
 package com.onyx.commander.gui;
 
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
-import java.util.concurrent.TimeUnit;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +7,6 @@ import com.onyx.commander.communication.OnyxClient;
 import com.onyx.commander.main.Main;
 import com.onyx.commander.utils.Constants;
 import com.onyx.quadcopter.devices.Blackboard;
-import com.onyx.quadcopter.devices.DeviceID;
-import com.onyx.quadcopter.messaging.ACLMessage;
-import com.onyx.quadcopter.messaging.ActionId;
-import com.onyx.quadcopter.messaging.MessageType;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -101,7 +93,7 @@ public class GuiController {
 	    + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
 	    + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
-    private static final String CMD_REGEX = "([0-9]+):[a-zA-Z0-9\\.-]*:([0-9\\.]*):([0-9]+):([0-9]+)";
+    private static final String CMD_REGEX = "[a-zA-Z0-9\\.- ]*";
 
     private static Blackboard blackboard = new Blackboard();
 
@@ -119,13 +111,13 @@ public class GuiController {
 
     @FXML
     protected void connect(final ActionEvent event) {
-	Authenticator.setDefault(new HTTPAuthenticator(usernameField.getText(), passField.getText()));
+	//Authenticator.setDefault(new HTTPAuthenticator(usernameField.getText(), passField.getText()));
 	String ip = ipField.getText();
 	if (ip.matches(IPADDRESS_PATTERN)) {
-	    loadWebview(ip);
 	    client = new OnyxClient(ip, Constants.SERVER_PORT);
 	    LOGGER.debug("Connecting to " + ip);
-	    Main.COORDINATOR.schedule(client, 0, TimeUnit.SECONDS);
+	    Main.COORDINATOR.submit(client);
+	    loadWebview(ip);
 	} else {
 	    LOGGER.debug("Cannot connect non valid IP address.");
 	}
@@ -138,10 +130,11 @@ public class GuiController {
      *            the ip address.
      */
     private void loadWebview(String ip) {
-	VLCDirectRendering vlcdr = new VLCDirectRendering();
+	String url = "http://" + ip + ":8080/stream/video.mjpeg";
+	VLCDirectRendering vlcdr = new VLCDirectRendering(url);
 	cameraVBox.getChildren().clear();
 	cameraVBox.getChildren().add(vlcdr);
-	showFPV(ip, vlcdr);
+	Main.COORDINATOR.submit(vlcdr);
     }
     
     
@@ -150,11 +143,7 @@ public class GuiController {
     protected void sendCommand() {
 	String cmd = commandTextField.getText();
 	if (cmd.matches(CMD_REGEX)) {
-	    String[] data = cmd.split(":");
-	    int id = Integer.parseInt(data[0]);
-	    DeviceID d = DeviceID.values()[id];
-	    sendMessage(d, data[1], Double.parseDouble(data[2]), ActionId.values()[Integer.parseInt(data[3])],
-		    MessageType.values()[Integer.parseInt(data[4])]);
+	    sendMessage(cmd);
 	} else {
 	    LOGGER.debug("Invalid command format.");
 	}
@@ -165,39 +154,8 @@ public class GuiController {
      * 
      * @param m
      */
-    protected void sendMessage(ACLMessage m) {
-	if (m.isValid()) {
-	    blackboard.addMessage(m);
-	}
-    }
-
-    /**
-     * Send a message over the network pipe.
-     * 
-     * @param dev
-     *            to device.
-     * @param content
-     *            content of the message to send.
-     * @param value
-     *            value of the message
-     * @param intent
-     *            message intent
-     * @param type
-     *            message type
-     * 
-     */
-    protected void sendMessage(DeviceID dev, String content, double value, ActionId intent, MessageType type) {
-	final ACLMessage m = new ACLMessage(type);
-	m.setActionID(intent);
-	m.setContent(content);
-	m.setReciever(dev);
-	m.setSender(DeviceID.COMM_CLIENT);
-	sendMessage(m);
-    }
-    
-    private void showFPV(final String ip, VLCDirectRendering vlcdr) {
-	String url = "http://" + ip + ":8080/stream/video.mjpeg";
-	vlcdr.start(url);
+    protected void sendMessage(String m) {
+	client.addMessage(m);
     }
 
     @FXML
@@ -219,27 +177,7 @@ public class GuiController {
 	assert enterCommandButton != null : "fx:id=\"enterCommandButton\" was not injected: check your FXML file 'commander.fxml'.";
 	assert commandTextField != null : "fx:id=\"commandTextField\" was not injected: check your FXML file 'commander.fxml'.";
 	assert commandOutputTextArea != null : "fx:id=\"commandOutputTextArea\" was not injected: check your FXML file 'commander.fxml'.";
-
 	cameraImageView.setImage(new Image(GuiController.class.getResourceAsStream("/default.jpg")));
 
-    }
-
-    static class HTTPAuthenticator extends Authenticator {
-	private String username, password;
-
-	public HTTPAuthenticator(String user, String pass) {
-	    username = user;
-	    password = pass;
-	}
-
-	protected PasswordAuthentication getPasswordAuthentication() {
-	    System.out.println("Requesting Host  : " + getRequestingHost());
-	    System.out.println("Requesting Port  : " + getRequestingPort());
-	    System.out.println("Requesting Prompt : " + getRequestingPrompt());
-	    System.out.println("Requesting Protocol: " + getRequestingProtocol());
-	    System.out.println("Requesting Scheme : " + getRequestingScheme());
-	    System.out.println("Requesting Site  : " + getRequestingSite());
-	    return new PasswordAuthentication(username, password.toCharArray());
-	}
     }
 }
