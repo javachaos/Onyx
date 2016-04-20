@@ -116,7 +116,7 @@ public class OnyxServer extends Device implements Runnable {
 
     @Override
     protected void alternate() {
-	final String peek = handler.getDataStack().peek();
+	final String peek = handler.getLastMsg();
 	if (peek != null) {
 	    setDisplay("Latest Comm: " + peek);
 	}
