@@ -65,7 +65,7 @@ public class OnyxClient implements Runnable {
 		    lastWriteFuture = ch.writeAndFlush(lastMsg = msgs.pop() + System.lineSeparator());
 		}
 
-		if (lastMsg.equals("COMM:CLOSE")) {
+		if (lastMsg != null && lastMsg.equals("COMM:CLOSE")) {
 		    ch.closeFuture().sync();
 		    break;
 		}
@@ -84,5 +84,12 @@ public class OnyxClient implements Runnable {
 
     public void addMessage(String cmd) {
 	msgs.push(cmd);
+    }
+    
+    /**
+     * Shutdown the connection.
+     */
+    public void shutdown() {
+	msgs.push("COMM:CLOSE");
     }
 }

@@ -8,6 +8,7 @@ import com.onyx.commander.main.Main;
 import com.onyx.commander.utils.Constants;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,8 +20,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.WindowEvent;
 
-public class GuiController {
+public class GuiController implements EventHandler<WindowEvent> {
 
     /**
      * Logger.
@@ -95,7 +97,7 @@ public class GuiController {
 	if (ip.matches(IPADDRESS_PATTERN)) {
 	    client = new OnyxClient(ip, Constants.SERVER_PORT);
 	    LOGGER.debug("Connecting to " + ip);
-	    Main.COORDINATOR.submit(client);
+	    Main.COORDINATOR.execute(client);
 	    loadWebview(ip);
 	} else {
 	    LOGGER.debug("Cannot connect non valid IP address.");
@@ -149,5 +151,12 @@ public class GuiController {
 	assert commandOutputTextArea != null : "fx:id=\"commandOutputTextArea\" was not injected: check your FXML file 'commander.fxml'.";
 	cameraImageView.setImage(new Image(GuiController.class.getResourceAsStream("/default.jpg")));
 
+    }
+
+    @Override
+    public void handle(WindowEvent event) {
+	//Called on shutdown.
+	client.shutdown();
+	System.exit(0);
     }
 }

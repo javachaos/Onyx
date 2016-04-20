@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.onyx.commander.gui.GuiController;
 import com.onyx.commander.utils.Constants;
 import com.onyx.quadcopter.tasks.ShutdownHook;
 
@@ -35,13 +36,21 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
        primaryStage.setTitle("Commander");
-       TitledPane myPane = (TitledPane)FXMLLoader.load(
-	       getClass().getResource("/commander.fxml"));
+//       TitledPane myPane = (TitledPane)FXMLLoader.load(
+//	       getClass().getResource("/commander.fxml"));
+       
+       
+       FXMLLoader fxmlLoader = new FXMLLoader();
+       TitledPane myPane = (TitledPane) fxmlLoader.load(getClass().getResource("/commander.fxml").openStream());
+       GuiController guiController = (GuiController) fxmlLoader.getController();
+       
+       
        Scene myScene = new Scene(myPane);
        myScene.setRoot(myPane);
        primaryStage.setScene(myScene);
        primaryStage.show();
        LOGGER.debug("Application Launched.");
+       primaryStage.setOnCloseRequest(guiController);
     }
     
     /**
