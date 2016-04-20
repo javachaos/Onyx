@@ -17,16 +17,17 @@ import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
-public class OnyxServer extends Device implements Runnable {
+public class OnyxServer extends Device {
 
     /**
      * Logger.
@@ -48,7 +49,7 @@ public class OnyxServer extends Device implements Runnable {
     /**
      * Communication handler.
      */
-    private final OnyxServerChannelHandler handler;
+    private OnyxServerChannelHandler handler;
 
     /**
      * Ping clients for data.
@@ -57,21 +58,18 @@ public class OnyxServer extends Device implements Runnable {
 
     public OnyxServer() {
 	super(DeviceID.COMM_SERVER);
-	handler = new OnyxServerChannelHandler(getController());
 	
     }
 
     @Override
     protected void init() {
+	handler = new OnyxServerChannelHandler(getController());
 	pingRequest = new ACLMessage(MessageType.RELAY);
 	pingRequest.setActionID(ActionId.SEND_DATA);
 	pingRequest.setSender(getId());
 	pingRequest.setReciever(DeviceID.COMM_CLIENT);
 	pingRequest.setValue(System.currentTimeMillis());
-    }
-
-    @Override
-    public void run() {
+	
 	LOGGER.debug("Starting CommServer.");
 	try {
 	    SelfSignedCertificate ssc = new SelfSignedCertificate();
@@ -80,16 +78,14 @@ public class OnyxServer extends Device implements Runnable {
 	    final ServerBootstrap b = new ServerBootstrap();
 	    b.group(bossGroup, workerGroup)
 	    .channel(NioServerSocketChannel.class)
-	    .childHandler(new OnyxServerChannelInitializer(sslCtx))
+	    .handler(new LoggingHandler(LogLevel.INFO))
+	    .childHandler(new OnyxServerChannelInitializer(sslCtx, handler))
 	    .option(ChannelOption.SO_BACKLOG, 128)
 	    .childOption(ChannelOption.SO_KEEPALIVE, true);
-	    
-	    // Bind and start to accept incoming connections.
-	    final ChannelFuture f = b.bind(PORT).sync();
+
+	    b.bind(PORT).sync().channel().closeFuture().sync();
 	    
 	    LOGGER.debug("CommServer Started.");
-	    // Wait until the server socket is closed.
-	    f.channel().closeFuture().sync();
 	} catch (final InterruptedException | SSLException | CertificateException e) {
 	    ExceptionUtils.logError(getClass(), e);
 	    throw new OnyxException(e.getMessage(), LOGGER);

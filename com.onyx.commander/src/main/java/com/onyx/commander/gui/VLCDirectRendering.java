@@ -20,6 +20,7 @@ import uk.co.caprica.vlcj.player.direct.BufferFormat;
 import uk.co.caprica.vlcj.player.direct.BufferFormatCallback;
 import uk.co.caprica.vlcj.player.direct.DefaultDirectMediaPlayer;
 import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
+import uk.co.caprica.vlcj.runtime.streams.NativeStreams;
 
 public class VLCDirectRendering extends BorderPane {
     
@@ -32,14 +33,17 @@ public class VLCDirectRendering extends BorderPane {
     /**
      * Target width, unless {@link #useSourceSize} is set.
      */
-    private static final int WIDTH = 720;
+    private static final int WIDTH = 640;
 
     /**
      * Target height, unless {@link #useSourceSize} is set.
      */
-    private static final int HEIGHT = 576;
+    private static final int HEIGHT = 480;
 
-    private static final double FPS = 24.0;
+    /**
+     * Frames per second
+     */
+    private static final double FPS = 15.0;
 
     /**
      * Lightweight JavaFX canvas, the video is rendered here.
@@ -60,6 +64,8 @@ public class VLCDirectRendering extends BorderPane {
      * The vlcj direct rendering media player component.
      */
     private final DirectMediaPlayerComponent mediaPlayerComponent;
+
+    private NativeStreams streams;
     
     public VLCDirectRendering() {
 	super();
@@ -68,9 +74,9 @@ public class VLCDirectRendering extends BorderPane {
         pixelFormat = PixelFormat.getByteBgraInstance();
         setCenter(canvas);
         mediaPlayerComponent = new FXMediaPlayerComponent();
-        
         timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
+        streams = new NativeStreams("/dev/null","/dev/null");
         double duration = 1000.0 / FPS;
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(duration), nextFrameHandler));
     }
@@ -85,6 +91,7 @@ public class VLCDirectRendering extends BorderPane {
 	timeline.stop();
 	mediaPlayerComponent.getMediaPlayer().stop();
         mediaPlayerComponent.getMediaPlayer().release();
+        streams.release();
     }
     
     public DirectMediaPlayerComponent getMediaPlayer() {
