@@ -2,7 +2,6 @@ package com.onyx.commander.communication;
 
 import com.onyx.quadcopter.utils.Constants;
 
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -22,7 +21,6 @@ public class OnyxClientChannelInitializer extends ChannelInitializer<SocketChann
     private final SslContext sslCtx;
     private final String host;
     private final int port;
-    private ChannelHandler handler;
     
     /**
      * OnyxClientChannelInitializer.
@@ -30,8 +28,7 @@ public class OnyxClientChannelInitializer extends ChannelInitializer<SocketChann
      * @param sslCtx
      * 		the sslCtx
      */
-    public OnyxClientChannelInitializer(OnyxClientCommunicationHandler handler, SslContext sslCtx, final String host, final int port) {
-	this.handler = handler;
+    public OnyxClientChannelInitializer(SslContext sslCtx, final String host, final int port) {
 	this.sslCtx = sslCtx;
 	this.host = host;
 	this.port = port;
@@ -49,6 +46,6 @@ public class OnyxClientChannelInitializer extends ChannelInitializer<SocketChann
         pipeline.addLast(new DelimiterBasedFrameDecoder(Constants.NIO_MAX_FRAMELEN, Delimiters.lineDelimiter()));
 	pipeline.addLast(new StringDecoder());
 	pipeline.addLast(new StringEncoder());
-	pipeline.addLast(handler);
+	pipeline.addLast(new OnyxClientCommunicationHandler());
     }
 }

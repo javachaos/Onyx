@@ -5,7 +5,10 @@ import javax.net.ssl.SSLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.onyx.quadcopter.utils.ConcurrentStack;
+
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -26,60 +29,59 @@ public class OnyxClient implements Runnable {
      * Server hostname.
      */
     private String host;
-    
-    /**
-     * Onyx Client Communication Handler.
-     */
-    private OnyxClientCommunicationHandler handler;
 
     /**
      * Server port.
      */
     private int port;
 
+    private SslContext sslCtx;
+
+    private ConcurrentStack<String> msgs;
+
+    private String lastMsg;
+
     public OnyxClient(final String servHost, final int servPort) {
 	this.host = servHost;
 	this.port = servPort;
-	handler = new OnyxClientCommunicationHandler();
-    }
-    
-    /**
-     * Add Messages.
-     * @param m
-     */
-    public void addMessage(final String m) {
-	handler.addData(m);
+	msgs = new ConcurrentStack<String>();
     }
 
     @Override
     public void run() {
-	// Configure SSL.
-	SslContext sslCtx = null;
-	try {
-	    sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
-	} catch (SSLException e1) {
-	    LOGGER.error(e1.getMessage());
-	}
 	EventLoopGroup workerGroup = new NioEventLoopGroup();
 	try {
+	    sslCtx = SslContextBuilder.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build();
 	    Bootstrap b = new Bootstrap();
 	    b.group(workerGroup);
 	    b.channel(NioSocketChannel.class);
 	    b.option(ChannelOption.SO_KEEPALIVE, true);
-	    b.handler(new OnyxClientChannelInitializer(handler, sslCtx, host, port));
+	    b.handler(new OnyxClientChannelInitializer(sslCtx, host, port));
 
-	    // Start the client.
-	    ChannelFuture f;
-	    try {
-		f = b.connect(host, port).sync();
-		f.channel().closeFuture().sync();
-	    } catch (InterruptedException e) {
-		e.printStackTrace();
-		LOGGER.debug(e.getMessage());
+	    Channel ch = b.connect(host, port).sync().channel();
+            ChannelFuture lastWriteFuture = null;
+            lastWriteFuture = ch.writeAndFlush(lastMsg = msgs.pop() + System.lineSeparator());
+	    
+	    switch(lastMsg) {
+    	        case "CLOSE":
+                    ch.closeFuture().sync();
+    		    break;
+    	        default:
+    	            break;
+	    }
+	    
+	    if (lastWriteFuture != null) {
+		lastWriteFuture.sync();
 	    }
 
+	} catch (SSLException | InterruptedException e1) {
+	    LOGGER.error(e1.getMessage());
 	} finally {
 	    workerGroup.shutdownGracefully();
 	}
+    }
+
+    public void addMessage(String cmd) {
+	msgs.push(cmd);
     }
 }
