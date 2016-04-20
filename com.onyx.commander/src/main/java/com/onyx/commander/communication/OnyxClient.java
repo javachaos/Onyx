@@ -10,7 +10,6 @@ import com.onyx.quadcopter.utils.ConcurrentStack;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -55,23 +54,25 @@ public class OnyxClient implements Runnable {
 	    Bootstrap b = new Bootstrap();
 	    b.group(workerGroup);
 	    b.channel(NioSocketChannel.class);
-	    b.option(ChannelOption.SO_KEEPALIVE, true);
 	    b.handler(new OnyxClientChannelInitializer(sslCtx, host, port));
 
 	    Channel ch = b.connect(host, port).sync().channel();
-            ChannelFuture lastWriteFuture = null;
-            lastWriteFuture = ch.writeAndFlush(lastMsg = msgs.pop() + System.lineSeparator());
-	    
-	    switch(lastMsg) {
-    	        case "CLOSE":
-                    ch.closeFuture().sync();
-    		    break;
-    	        default:
-    	            break;
+	    ChannelFuture lastWriteFuture = null;
+
+	    while(true) {
+		String m = msgs.peek();
+		if (m != null && !m.isEmpty()) {
+		    lastWriteFuture = ch.writeAndFlush(lastMsg = msgs.pop() + System.lineSeparator());
+		}
+
+		if (lastMsg.equals("CLOSE:CLOSE")) {
+		    ch.closeFuture().sync();
+		    break;
+		}
 	    }
-	    
+
 	    if (lastWriteFuture != null) {
-		lastWriteFuture.sync();
+	        lastWriteFuture.sync();
 	    }
 
 	} catch (SSLException | InterruptedException e1) {

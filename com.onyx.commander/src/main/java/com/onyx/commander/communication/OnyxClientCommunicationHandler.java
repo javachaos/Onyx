@@ -18,10 +18,7 @@ public class OnyxClientCommunicationHandler extends SimpleChannelInboundHandler<
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) {
-	if (msg instanceof String) {
-	    String m = msg.toString();
-            LOGGER.debug(m);
-	}
+            LOGGER.debug(msg);
     }
 
     @Override
