@@ -2,6 +2,7 @@ package com.onyx.quadcopter.tasks;
 
 /**
  * High level task identifier.
+ * 
  * @author fred
  *
  */

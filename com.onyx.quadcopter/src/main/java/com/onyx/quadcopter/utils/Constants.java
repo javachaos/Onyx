@@ -319,7 +319,7 @@ public final class Constants {
      * D Gain for PID controller.
      */
     public static final float PID_GAIN_D_X = PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainx.d", 0);
-    
+
     /**
      * P Gain for PID controller.
      */
@@ -334,7 +334,7 @@ public final class Constants {
      * D Gain for PID controller.
      */
     public static final float PID_GAIN_D_Y = PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainy.d", 0);
-    
+
     /**
      * P Gain for PID controller.
      */
@@ -378,19 +378,17 @@ public final class Constants {
 	    .getIntegerProperty("com.onyx.quadcopter.i2c.addr.pca9685", 0x40);
 
     /**
-     * Maximum percentage speed of the motors.
-     * (Cannot be changed)
+     * Maximum percentage speed of the motors. (Cannot be changed)
      */
     public static final int MOTOR_MAX_SPEED = 100;
-    
+
     /**
      * Maximum pulse width to send to ESCs for max motor speed.
      */
     public static final int MOTOR_MAX_MS = 2000;
 
     /**
-     * The minimum speed of the motors as a percentage.
-     * (Cannot be changed)
+     * The minimum speed of the motors as a percentage. (Cannot be changed)
      */
     public static final int MOTOR_MIN_SPEED = 0;
 
@@ -412,7 +410,8 @@ public final class Constants {
     /**
      * Max size of the blackboard Concurrent stack.
      */
-    public static final int MAX_BLACKBOARD_BUCKET_SIZE = PROPERTIES.getIntegerProperty("com.onyx.quadcopter.blackboard.max.bucket.size", 32);
+    public static final int MAX_BLACKBOARD_BUCKET_SIZE = PROPERTIES
+	    .getIntegerProperty("com.onyx.quadcopter.blackboard.max.bucket.size", 32);
 
     /**
      * The default task priority.
@@ -448,6 +447,5 @@ public final class Constants {
      * Minimum speed of motors. In microsecond pulse width.
      */
     public static final double MOTOR_MIN_MS = 1000;
-
 
 }

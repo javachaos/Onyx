@@ -3,6 +3,7 @@ package com.onyx.quadcopter.main;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +74,7 @@ public class Controller extends Device implements Runnable, StartStopable {
      * Communications server reference.
      */
     private OnyxServer commServer;
-    
+
     /**
      * Singleton Reference.
      */
@@ -87,9 +88,10 @@ public class Controller extends Device implements Runnable, StartStopable {
 	devices = new MapMaker().concurrencyLevel(Constants.NUM_THREADS).initialCapacity(Constants.MAX_DEVICES)
 		.makeMap();
     }
-    
+
     /**
      * Get a reference to this controller.
+     * 
      * @return
      */
     public static synchronized Controller getInstance() {
@@ -104,7 +106,7 @@ public class Controller extends Device implements Runnable, StartStopable {
 	LOGGER.debug("Initializing Controller...");
 	blackboard = new Blackboard();
 	commServer = new OnyxServer();
-	//Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
+	Main.COORDINATOR.schedule(commServer, Constants.COMM_SERVER_INIT_DELAY, TimeUnit.SECONDS);
 	setGpio(GpioFactory.getInstance());
 	cleaner = new Cleaner();
 	addDevice(commServer);
@@ -153,7 +155,7 @@ public class Controller extends Device implements Runnable, StartStopable {
      * Add a device to the devices list.
      *
      * @param d
-     * 		the device to add.
+     *            the device to add.
      */
     public void addDevice(final Device d) {
 	if (d != null) {
@@ -170,10 +172,10 @@ public class Controller extends Device implements Runnable, StartStopable {
 
     /**
      * Get a device instance from this controller
+     * 
      * @param d
-     * 		the deviceid for the device returned.
-     * @return
-     * 		the device associated with deviceId d.
+     *            the deviceid for the device returned.
+     * @return the device associated with deviceId d.
      */
     public Device getDevice(final DeviceID d) {
 	final Device dev = devices.get(d);
@@ -186,8 +188,9 @@ public class Controller extends Device implements Runnable, StartStopable {
 
     /**
      * Remove a device from this Controller.
+     * 
      * @param deviceId
-     * 		the device to be removed.
+     *            the device to be removed.
      */
     public void removeDevice(final DeviceID deviceId) {
 	if (devices.containsKey(deviceId)) {
@@ -200,25 +203,26 @@ public class Controller extends Device implements Runnable, StartStopable {
 
     @Override
     protected synchronized void update() {
-	//No call to super.update() for we do not wish to adapt our behavior from super.
-//	final Iterator<DeviceID> it = devices.keySet().iterator();
+	// No call to super.update() for we do not wish to adapt our behavior
+	// from super.
+	// final Iterator<DeviceID> it = devices.keySet().iterator();
 	try {
-	    devices.values().parallelStream().filter(e -> e.isInitialized())
-	                                     .forEach(e -> e.execute());                               
-	    //devices.forEach((id,dev) -> dev.execute());
+	    devices.values().parallelStream().filter(e -> e.isInitialized()).forEach(e -> e.execute());
+	    // devices.forEach((id,dev) -> dev.execute());
 	} catch (Throwable t) {
-            ExceptionUtils.logError(getClass(), t);
-            Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
+	    ExceptionUtils.logError(getClass(), t);
+	    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
 	}
-//	while (it.hasNext()) {
-//	    Device d = getDevice(it.next());
-//	    try {
-//	        d.execute();
-//	    } catch (Throwable t) {
-//		ExceptionUtils.logError(d.getClass(), t);
-//		Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
-//	    }
-//	}
+	// while (it.hasNext()) {
+	// Device d = getDevice(it.next());
+	// try {
+	// d.execute();
+	// } catch (Throwable t) {
+	// ExceptionUtils.logError(d.getClass(), t);
+	// Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(),
+	// t);
+	// }
+	// }
     }
 
     @Override
@@ -236,11 +240,11 @@ public class Controller extends Device implements Runnable, StartStopable {
     public synchronized void pause() {
 	isRunning = false;
     }
-    
+
     public synchronized void resume() {
 	isRunning = true;
     }
-    
+
     public Set<Entry<DeviceID, Device>> getDevices() {
 	return devices.entrySet();
     }
@@ -278,10 +282,10 @@ public class Controller extends Device implements Runnable, StartStopable {
     }
 
     /**
-     * Execute a high level Task.
-     * Future is discarded.
+     * Execute a high level Task. Future is discarded.
+     * 
      * @param t
-     * 		the task to execute.
+     *            the task to execute.
      */
     public void executeTask(Task<?> t) {
 	Main.COORDINATOR.submit(t);
@@ -298,6 +302,6 @@ public class Controller extends Device implements Runnable, StartStopable {
 
     @Override
     public void update(ACLMessage msg) {
-	//UNUSED
+	// UNUSED
     }
 }

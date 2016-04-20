@@ -234,7 +234,7 @@ public class Display {
 	    try {
 		this.spi.write((short) command);
 	    } catch (IOException e) {
-                ExceptionUtils.logError(getClass(), e);
+		ExceptionUtils.logError(getClass(), e);
 	    }
 	}
     }
@@ -305,7 +305,7 @@ public class Display {
 		Thread.sleep(10);
 		this.rstPin.setState(true);
 	    } catch (InterruptedException e) {
-                ExceptionUtils.logError(getClass(), e);
+		ExceptionUtils.logError(getClass(), e);
 	    }
 	}
     }
@@ -552,11 +552,11 @@ public class Display {
     public void write(String string) {
 	if (string != null && !string.isEmpty() && !string.equals(displayedString)) {
 	    displayedString = string;
-            clear();
-            getGraphics().setColor(Color.WHITE);
-            getGraphics().setFont(new Font("Monospaced", Font.PLAIN, Constants.DISP_FONT));
-            drawStringMultiLine(displayedString);
-            displayImage();
+	    clear();
+	    getGraphics().setColor(Color.WHITE);
+	    getGraphics().setFont(new Font("Monospaced", Font.PLAIN, Constants.DISP_FONT));
+	    drawStringMultiLine(displayedString);
+	    displayImage();
 	}
     }
 

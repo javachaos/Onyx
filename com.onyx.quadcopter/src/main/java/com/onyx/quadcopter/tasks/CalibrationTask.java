@@ -26,26 +26,27 @@ public class CalibrationTask extends Task<ACLMessage> {
 
     @Override
     public void perform() {
-	    getDev().sendMessage(DeviceID.OLED_DEVICE,
-		    "Initiating calibration sequence. Attach battery and hold red button for 3 seconds when ready.",
-		    ActionId.PRINT, ACLPriority.MAX);
-	    setAllSpeed(Constants.MOTOR_MAX_SPEED);
-	    while(!pressed) {
-		//Pause this thread but sleep it to avoid busy waiting.
-		try {
-		    Thread.sleep(Constants.MOTOR_INIT_DELAY);
-		} catch (InterruptedException e) {
-		    ExceptionUtils.logError(getClass(), e);
-		}
-		pressed = (StateMonitor.getState() != OnyxState.CALIBRATION);
+	getDev().sendMessage(DeviceID.OLED_DEVICE,
+		"Initiating calibration sequence. Attach battery and hold red button for 3 seconds when ready.",
+		ActionId.PRINT, ACLPriority.MAX);
+	setAllSpeed(Constants.MOTOR_MAX_SPEED);
+	while (!pressed) {
+	    // Pause this thread but sleep it to avoid busy waiting.
+	    try {
+		Thread.sleep(Constants.MOTOR_INIT_DELAY);
+	    } catch (InterruptedException e) {
+		ExceptionUtils.logError(getClass(), e);
 	    }
-	    setAllSpeed(Constants.MOTOR_MIN_SPEED);
+	    pressed = (StateMonitor.getState() != OnyxState.CALIBRATION);
+	}
+	setAllSpeed(Constants.MOTOR_MIN_SPEED);
     }
 
     /**
      * Set the speed of all 4 motors.
+     * 
      * @param speed
-     * 		the speed at which to rotate the motors as a percentage.
+     *            the speed at which to rotate the motors as a percentage.
      */
     private void setAllSpeed(double speed) {
 	getDev().sendMessageHigh(DeviceID.MOTOR1, "", speed, ActionId.CHANGE_MOTOR_SPEED);

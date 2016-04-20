@@ -27,7 +27,7 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
-public class OnyxServer extends Device {
+public class OnyxServer extends Device implements Runnable {
 
     /**
      * Logger.
@@ -58,33 +58,33 @@ public class OnyxServer extends Device {
 
     public OnyxServer() {
 	super(DeviceID.COMM_SERVER);
-	
+
     }
 
     @Override
     protected void init() {
-	handler = new OnyxServerChannelHandler(getController());
 	pingRequest = new ACLMessage(MessageType.RELAY);
 	pingRequest.setActionID(ActionId.SEND_DATA);
 	pingRequest.setSender(getId());
 	pingRequest.setReciever(DeviceID.COMM_CLIENT);
 	pingRequest.setValue(System.currentTimeMillis());
-	
+    }
+
+    @Override
+    public void run() {
+	handler = new OnyxServerChannelHandler(getController());
 	LOGGER.debug("Starting CommServer.");
 	try {
 	    SelfSignedCertificate ssc = new SelfSignedCertificate();
-	    SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey())
-	        .build();
+	    SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
 	    final ServerBootstrap b = new ServerBootstrap();
-	    b.group(bossGroup, workerGroup)
-	    .channel(NioServerSocketChannel.class)
-	    .handler(new LoggingHandler(LogLevel.INFO))
-	    .childHandler(new OnyxServerChannelInitializer(sslCtx, handler))
-	    .option(ChannelOption.SO_BACKLOG, 128)
-	    .childOption(ChannelOption.SO_KEEPALIVE, true);
+	    b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
+		    .handler(new LoggingHandler(LogLevel.INFO))
+		    .childHandler(new OnyxServerChannelInitializer(sslCtx, handler))
+		    .option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, true);
 
 	    b.bind(PORT).sync().channel().closeFuture().sync();
-	    
+
 	    LOGGER.debug("CommServer Started.");
 	} catch (final InterruptedException | SSLException | CertificateException e) {
 	    ExceptionUtils.logError(getClass(), e);
@@ -102,9 +102,9 @@ public class OnyxServer extends Device {
 	// Send client a request for data.
 	handler.addData(pingRequest);
     }
-    
+
     @Override
-    public  void update(final ACLMessage msg) {
+    public void update(final ACLMessage msg) {
 	switch (msg.getActionID()) {
 	case SEND_DATA:
 	    handler.addData(msg);

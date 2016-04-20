@@ -49,13 +49,13 @@ public abstract class Device implements Executable, Updateable {
      * Stack of ACL Messages.
      */
     private PriorityBlockingQueue<ACLMessage> messages = new PriorityBlockingQueue<ACLMessage>();
-    
+
     public Device(final DeviceID id) {
 	setId(id);
 	setName(id.toString());
 	controller = Controller.getInstance();
     }
-    
+
     public Device() {
 	setId(DeviceID.CONTROLLER);
 	setName(DeviceID.CONTROLLER.name());
@@ -77,9 +77,9 @@ public abstract class Device implements Executable, Updateable {
      */
     protected void update() {
 	if (isNewMessage()) {
-	    while(getMessages().size() > 0) {
-                ACLMessage msg = getMessages().poll();
-                this.update(msg);
+	    while (getMessages().size() > 0) {
+		ACLMessage msg = getMessages().poll();
+		this.update(msg);
 	    }
 	}
     }
@@ -95,7 +95,7 @@ public abstract class Device implements Executable, Updateable {
 	    alternate();
 	}
     }
-    
+
     /**
      * Accumulate all messages from the blackboard for this device.
      */
@@ -105,7 +105,7 @@ public abstract class Device implements Executable, Updateable {
 	if (previousMessage == null)
 	    previousMessage = m;
 	lastMessage = m;
-	while(m != null && m.isValid()) {
+	while (m != null && m.isValid()) {
 	    messages.offer(m);
 	    m = getController().getBlackboard().getMessage(this);
 	}
@@ -113,9 +113,10 @@ public abstract class Device implements Executable, Updateable {
 	    messages.clear();
 	}
     }
-    
+
     /**
      * Get the messages for this device.
+     * 
      * @return
      */
     public PriorityBlockingQueue<ACLMessage> getMessages() {
@@ -193,8 +194,8 @@ public abstract class Device implements Executable, Updateable {
      * @param action
      *            the actionId
      */
-    public void sendMessage(final MessageType type, final DeviceID receiver, final String content,
-	    final double value, final ActionId action, final ACLPriority priority) {
+    public void sendMessage(final MessageType type, final DeviceID receiver, final String content, final double value,
+	    final ActionId action, final ACLPriority priority) {
 	final ACLMessage m = new ACLMessage(type);
 	m.setActionID(action);
 	m.setContent(content);
@@ -215,8 +216,8 @@ public abstract class Device implements Executable, Updateable {
      * @param action
      *            the actionId
      */
-    public void sendMessage(final DeviceID receiver, final String content, final double value,
-	    final ActionId action, final ACLPriority priority) {
+    public void sendMessage(final DeviceID receiver, final String content, final double value, final ActionId action,
+	    final ACLPriority priority) {
 	sendMessage(MessageType.SEND, receiver, content, value, action, priority);
     }
 
@@ -230,19 +231,21 @@ public abstract class Device implements Executable, Updateable {
      * @param action
      *            the actionId
      */
-    public void sendMessage(final DeviceID receiver, final String content, final ActionId action, final ACLPriority priority) {
+    public void sendMessage(final DeviceID receiver, final String content, final ActionId action,
+	    final ACLPriority priority) {
 	sendMessage(receiver, content, 0.0, action, priority);
     }
-    
+
     /**
      * Send a message to the OLED device to display a message.
+     * 
      * @param text
-     * 		the text to send to the display.
+     *            the text to send to the display.
      */
     public void setDisplay(final String text) {
 	sendMessage(DeviceID.OLED_DEVICE, text, ActionId.DISPLAY, ACLPriority.MEDIUM);
     }
-    
+
     /**
      * Send a message to receiver. (ACLPriority.MEDIUM)
      * 
@@ -270,7 +273,7 @@ public abstract class Device implements Executable, Updateable {
     public void sendMessageHigh(final DeviceID receiver, final String content, final ActionId action) {
 	sendMessage(receiver, content, 0.0, action, ACLPriority.HIGH);
     }
-    
+
     /**
      * Send a message to receiver. (ACLPriority.HIGH)
      * 
@@ -281,7 +284,8 @@ public abstract class Device implements Executable, Updateable {
      * @param action
      *            the actionId
      */
-    public void sendMessageHigh(final DeviceID receiver, final String content, final double value, final ActionId action) {
+    public void sendMessageHigh(final DeviceID receiver, final String content, final double value,
+	    final ActionId action) {
 	sendMessage(receiver, content, value, action, ACLPriority.HIGH);
     }
 
@@ -301,12 +305,14 @@ public abstract class Device implements Executable, Updateable {
 
     /**
      * Send an ACLMessage.
+     * 
      * @param m
      */
     public void sendMessage(ACLMessage m) {
-	sendMessage(m.getMessageType(),m.getReciever(),m.getContent(),m.getValue(),m.getActionID(),m.getPriority());
+	sendMessage(m.getMessageType(), m.getReciever(), m.getContent(), m.getValue(), m.getActionID(),
+		m.getPriority());
     }
-    
+
     /**
      * Send a reply to the last sender.
      * 
@@ -335,7 +341,8 @@ public abstract class Device implements Executable, Updateable {
      * @param action
      */
     public void sendReply(final String content) {
-	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, lastMessage.getActionID(), lastMessage.getPriority());
+	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, lastMessage.getActionID(),
+		lastMessage.getPriority());
     }
 
     /**
@@ -346,7 +353,8 @@ public abstract class Device implements Executable, Updateable {
      * @param action
      */
     public void sendReply(final String content, final double value) {
-	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value, lastMessage.getActionID(), lastMessage.getPriority());
+	sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value, lastMessage.getActionID(),
+		lastMessage.getPriority());
     }
 
     /**
@@ -389,7 +397,7 @@ public abstract class Device implements Executable, Updateable {
 	    LOGGER.debug("Initializing " + getName());
 	    init();
 	    if (controller == null) {
-	        controller = Controller.getInstance();
+		controller = Controller.getInstance();
 	    }
 	    LOGGER.debug("Device: " + getName() + " initialized.");
 	    initialized = true;

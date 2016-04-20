@@ -12,22 +12,22 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.ssl.SslContext;
 
 public class OnyxServerChannelInitializer extends ChannelInitializer<SocketChannel> {
-    
+
     /**
      * SSL Ctx
      */
     private final SslContext sslCtx;
     private final SimpleChannelInboundHandler<ACLMessage> handler;
-    
+
     public OnyxServerChannelInitializer(SslContext sslCtx, SimpleChannelInboundHandler<ACLMessage> handler) {
-        this.sslCtx = sslCtx;
-        this.handler = handler;
+	this.sslCtx = sslCtx;
+	this.handler = handler;
     }
 
     @Override
     public void initChannel(final SocketChannel ch) throws Exception {
 	ChannelPipeline pipeline = ch.pipeline();
-	
+
 	// Add SSL handler first to encrypt and decrypt everything.
 	// In this example, we use a bogus certificate in the server side
 	// and accept any invalid certificates in the client side.

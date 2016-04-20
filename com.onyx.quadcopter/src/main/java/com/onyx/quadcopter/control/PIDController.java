@@ -17,7 +17,7 @@ public class PIDController extends Device {
     private static final double GAIN_P_X = Constants.PID_GAIN_P_X;
     private static final double GAIN_I_X = Constants.PID_GAIN_I_X;
     private static final double GAIN_D_X = Constants.PID_GAIN_D_X;
-    
+
     private static final double GAIN_P_Y = Constants.PID_GAIN_P_Y;
     private static final double GAIN_I_Y = Constants.PID_GAIN_I_Y;
     private static final double GAIN_D_Y = Constants.PID_GAIN_D_Y;
@@ -25,7 +25,7 @@ public class PIDController extends Device {
     private static final double GAIN_P_Z = Constants.PID_GAIN_P_Z;
     private static final double GAIN_I_Z = Constants.PID_GAIN_I_Z;
     private static final double GAIN_D_Z = Constants.PID_GAIN_D_Z;
-    
+
     private Pid xPid, yPid, zPid;
 
     /**
@@ -33,12 +33,12 @@ public class PIDController extends Device {
      */
     private double[] orientation = new double[3];
     private double[] gyro = new double[3];
-    
+
     /**
      * Computed orientation.
      */
     private double[] computedGyro = new double[3];
-    
+
     /**
      * The controller throttle.
      */
@@ -62,7 +62,7 @@ public class PIDController extends Device {
 
     @Override
     protected void init() {
-	
+
     }
 
     @Override
@@ -84,49 +84,47 @@ public class PIDController extends Device {
     protected void update() {
 	super.update();
 
-	computedGyro[0] = xPid.compute((computedGyro[0] * 0.8)+((gyro[0] / Constants.GYRO_SCALE) * 0.2));
-	computedGyro[1] = yPid.compute((computedGyro[1] * 0.8)+((gyro[1] / Constants.GYRO_SCALE) * 0.2));
-	computedGyro[2] = zPid.compute((computedGyro[2] * 0.8)+((gyro[2] / Constants.GYRO_SCALE) * 0.2));
+	computedGyro[0] = xPid.compute((computedGyro[0] * 0.8) + ((gyro[0] / Constants.GYRO_SCALE) * 0.2));
+	computedGyro[1] = yPid.compute((computedGyro[1] * 0.8) + ((gyro[1] / Constants.GYRO_SCALE) * 0.2));
+	computedGyro[2] = zPid.compute((computedGyro[2] * 0.8) + ((gyro[2] / Constants.GYRO_SCALE) * 0.2));
 
-	if(orientation[0] >= Constants.MAX_FLIGHT_INCLINE) {
+	if (orientation[0] >= Constants.MAX_FLIGHT_INCLINE) {
 	    computedGyro[0] = 0;
 	}
-	
-	if(orientation[1] >= Constants.MAX_FLIGHT_INCLINE) {
+
+	if (orientation[1] >= Constants.MAX_FLIGHT_INCLINE) {
 	    computedGyro[1] = 0;
 	}
 
 	throttle = limit(Constants.MAX_THROTTLE, 0, throttle);
-	
-	double prev_esc1 = esc1;
-	double prev_esc2 = esc2; 
-	double prev_esc3 = esc3; 
-	double prev_esc4 = esc4; 
-	
-	esc1 = throttle -  computedGyro[0] + computedGyro[1] - computedGyro[2];
-	esc2 = throttle +  computedGyro[0] + computedGyro[1] + computedGyro[2];
-	esc3 = throttle +  computedGyro[0] - computedGyro[1] - computedGyro[2];
-	esc4 = throttle -  computedGyro[0] - computedGyro[1] + computedGyro[2];
 
-	if (started) {//Flight mode started, keep rotors spinning at 1200us.
-            esc1 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc1);
-            esc2 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc2);
-            esc3 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc3);
-            esc4 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc4);
+	double prev_esc1 = esc1;
+	double prev_esc2 = esc2;
+	double prev_esc3 = esc3;
+	double prev_esc4 = esc4;
+
+	esc1 = throttle - computedGyro[0] + computedGyro[1] - computedGyro[2];
+	esc2 = throttle + computedGyro[0] + computedGyro[1] + computedGyro[2];
+	esc3 = throttle + computedGyro[0] - computedGyro[1] - computedGyro[2];
+	esc4 = throttle - computedGyro[0] - computedGyro[1] + computedGyro[2];
+
+	if (started) {// Flight mode started, keep rotors spinning at 1200us.
+	    esc1 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc1);
+	    esc2 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc2);
+	    esc3 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc3);
+	    esc4 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc4);
 	} else {// Not in flight mode so keep motors quiet at 1000us.
 	    esc1 = Constants.MOTOR_MIN_MS;
 	    esc2 = Constants.MOTOR_MIN_MS;
 	    esc3 = Constants.MOTOR_MIN_MS;
 	    esc4 = Constants.MOTOR_MIN_MS;
 	}
-	
-	//Display the Computed ESC Speeds.
-	setDisplay("ESC1: " + esc1 + System.lineSeparator() + 
-		   "ESC2: " + esc2 + System.lineSeparator() + 
-		   "ESC3: " + esc3 + System.lineSeparator() + 
-		   "ESC4: " + esc4);
-	
-	//Only update motor speed if there is a noticeable change in value.
+
+	// Display the Computed ESC Speeds.
+	setDisplay("ESC1: " + esc1 + System.lineSeparator() + "ESC2: " + esc2 + System.lineSeparator() + "ESC3: " + esc3
+		+ System.lineSeparator() + "ESC4: " + esc4);
+
+	// Only update motor speed if there is a noticeable change in value.
 	if (Math.abs(prev_esc1 - esc1) > 0) {
 	    sendMessageHigh(DeviceID.MOTOR1, "", esc1, ActionId.CHANGE_PULSE_WIDTH);
 	}
@@ -140,31 +138,29 @@ public class PIDController extends Device {
 	    sendMessageHigh(DeviceID.MOTOR4, "", esc4, ActionId.CHANGE_PULSE_WIDTH);
 	}
     }
-    
+
     /**
-     * Limit the input value between min and max, if
-     * the value is less than the min return min, if
-     * the value is greater than max return max.
+     * Limit the input value between min and max, if the value is less than the
+     * min return min, if the value is greater than max return max.
      * 
      * @param max
-     *     the max value to clamp to.
+     *            the max value to clamp to.
      * @param min
-     * 	   the min value to clamp to.
+     *            the min value to clamp to.
      * @param value
-     *     the value.
-     * @return
-     * 	   the value clamped between min and max.
+     *            the value.
+     * @return the value clamped between min and max.
      */
     private double limit(double max, double min, double value) {
-	if(value >= max) {
+	if (value >= max) {
 	    return max;
 	}
-	if(value <= min) {
+	if (value <= min) {
 	    return min;
 	}
 	return value;
     }
-    
+
     @Override
     public void update(ACLMessage msg) {
 	switch (msg.getActionID()) {
@@ -190,7 +186,7 @@ public class PIDController extends Device {
 	case START_MOTORS:
 	    started = Boolean.parseBoolean(msg.getContent());
 	    throttle = 0;
-	    //Start or stop motors.
+	    // Start or stop motors.
 	default:
 	    break;
 	}

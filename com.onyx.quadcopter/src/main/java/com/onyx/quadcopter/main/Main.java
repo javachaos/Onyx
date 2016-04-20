@@ -25,7 +25,7 @@ public class Main {
 	    ExceptionUtils.logError(Main.class, e);
 	}
     }
-    
+
     public static final ScheduledExecutorService COORDINATOR = Executors.newScheduledThreadPool(Constants.NUM_THREADS);
 
     public static void main(final String[] args) {

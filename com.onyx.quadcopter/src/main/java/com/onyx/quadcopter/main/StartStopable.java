@@ -6,7 +6,7 @@ public interface StartStopable {
      * Start this StartStopable.
      */
     void start();
-    
+
     /**
      * Stop this StartStopable.
      */

@@ -44,7 +44,7 @@ public class Motor extends Device {
 	super.update();
 	setDisplay("Current speed of " + getId() + " is: " + currentSpeed + "%.");
     }
-    
+
     @Override
     public void update(final ACLMessage msg) {
 	switch (msg.getActionID()) {

@@ -11,7 +11,7 @@ import upm_pca9685.PCA9685;
 public class PwmControl {
 
     /**
-     *  PCA9685 pwm driver.
+     * PCA9685 pwm driver.
      */
     private static PCA9685 pwm = new PCA9685(Constants.I2C_BUS_ID, Constants.PCA9685_I2C_ADDRESS);
 
@@ -30,7 +30,7 @@ public class PwmControl {
      */
     private double scale = 4.884004884;
 
-    private short PCA9685_ALL_LED  = 0xff;
+    private short PCA9685_ALL_LED = 0xff;
     /**
      * Logger.
      */

@@ -51,8 +51,8 @@ public enum OnyxState {
     /**
      * Aircraft is off the ground.
      */
-    AIRBORNE, 
-    
+    AIRBORNE,
+
     /**
      * Calibrate the ESCs
      */

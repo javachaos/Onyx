@@ -167,9 +167,9 @@ public final class StateMonitor implements Runnable {
     }
 
     public static void calibrationState() {
-	state = OnyxState.CALIBRATION;	
+	state = OnyxState.CALIBRATION;
     }
-    
+
     /**
      * The aircraft in landed.
      */
@@ -246,7 +246,7 @@ public final class StateMonitor implements Runnable {
 	    break;
 	}
     }
-    
+
     /**
      * Error state.
      */

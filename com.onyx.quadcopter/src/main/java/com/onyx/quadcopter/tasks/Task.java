@@ -13,26 +13,27 @@ import com.onyx.quadcopter.utils.Constants;
 public abstract class Task<T> implements Callable<T>, Comparable<T> {
 
     public final Logger LOGGER = LoggerFactory.getLogger(getClass());
-    
+
     /**
      * The underlying device which created this task.
      */
     private Device dev;
-    
+
     /**
      * The priority of this task.
      */
     private int priority;
-    
+
     /**
      * The task ID for this task.
      */
     private TaskID id;
-    
+
     /**
      * Construct a new high level operation.
+     * 
      * @param id
-     * 		the id of this task.
+     *            the id of this task.
      */
     public Task(final TaskID id) {
 	setDev(Controller.getInstance());
@@ -43,30 +44,32 @@ public abstract class Task<T> implements Callable<T>, Comparable<T> {
 	}
 	setPriority(Constants.DEFAULT_TASK_PRIORITY);
     }
-    
+
     /**
      * Construct a new high level operation.
+     * 
      * @param id
-     * 		the id of this task.
+     *            the id of this task.
      * @param priority
-     * 		the caller defined priority of this high level operation.
+     *            the caller defined priority of this high level operation.
      */
     public Task(final TaskID id, final int priority) {
 	this(id);
 	setPriority(priority);
     }
-    
+
     /**
      * Perform this task.
      */
     public abstract void perform();
-    
+
     /**
      * Called when the task has completed it's job.
+     * 
      * @return the completion object.
      */
     protected abstract T complete();
-    
+
     @Override
     public T call() throws Exception {
 	LOGGER.debug("Executing task: " + getName());
@@ -74,22 +77,25 @@ public abstract class Task<T> implements Callable<T>, Comparable<T> {
 	LOGGER.debug("Execution complete for task: " + getName());
 	return complete();
     }
+
     /**
      * @return the priority
      */
     public int getPriority() {
 	return priority;
     }
+
     /**
-     * @param priority the priority to set
+     * @param priority
+     *            the priority to set
      */
     public void setPriority(int priority) {
 	this.priority = priority;
     }
-    
+
     @Override
     public int compareTo(Object o) {
-        final int BEFORE = -1;
+	final int BEFORE = -1;
 	final int EQUAL = 0;
 	final int AFTER = 1;
 	if (this == o && o.equals(this)) {
@@ -97,8 +103,10 @@ public abstract class Task<T> implements Callable<T>, Comparable<T> {
 	}
 	return ((Task<?>) o).getPriority() > getPriority() ? AFTER : BEFORE;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -110,7 +118,10 @@ public abstract class Task<T> implements Callable<T>, Comparable<T> {
 	result = prime * result + priority;
 	return result;
     }
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -149,7 +160,8 @@ public abstract class Task<T> implements Callable<T>, Comparable<T> {
     }
 
     /**
-     * @param dev the dev to set
+     * @param dev
+     *            the dev to set
      */
     public void setDev(Device dev) {
 	this.dev = dev;
@@ -157,6 +169,7 @@ public abstract class Task<T> implements Callable<T>, Comparable<T> {
 
     /**
      * Return the name of this task
+     * 
      * @return
      */
     public String getName() {
