@@ -18,6 +18,10 @@ public class OnyxClientCommunicationHandler extends ChannelInboundHandlerAdapter
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(OnyxClientCommunicationHandler.class);
     private ConcurrentStack<String> dataStack;
+    
+    public OnyxClientCommunicationHandler() {
+	dataStack = new ConcurrentStack<String>();
+    }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {

@@ -448,4 +448,6 @@ public final class Constants {
      */
     public static final double MOTOR_MIN_MS = 1000;
 
+    public static final int NIO_MAX_FRAMELEN = 8192;
+
 }
