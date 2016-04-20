@@ -79,20 +79,21 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<ACLMes
 	if (data.isValid()) {
 	    dataStack.push(data);
 	}
-	
-	if(dataStack.size() >= Constants.NETWORK_BUFFER_SIZE) {
+
+	if (dataStack.size() >= Constants.NETWORK_BUFFER_SIZE) {
 	    dataStack.clear();
 	}
     }
 
     /**
      * Get this connection handlers data stack.
+     * 
      * @return
      */
     public ConcurrentStack<ACLMessage> getDataStack() {
 	return dataStack;
     }
-    
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ACLMessage msg) throws Exception {
 	controller.getBlackboard().addMessage(msg);

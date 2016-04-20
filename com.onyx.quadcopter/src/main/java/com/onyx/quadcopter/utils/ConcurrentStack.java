@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class ConcurrentStack<E> {
     AtomicReference<Node<E>> head = new AtomicReference<Node<E>>();
     AtomicInteger size = new AtomicInteger();
-    
+
     public void push(final E item) {
 	size.incrementAndGet();
 	final Node<E> newHead = new Node<E>(item);
@@ -30,7 +30,7 @@ public class ConcurrentStack<E> {
 	} while (!head.compareAndSet(oldHead, newHead));
 	return oldHead.item;
     }
-    
+
     public int size() {
 	return size.get();
     }

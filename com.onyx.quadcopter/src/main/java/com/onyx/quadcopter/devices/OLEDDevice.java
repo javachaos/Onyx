@@ -13,6 +13,7 @@ import com.pi4j.io.i2c.impl.I2CBusImpl;
 
 /**
  * Represents an OLED Device.
+ * 
  * @author fred
  *
  */
@@ -37,7 +38,9 @@ public class OLEDDevice extends Device {
 
     /**
      * Creates a new OLED Device.
-     * @param c controller.
+     * 
+     * @param c
+     *            controller.
      */
     public OLEDDevice() {
 	super(DeviceID.OLED_DEVICE);
@@ -49,23 +52,23 @@ public class OLEDDevice extends Device {
 	    msgs.clear();
 	}
 	switch (msg.getActionID()) {
-        case PRINT:
+	case PRINT:
 	    oled.write(msg.getContent());
 	    break;
-        case DISPLAY:
-            msgs.put(msg.getSender(), msg.getContent());
+	case DISPLAY:
+	    msgs.put(msg.getSender(), msg.getContent());
 	    break;
-        case CHANGE_DISPLAY:
+	case CHANGE_DISPLAY:
 	    showNext();
 	    break;
-        default:
-            break;
-        }
+	default:
+	    break;
+	}
 
 	if (iterationCount++ == Constants.OLED_UPDATE_SPEED) {
 	    iterationCount = 0;
 	    show();
-        }
+	}
     }
 
     @Override
@@ -86,10 +89,11 @@ public class OLEDDevice extends Device {
     }
 
     private void incrementCounter() {
-        if (counter.incrementAndGet() >= DeviceID.values().length) {
+	if (counter.incrementAndGet() >= DeviceID.values().length) {
 	    counter.set(0);
-        }
+	}
     }
+
     /**
      * Display the next msg from the msg list.
      */
@@ -100,9 +104,9 @@ public class OLEDDevice extends Device {
 	}
 	show();
     }
-    
+
     private void show() {
-        oled.write(msgs.get(DeviceID.values()[counter.get()]));
+	oled.write(msgs.get(DeviceID.values()[counter.get()]));
     }
 
     @Override

@@ -28,10 +28,10 @@ public class GPSDevice extends Device {
 	    gps.readData(nmeaBuffer);
 	}
     }
-    
+
     @Override
     public void update(ACLMessage msg) {
-	//TODO Complete msg handling.
+	// TODO Complete msg handling.
     }
 
     @Override

@@ -217,22 +217,23 @@ public final class ACLMessage implements Serializable, Comparable<ACLMessage> {
 
     /**
      * Get the priority of this ACLMessage in relation to all other messages.
-     * @return
-     * 		the priority of this ACLMessage.
+     * 
+     * @return the priority of this ACLMessage.
      */
     public ACLPriority getPriority() {
 	return priority;
     }
-    
+
     /**
      * Set the priority of this ACLMessage.
+     * 
      * @param priority
-     * 		The priority of this ACLMessage to be set.
+     *            The priority of this ACLMessage to be set.
      */
     public void setPriority(final ACLPriority priority) {
 	this.priority = priority;
     }
-    
+
     /*
      * (non-Javadoc)
      * 

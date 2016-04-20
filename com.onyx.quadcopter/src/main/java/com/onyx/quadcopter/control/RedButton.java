@@ -15,8 +15,8 @@ import com.pi4j.io.gpio.event.GpioPinDigitalStateChangeEvent;
 import com.pi4j.io.gpio.event.GpioPinListenerDigital;
 
 /**
- * Red Button, housed on the outside of the aircraft for performing
- * Very simple commands.
+ * Red Button, housed on the outside of the aircraft for performing Very simple
+ * commands.
  * 
  * @author fred
  *
@@ -27,35 +27,35 @@ public class RedButton extends Device implements GpioPinListenerDigital {
      * Push Button.
      */
     private GpioPinDigitalInput button;
-    
+
     /**
      * How long the button has been held down for in nanoseconds.
      */
     private long holdDownTime = 0;
     private long startTime = 0;
-    
+
     /**
      * Number of nanoseconds per second.
      */
     private static final long NANOSECONDS_PER_SEC = (long) 1e+9;
-    
-    //These _SEQ variables hold the information about which sequence to trigger
-    //given the length of time the operator holds down this button.
+
+    // These _SEQ variables hold the information about which sequence to trigger
+    // given the length of time the operator holds down this button.
     //
     // Ex. If this button is held down for between 2seconds and less than
-    //     the start of the shutdown_seq time which is 10seconds.
-    //     The calibration sequence is entered.
-    
+    // the start of the shutdown_seq time which is 10seconds.
+    // The calibration sequence is entered.
+
     /**
      * Display Time. [0s-2s].
      */
     private static final long DISPLAY_SEQ = 0;
-    
+
     /**
      * Calibration Time. [2s-9s]
      */
     private static final long CALIBRATE_SEQ = 2 * NANOSECONDS_PER_SEC;
-    
+
     /**
      * Shutdown Time. [5s-infs]
      */
@@ -63,6 +63,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 
     /**
      * Creates a red button.
+     * 
      * @param c
      */
     public RedButton() {
@@ -101,7 +102,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
 	}
 	if (state.getState() == PinState.HIGH) {
 	    holdDownTime = System.nanoTime() - startTime;
-	    LOGGER.debug("Button Released. Held down for "+ holdDownTime + "  nanoseconds.");
+	    LOGGER.debug("Button Released. Held down for " + holdDownTime + "  nanoseconds.");
 	    handleActionSequence(holdDownTime);
 	}
     }
@@ -110,27 +111,27 @@ public class RedButton extends Device implements GpioPinListenerDigital {
      * Handle Action Sequence.
      * 
      * @param hdt
-     *         Hold down time, how long this button has been held down for.
+     *            Hold down time, how long this button has been held down for.
      */
     private void handleActionSequence(long hdt) {
 	if (hdt >= DISPLAY_SEQ && hdt < CALIBRATE_SEQ) {
-	    sendMessage(DeviceID.OLED_DEVICE,"NULL", ActionId.CHANGE_DISPLAY, ACLPriority.MAX);
+	    sendMessage(DeviceID.OLED_DEVICE, "NULL", ActionId.CHANGE_DISPLAY, ACLPriority.MAX);
 	} else if (hdt > CALIBRATE_SEQ && hdt < SHUTDOWN_SEQ) {
 	    LOGGER.debug("Calibration sequence timing entered.");
 	    if (StateMonitor.getState() == OnyxState.CALIBRATION) {
 		StateMonitor.landedState();
 	    } else {
-	        StateMonitor.calibrationState();
+		StateMonitor.calibrationState();
 	    }
 	} else if (hdt >= SHUTDOWN_SEQ) {
 	    LOGGER.debug("Initiating Shutdown Sequence...");
-	    sendMessage(DeviceID.OLED_DEVICE,"Initiating Shutdown Sequence...", ActionId.PRINT, ACLPriority.MAX);
+	    sendMessage(DeviceID.OLED_DEVICE, "Initiating Shutdown Sequence...", ActionId.PRINT, ACLPriority.MAX);
 	    StateMonitor.shutdownState();
 	}
     }
 
     @Override
     public void update(ACLMessage msg) {
-	setDisplay("Current Button State: "+ button.getState());
+	setDisplay("Current Button State: " + button.getState());
     }
 }

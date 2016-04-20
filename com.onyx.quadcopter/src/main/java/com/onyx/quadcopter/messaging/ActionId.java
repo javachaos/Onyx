@@ -78,27 +78,27 @@ public enum ActionId {
      * Change the pulse width
      */
     CHANGE_PULSE_WIDTH(13),
-    
+
     /**
      * Display message.
      */
-    DISPLAY(14), 
-    
+    DISPLAY(14),
+
     /**
      * Change the display for OLED.
      */
-    CHANGE_DISPLAY(15), 
-    
+    CHANGE_DISPLAY(15),
+
     /**
      * Change the orientation.
      */
-    CHANGE_ORIENT(16), 
-    
+    CHANGE_ORIENT(16),
+
     /**
      * Get gyro data
      */
-    GYRO(17), 
-    
+    GYRO(17),
+
     /**
      * Start motors in preparation for flight.
      */
