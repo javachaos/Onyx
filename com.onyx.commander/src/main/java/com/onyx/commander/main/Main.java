@@ -35,16 +35,10 @@ public class Main extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-       primaryStage.setTitle("Commander");
-//       TitledPane myPane = (TitledPane)FXMLLoader.load(
-//	       getClass().getResource("/commander.fxml"));
-       
-       
+       primaryStage.setTitle("Commander");       
        FXMLLoader fxmlLoader = new FXMLLoader();
        TitledPane myPane = (TitledPane) fxmlLoader.load(getClass().getResource("/commander.fxml").openStream());
        GuiController guiController = (GuiController) fxmlLoader.getController();
-       
-       
        Scene myScene = new Scene(myPane);
        myScene.setRoot(myPane);
        primaryStage.setScene(myScene);

@@ -1,5 +1,6 @@
 package com.onyx.commander.gui;
 
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
@@ -85,6 +86,8 @@ public class GuiController implements EventHandler<WindowEvent> {
     @FXML
     private ImageView cameraImageView;
 
+    private Future<?> vlcdrFuture;
+
     /**
      * IP Regex.
      */
@@ -94,17 +97,8 @@ public class GuiController implements EventHandler<WindowEvent> {
 
     private static final String CMD_REGEX = "[a-zA-Z0-9\\.-]*:[a-zA-Z0-9\\.-]*";
     
-    private Task<Void> connectionStatus = new Task<Void>() {
-	@Override
-	protected Void call() throws Exception {
-	    if (client.isConnected()) {
-	        connStatusLbl.setText(connStatusLbl.getText() + " " + "connected");
-	    } else {
-	        connStatusLbl.setText(connStatusLbl.getText() + " " + "disconnected");
-	    }
-	    return null;
-	}
-    };
+    public GuiController() {
+    }
 
     @FXML
     protected void connect(final ActionEvent event) {
@@ -113,7 +107,6 @@ public class GuiController implements EventHandler<WindowEvent> {
 	    client = new OnyxClient(ip, Constants.SERVER_PORT);
 	    LOGGER.debug("Connecting to " + ip);
 	    Main.COORDINATOR.submit(client);
-	    Main.COORDINATOR.scheduleAtFixedRate(connectionStatus, 0, 1, TimeUnit.SECONDS);
 	    loadWebview(ip);
 	} else {
 	    LOGGER.debug("Cannot connect non valid IP address.");
@@ -131,7 +124,7 @@ public class GuiController implements EventHandler<WindowEvent> {
 	VLCDirectRendering vlcdr = new VLCDirectRendering(url);
 	cameraVBox.getChildren().clear();
 	cameraVBox.getChildren().add(vlcdr);
-	Main.COORDINATOR.submit(vlcdr);
+	vlcdrFuture = Main.COORDINATOR.submit(vlcdr);
     }
 
     @FXML
@@ -164,13 +157,33 @@ public class GuiController implements EventHandler<WindowEvent> {
 	assert commandTextField != null : "fx:id=\"commandTextField\" was not injected: check your FXML file 'commander.fxml'.";
 	assert commandOutputTextArea != null : "fx:id=\"commandOutputTextArea\" was not injected: check your FXML file 'commander.fxml'.";
 	cameraImageView.setImage(new Image(GuiController.class.getResourceAsStream("/default.jpg")));
+	Main.COORDINATOR.scheduleAtFixedRate(connectionStatus, 0, 1, TimeUnit.SECONDS);
 
     }
+    
+    private Task<Void> connectionStatus = new Task<Void>() {
+	@Override
+	protected Void call() throws Exception {
+	    if (client == null) {
+		return null;
+	    }
+	    while (client.isConnected()) {
+	        connStatusLbl.setText(connStatusLbl.getText() + " " + "connected.");
+	    } 
+    	    if (!client.isConnected()) {
+    	        connStatusLbl.setText(connStatusLbl.getText() + " " + "disconnected.");
+    	        vlcdrFuture.cancel(!client.isConnected());
+	    }
+	    return null;
+	}
+    };
 
     @Override
     public void handle(WindowEvent event) {
 	//Called on shutdown.
-	client.shutdown();
+	if (client != null) {
+	    client.shutdown();
+	}
 	System.exit(0);
     }
 }
