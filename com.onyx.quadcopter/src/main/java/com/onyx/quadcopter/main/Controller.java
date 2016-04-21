@@ -106,7 +106,6 @@ public final class Controller extends Device implements Runnable, StartStopable 
 
   @Override
   protected void init() {
-    LOGGER.debug("Initializing Controller...");
     blackboard = new Blackboard();
     commServer = new OnyxServer();
     Main.COORDINATOR.schedule(commServer, 0, TimeUnit.SECONDS);
@@ -122,22 +121,22 @@ public final class Controller extends Device implements Runnable, StartStopable 
     addDevice(new Motor(DeviceId.MOTOR3, Constants.GPIO_MOTOR3));
     addDevice(new Motor(DeviceId.MOTOR4, Constants.GPIO_MOTOR4));
     addDevice(new PidController());
-    LOGGER.debug("Controller Initialized.");
-    for (final Entry<DeviceId, Device> d : devices.entrySet()) {
-      d.getValue().initialize();
-    }
+    devices.values()
+      .parallelStream()
+      .filter(e -> !e.isInitialized())
+      .forEachOrdered(e -> e.initialize());
   }
 
   @Override
   public void shutdown() {
     LOGGER.debug("Starting Controller shutdown...");
     blackboard.shutdown();
-    for (final Entry<DeviceId, Device> d : devices.entrySet()) {
-      LOGGER.debug("Shutting down: " + d.getKey().toString());
-      d.getValue().shutdown();
-      cleaner.cleanUp(d.getValue());
-      LOGGER.debug("Shutdown complete for: " + d.getKey().toString());
-    }
+    devices.values().parallelStream().forEachOrdered(d -> {
+      LOGGER.debug("Shutting down: " + d.toString());
+      d.shutdown();
+      cleaner.cleanUp(d);
+      LOGGER.debug("Shutdown complete for: " + d.toString());
+    });
     gpio.shutdown();
     devices.clear();
     cleaner.cleanUp(gpio);

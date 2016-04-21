@@ -248,7 +248,7 @@ public final class GuiController implements EventHandler<WindowEvent> {
     assert commandOutputTextArea != null : "fx:id=\"commandOutputTextArea\""
         + " was not injected: check your FXML file 'commander.fxml'.";
     cameraImageView.setImage(new Image(GuiController.class.getResourceAsStream("/default.jpg")));
-    Main.COORDINATOR.scheduleAtFixedRate(connectionStatus, 0, 1, TimeUnit.SECONDS);
+    Main.COORDINATOR.scheduleAtFixedRate(connectionStatus, 0, 10, TimeUnit.MILLISECONDS);
 
   }
 
@@ -261,7 +261,7 @@ public final class GuiController implements EventHandler<WindowEvent> {
       if (client == null) {
         return null;
       }
-      while (client.isConnected()) {
+      if (client.isConnected()) {
         connStatusLbl.setText(connStatusLbl.getText() + " " + "connected.");
       }
       if (!client.isConnected()) {
@@ -274,7 +274,6 @@ public final class GuiController implements EventHandler<WindowEvent> {
 
   @Override
   public void handle(final WindowEvent event) {
-    // Called on shutdown.
     if (client != null) {
       client.shutdown();
     }

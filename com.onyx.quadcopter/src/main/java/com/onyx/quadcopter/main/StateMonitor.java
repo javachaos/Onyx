@@ -291,6 +291,7 @@ public final class StateMonitor implements Runnable {
     if (isStateChanged()) {
       switch (previousState) {
         case AIRBORNE:
+          LOGGER.debug("Attempt Recovery.");
           break;
         case ERROR:
           break;
