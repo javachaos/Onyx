@@ -1,11 +1,5 @@
 package com.onyx.commander.gui;
 
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.onyx.commander.communication.OnyxClient;
 import com.onyx.commander.main.Main;
 import com.onyx.commander.utils.Constants;
@@ -26,164 +20,264 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 
-public class GuiController implements EventHandler<WindowEvent> {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    /**
-     * Logger.
-     */
-    public static final Logger LOGGER = LoggerFactory.getLogger(GuiController.class);
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
-    @FXML
-    private TitledPane mainPane;
+/**
+ * Gui Controller class.
+ * 
+ * @author fred
+ *
+ */
+public final class GuiController implements EventHandler<WindowEvent> {
 
-    @FXML
-    private AnchorPane anchorPane;
+  /**
+   * Logger.
+   */
+  public static final Logger LOGGER = LoggerFactory.getLogger(GuiController.class);
 
-    @FXML
-    private Button connectButton;
 
-    @FXML
-    private Label connStatusLbl;
+  /**
+   * Main Pane.
+   */
+  @FXML
+  private TitledPane mainPane;
 
-    @FXML
-    private TextField usernameField;
+  /**
+   * Anchor Pane.
+   */
+  @FXML
+  private AnchorPane anchorPane;
 
-    @FXML
-    private PasswordField passField;
+  /**
+   * Connect button.
+   */
+  @FXML
+  private Button connectButton;
 
-    @FXML
-    private TextField ipField;
+  /**
+   * Connection status label.
+   */
+  @FXML
+  private Label connStatusLbl;
 
-    @FXML
-    private TitledPane cameraTitledPane;
+  /**
+   * Username field.
+   */
+  @FXML
+  private TextField usernameField;
 
-    @FXML
-    private Label orientationLbl;
+  /**
+   * Password field.
+   */
+  @FXML
+  private PasswordField passField;
 
-    @FXML
-    private Label hspeedLbl;
+  /**
+   * IP field.
+   */
+  @FXML
+  private TextField ipField;
 
-    @FXML
-    private Label vspeedLbl;
+  /**
+   * Camera titled pane.
+   */
+  @FXML
+  private TitledPane cameraTitledPane;
 
-    @FXML
-    private TextArea logTextArea;
+  /**
+   * Orientation Label.
+   */
+  @FXML
+  private Label orientationLbl;
 
-    @FXML
-    private Button enterCommandButton;
+  /**
+   * Horizontal speed label.
+   */
+  @FXML
+  private Label hspeedLbl;
 
-    @FXML
-    private TextField commandTextField;
+  /**
+   * Vertical speed label.
+   */
+  @FXML
+  private Label vspeedLbl;
 
-    @FXML
-    private TextArea commandOutputTextArea;
+  /**
+   * Log text area.
+   */
+  @FXML
+  private TextArea logTextArea;
 
-    private OnyxClient client;
+  /**
+   * Enter command button.
+   */
+  @FXML
+  private Button enterCommandButton;
 
-    @FXML
-    private VBox cameraVBox;
+  /**
+   * Command text field.
+   */
+  @FXML
+  private TextField commandTextField;
 
-    @FXML
-    private ImageView cameraImageView;
+  /**
+   * Command output TextArea.
+   */
+  @FXML
+  private TextArea commandOutputTextArea;
 
-    private Future<?> vlcdrFuture;
+  /**
+   * Onyx Client.
+   */
+  private OnyxClient client;
 
-    /**
-     * IP Regex.
-     */
-    private static final String IPADDRESS_PATTERN = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-	    + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-	    + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+  /**
+   * Camera VBox.
+   */
+  @FXML
+  private VBox cameraVBox;
 
-    private static final String CMD_REGEX = "[a-zA-Z0-9\\.-]*:[a-zA-Z0-9\\.-]*";
-    
-    public GuiController() {
+  /**
+   * Camera Image View.
+   */
+  @FXML
+  private ImageView cameraImageView;
+
+  /**
+   * VLC Direct rendering future.
+   */
+  private Future<?> vlcdrFuture;
+
+  /**
+   * IP Regex.
+   */
+  private static final String IPADDRESS_PATTERN =
+      "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+          + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\." + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+
+  /**
+   * Command Regex.
+   */
+  private static final String CMD_REGEX = "[a-zA-Z0-9\\.-]*:[a-zA-Z0-9\\.-]*";
+
+  /**
+   * Connect event.
+   * 
+   * @param event the action event.
+   */
+  @FXML
+  protected void connect(final ActionEvent event) {
+    String ip = ipField.getText();
+    if (ip.matches(IPADDRESS_PATTERN)) {
+      client = new OnyxClient(ip, Constants.SERVER_PORT);
+      LOGGER.debug("Connecting to " + ip);
+      Main.COORDINATOR.submit(client);
+      loadWebview(ip);
+    } else {
+      LOGGER.debug("Cannot connect non valid IP address.");
     }
+  }
 
-    @FXML
-    protected void connect(final ActionEvent event) {
-	String ip = ipField.getText();
-	if (ip.matches(IPADDRESS_PATTERN)) {
-	    client = new OnyxClient(ip, Constants.SERVER_PORT);
-	    LOGGER.debug("Connecting to " + ip);
-	    Main.COORDINATOR.submit(client);
-	    loadWebview(ip);
-	} else {
-	    LOGGER.debug("Cannot connect non valid IP address.");
-	}
+  /**
+   * Load the webview.
+   * 
+   * @param ip the ip address.
+   */
+  private void loadWebview(final String ip) {
+    String url = "http://" + ip + ":8080/stream/video.mjpeg";
+    VlcDirectRenderingPane vlcdr = new VlcDirectRenderingPane(url);
+    cameraVBox.getChildren().clear();
+    cameraVBox.getChildren().add(vlcdr);
+    vlcdrFuture = Main.COORDINATOR.submit(vlcdr);
+  }
+
+  /**
+   * Send a command to the server.
+   */
+  @FXML
+  protected void sendCommand() {
+    String cmd = commandTextField.getText();
+    if (cmd.matches(CMD_REGEX)) {
+      client.sendMessage(cmd);
+    } else {
+      LOGGER.debug("Invalid command format.");
     }
+  }
 
-    /**
-     * Load the webview.
-     * 
-     * @param ip
-     *            the ip address.
-     */
-    private void loadWebview(String ip) {
-	String url = "http://" + ip + ":8080/stream/video.mjpeg";
-	VLCDirectRendering vlcdr = new VLCDirectRendering(url);
-	cameraVBox.getChildren().clear();
-	cameraVBox.getChildren().add(vlcdr);
-	vlcdrFuture = Main.COORDINATOR.submit(vlcdr);
-    }
+  /**
+   * Initialized JavaFX components.
+   */
+  @FXML
+  void initialize() {
+    assert mainPane != null : "fx:id=\"mainPane\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert anchorPane != null : "fx:id=\"anchorPane\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert connectButton != null : "fx:id=\"connectButton\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert connStatusLbl != null : "fx:id=\"connStatusLbl\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert usernameField != null : "fx:id=\"usernameField\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert passField != null : "fx:id=\"passField\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert ipField != null : "fx:id=\"ipField\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert cameraTitledPane != null : "fx:id=\"cameraTitledPane\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert cameraVBox != null : "fx:id=\"cameraVBox\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert cameraImageView != null : "fx:id=\"cameraImageView\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert orientationLbl != null : "fx:id=\"orientationLbl\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert hspeedLbl != null : "fx:id=\"hspeedLbl\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert vspeedLbl != null : "fx:id=\"vspeedLbl\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert logTextArea != null : "fx:id=\"logTextArea\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert enterCommandButton != null : "fx:id=\"enterCommandButton\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert commandTextField != null : "fx:id=\"commandTextField\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    assert commandOutputTextArea != null : "fx:id=\"commandOutputTextArea\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
+    cameraImageView.setImage(new Image(GuiController.class.getResourceAsStream("/default.jpg")));
+    Main.COORDINATOR.scheduleAtFixedRate(connectionStatus, 0, 1, TimeUnit.SECONDS);
 
-    @FXML
-    protected void sendCommand() {
-	String cmd = commandTextField.getText();
-	if (cmd.matches(CMD_REGEX)) {
-            client.sendMessage(cmd);
-	} else {
-	    LOGGER.debug("Invalid command format.");
-	}
-    }
+  }
 
-    @FXML
-    void initialize() {
-	assert mainPane != null : "fx:id=\"mainPane\" was not injected: check your FXML file 'commander.fxml'.";
-	assert anchorPane != null : "fx:id=\"anchorPane\" was not injected: check your FXML file 'commander.fxml'.";
-	assert connectButton != null : "fx:id=\"connectButton\" was not injected: check your FXML file 'commander.fxml'.";
-	assert connStatusLbl != null : "fx:id=\"connStatusLbl\" was not injected: check your FXML file 'commander.fxml'.";
-	assert usernameField != null : "fx:id=\"usernameField\" was not injected: check your FXML file 'commander.fxml'.";
-	assert passField != null : "fx:id=\"passField\" was not injected: check your FXML file 'commander.fxml'.";
-	assert ipField != null : "fx:id=\"ipField\" was not injected: check your FXML file 'commander.fxml'.";
-	assert cameraTitledPane != null : "fx:id=\"cameraTitledPane\" was not injected: check your FXML file 'commander.fxml'.";
-	assert cameraVBox != null : "fx:id=\"cameraVBox\" was not injected: check your FXML file 'commander.fxml'.";
-	assert cameraImageView != null : "fx:id=\"cameraImageView\" was not injected: check your FXML file 'commander.fxml'.";
-	assert orientationLbl != null : "fx:id=\"orientationLbl\" was not injected: check your FXML file 'commander.fxml'.";
-	assert hspeedLbl != null : "fx:id=\"hspeedLbl\" was not injected: check your FXML file 'commander.fxml'.";
-	assert vspeedLbl != null : "fx:id=\"vspeedLbl\" was not injected: check your FXML file 'commander.fxml'.";
-	assert logTextArea != null : "fx:id=\"logTextArea\" was not injected: check your FXML file 'commander.fxml'.";
-	assert enterCommandButton != null : "fx:id=\"enterCommandButton\" was not injected: check your FXML file 'commander.fxml'.";
-	assert commandTextField != null : "fx:id=\"commandTextField\" was not injected: check your FXML file 'commander.fxml'.";
-	assert commandOutputTextArea != null : "fx:id=\"commandOutputTextArea\" was not injected: check your FXML file 'commander.fxml'.";
-	cameraImageView.setImage(new Image(GuiController.class.getResourceAsStream("/default.jpg")));
-	Main.COORDINATOR.scheduleAtFixedRate(connectionStatus, 0, 1, TimeUnit.SECONDS);
-
-    }
-    
-    private Task<Void> connectionStatus = new Task<Void>() {
-	@Override
-	protected Void call() throws Exception {
-	    if (client == null) {
-		return null;
-	    }
-	    while (client.isConnected()) {
-	        connStatusLbl.setText(connStatusLbl.getText() + " " + "connected.");
-	    } 
-    	    if (!client.isConnected()) {
-    	        connStatusLbl.setText(connStatusLbl.getText() + " " + "disconnected.");
-    	        vlcdrFuture.cancel(!client.isConnected());
-	    }
-	    return null;
-	}
-    };
-
+  /**
+   * Connection status label update task.
+   */
+  private Task<Void> connectionStatus = new Task<Void>() {
     @Override
-    public void handle(WindowEvent event) {
-	//Called on shutdown.
-	if (client != null) {
-	    client.shutdown();
-	}
-	System.exit(0);
+    protected Void call() throws Exception {
+      if (client == null) {
+        return null;
+      }
+      while (client.isConnected()) {
+        connStatusLbl.setText(connStatusLbl.getText() + " " + "connected.");
+      }
+      if (!client.isConnected()) {
+        connStatusLbl.setText(connStatusLbl.getText() + " " + "disconnected.");
+        vlcdrFuture.cancel(!client.isConnected());
+      }
+      return null;
     }
+  };
+
+  @Override
+  public void handle(final WindowEvent event) {
+    // Called on shutdown.
+    if (client != null) {
+      client.shutdown();
+    }
+    System.exit(0);
+  }
 }

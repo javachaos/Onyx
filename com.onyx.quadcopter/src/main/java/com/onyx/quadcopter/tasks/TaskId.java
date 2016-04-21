@@ -6,10 +6,10 @@ package com.onyx.quadcopter.tasks;
  * @author fred
  *
  */
-public enum TaskID {
+public enum TaskId {
 
-    /**
-     * Calibrate the motors.
-     */
-    CALIBRATE;
+  /**
+   * Calibrate the motors.
+   */
+  CALIBRATE;
 }

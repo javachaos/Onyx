@@ -1,69 +1,69 @@
 package com.onyx.quadcopter.tasks;
 
-import com.onyx.quadcopter.devices.DeviceID;
+import com.onyx.quadcopter.devices.DeviceId;
 import com.onyx.quadcopter.main.OnyxState;
 import com.onyx.quadcopter.main.StateMonitor;
-import com.onyx.quadcopter.messaging.ACLMessage;
-import com.onyx.quadcopter.messaging.ACLPriority;
+import com.onyx.quadcopter.messaging.AclMessage;
+import com.onyx.quadcopter.messaging.AclPriority;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.messaging.MessageType;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
 
-public class CalibrationTask extends Task<ACLMessage> {
+public class CalibrationTask extends Task<AclMessage> {
 
-    /**
-     * True when the red button has been pressed.
-     */
-    private boolean pressed;
+  /**
+   * True when the red button has been pressed.
+   */
+  private boolean pressed;
 
-    /**
-     * Construct a new calibration task.
-     */
-    public CalibrationTask() {
-	super(TaskID.CALIBRATE);
+  /**
+   * Construct a new calibration task.
+   */
+  public CalibrationTask() {
+    super(TaskId.CALIBRATE);
+  }
+
+  @Override
+  public void perform() {
+    getDev().sendMessage(DeviceId.OLED_DEVICE,
+        "Initiating calibration sequence."
+        + "Attach battery and hold red button for 3s.",
+        ActionId.PRINT, AclPriority.MAX);
+    setAllSpeed(Constants.MOTOR_MAX_SPEED);
+    while (!pressed) {
+      // Pause this thread but sleep it to avoid busy waiting.
+      try {
+        Thread.sleep(Constants.MOTOR_INIT_DELAY);
+      } catch (InterruptedException e1) {
+        ExceptionUtils.logError(getClass(), e1);
+      }
+      pressed = (StateMonitor.getState() != OnyxState.CALIBRATION);
     }
+    setAllSpeed(Constants.MOTOR_MIN_SPEED);
+  }
 
-    @Override
-    public void perform() {
-	getDev().sendMessage(DeviceID.OLED_DEVICE,
-		"Initiating calibration sequence. Attach battery and hold red button for 3 seconds when ready.",
-		ActionId.PRINT, ACLPriority.MAX);
-	setAllSpeed(Constants.MOTOR_MAX_SPEED);
-	while (!pressed) {
-	    // Pause this thread but sleep it to avoid busy waiting.
-	    try {
-		Thread.sleep(Constants.MOTOR_INIT_DELAY);
-	    } catch (InterruptedException e) {
-		ExceptionUtils.logError(getClass(), e);
-	    }
-	    pressed = (StateMonitor.getState() != OnyxState.CALIBRATION);
-	}
-	setAllSpeed(Constants.MOTOR_MIN_SPEED);
-    }
+  /**
+   * Set the speed of all 4 motors.
+   * 
+   * @param speed the speed at which to rotate the motors as a percentage.
+   */
+  private void setAllSpeed(double speed) {
+    getDev().sendMessageHigh(DeviceId.MOTOR1, "", speed, ActionId.CHANGE_MOTOR_SPEED);
+    getDev().sendMessageHigh(DeviceId.MOTOR2, "", speed, ActionId.CHANGE_MOTOR_SPEED);
+    getDev().sendMessageHigh(DeviceId.MOTOR3, "", speed, ActionId.CHANGE_MOTOR_SPEED);
+    getDev().sendMessageHigh(DeviceId.MOTOR4, "", speed, ActionId.CHANGE_MOTOR_SPEED);
+  }
 
-    /**
-     * Set the speed of all 4 motors.
-     * 
-     * @param speed
-     *            the speed at which to rotate the motors as a percentage.
-     */
-    private void setAllSpeed(double speed) {
-	getDev().sendMessageHigh(DeviceID.MOTOR1, "", speed, ActionId.CHANGE_MOTOR_SPEED);
-	getDev().sendMessageHigh(DeviceID.MOTOR2, "", speed, ActionId.CHANGE_MOTOR_SPEED);
-	getDev().sendMessageHigh(DeviceID.MOTOR3, "", speed, ActionId.CHANGE_MOTOR_SPEED);
-	getDev().sendMessageHigh(DeviceID.MOTOR4, "", speed, ActionId.CHANGE_MOTOR_SPEED);
-    }
-
-    @Override
-    protected ACLMessage complete() {
-	ACLMessage m = new ACLMessage(MessageType.SEND);
-	m.setActionID(ActionId.PRINT);
-	m.setContent("Calibration complete!");
-	m.setPriority(ACLPriority.HIGH);
-	m.setReciever(DeviceID.OLED_DEVICE);
-	m.setSender(getDev().getId());
-	getDev().sendMessage(m);
-	return m;
-    }
+  @Override
+  protected AclMessage complete() {
+    AclMessage msg = new AclMessage(MessageType.SEND);
+    msg.setActionId(ActionId.PRINT);
+    msg.setContent("Calibration complete!");
+    msg.setPriority(AclPriority.HIGH);
+    msg.setReciever(DeviceId.OLED_DEVICE);
+    msg.setSender(getDev().getId());
+    getDev().sendMessage(msg);
+    return msg;
+  }
 }
