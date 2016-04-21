@@ -12,7 +12,6 @@ import com.onyx.quadcopter.devices.GpsDevice;
 import com.onyx.quadcopter.devices.GyroMagAcc;
 import com.onyx.quadcopter.devices.Motor;
 import com.onyx.quadcopter.devices.OledDevice;
-import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.messaging.AclMessage;
 import com.onyx.quadcopter.tasks.Task;
 import com.onyx.quadcopter.utils.Cleaner;
@@ -29,6 +28,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+
 
 /**
  * Controller class.
@@ -131,12 +131,14 @@ public final class Controller extends Device implements Runnable, StartStopable 
   public void shutdown() {
     LOGGER.debug("Starting Controller shutdown...");
     blackboard.shutdown();
-    devices.values().parallelStream().forEachOrdered(d -> {
-      LOGGER.debug("Shutting down: " + d.toString());
-      d.shutdown();
-      cleaner.cleanUp(d);
-      LOGGER.debug("Shutdown complete for: " + d.toString());
-    });
+    devices.values().parallelStream()
+        .filter(e -> e.isInitialized())
+        .forEachOrdered(d -> {
+          LOGGER.debug("Shutting down: " + d.toString());
+          d.shutdown();
+          cleaner.cleanUp(d);
+          LOGGER.debug("Shutdown complete for: " + d.toString());
+        });
     gpio.shutdown();
     devices.clear();
     cleaner.cleanUp(gpio);
@@ -164,11 +166,7 @@ public final class Controller extends Device implements Runnable, StartStopable 
       if (deviceCount++ < Constants.MAX_DEVICES) {
         devices.put(dev.getId(), dev);
         LOGGER.debug("Device " + dev + " added to controller.");
-      } else {
-        throw new OnyxException("Max devices exceeded.", LOGGER);
       }
-    } else {
-      throw new OnyxException("Attempting to add null device to Controller.", LOGGER);
     }
   }
 
@@ -179,12 +177,7 @@ public final class Controller extends Device implements Runnable, StartStopable 
    * @return the device associated with deviceId d.
    */
   public Device getDevice(final DeviceId dev) {
-    final Device mdev = devices.get(dev);
-    if (mdev != null) {
-      return devices.get(dev);
-    } else {
-      throw new OnyxException("Device not found for DeviceID: " + dev, LOGGER);
-    }
+    return devices.get(dev);
   }
 
   /**
@@ -250,7 +243,7 @@ public final class Controller extends Device implements Runnable, StartStopable 
   }
 
   /**
-   * Execute a high level Task. Future is discarded.
+   * Execute a high level Task.
    * 
    * @param task the task to execute.
    * @param <T> the return type of the task t.

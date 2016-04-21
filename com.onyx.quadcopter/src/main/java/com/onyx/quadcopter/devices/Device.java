@@ -94,13 +94,17 @@ public abstract class Device implements Executable, Updateable {
 
   @Override
   public synchronized void execute() {
-    gatherMessages();
-    update();
-    runCounter++;
-    if (runCounter == Constants.ALTERNATE_SPEED) {
-      runCounter = 0;
-      LOGGER.debug("Device heartbeat: " + getName() + ".");
-      alternate();
+    try {
+      gatherMessages();
+      update();
+      runCounter++;
+      if (runCounter == Constants.ALTERNATE_SPEED) {
+        runCounter = 0;
+        LOGGER.debug("Device heartbeat: " + getName() + ".");
+        alternate();
+      }
+    } catch (Throwable t1) {
+      LOGGER.error(getName() + ": " + t1.getMessage());
     }
   }
 
@@ -400,18 +404,17 @@ public abstract class Device implements Executable, Updateable {
    */
   public void initialize() {
     if (!isInitialized()) {
-      LOGGER.debug("Initializing " + getName());
-      try {
-        init();
-      } catch (Throwable t1) {
-        LOGGER.error(t1.getMessage());
-        throw new RuntimeException(t1);
-      }
       if (controller == null) {
         controller = Controller.getInstance();
       }
-      LOGGER.debug("Device: " + getName() + " initialized.");
-      initialized = true;
+      try {
+        LOGGER.debug("Initializing " + getName());
+        init();
+        LOGGER.debug("Device: " + getName() + " initialized.");
+        initialized = true;
+      } catch (Throwable t1) {
+        LOGGER.error(getName() + ": " + t1.getMessage());
+      }
     }
   }
 }
