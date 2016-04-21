@@ -24,7 +24,6 @@ import com.onyx.quadcopter.messaging.ACLMessage;
 import com.onyx.quadcopter.tasks.Task;
 import com.onyx.quadcopter.utils.Cleaner;
 import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.ExceptionUtils;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 
@@ -205,12 +204,7 @@ public class Controller extends Device implements Runnable, StartStopable {
 
     @Override
     protected synchronized void update() {
-	try {
-	    devices.values().parallelStream().filter(e -> e.isInitialized()).forEach(e -> e.execute());
-	} catch (Throwable t) {
-	    ExceptionUtils.logError(getClass(), t);
-	    Thread.getDefaultUncaughtExceptionHandler().uncaughtException(Thread.currentThread(), t);
-	}
+        devices.values().parallelStream().filter(e -> e.isInitialized()).forEach(e -> e.execute());
     }
 
     @Override
