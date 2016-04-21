@@ -6,6 +6,6 @@ package com.onyx.quadcopter.messaging;
  * @author fred
  *
  */
-public enum ACLPriority {
-    MIN, LOW, MEDIUM, HIGH, MAX;
+public enum AclPriority {
+  MIN, LOW, MEDIUM, HIGH, MAX;
 }

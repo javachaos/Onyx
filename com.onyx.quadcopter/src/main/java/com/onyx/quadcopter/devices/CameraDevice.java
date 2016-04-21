@@ -1,14 +1,14 @@
 package com.onyx.quadcopter.devices;
 
-import java.io.File;
+import com.onyx.quadcopter.messaging.AclMessage;
+import com.onyx.quadcopter.utils.Constants;
+import com.onyx.quadcopter.utils.ExceptionUtils;
 
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;
 import org.opencv.highgui.VideoCapture;
 
-import com.onyx.quadcopter.messaging.ACLMessage;
-import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.ExceptionUtils;
+import java.io.File;
 
 /**
  * Camera Device.
@@ -18,61 +18,58 @@ import com.onyx.quadcopter.utils.ExceptionUtils;
  */
 public class CameraDevice extends Device {
 
-    static {
-	try {
-	    System.load(Constants.CAM_NATIVE_LIB);
-	} catch (final UnsatisfiedLinkError e) {
-	    ExceptionUtils.logError(CameraDevice.class, e);
-	}
+  static {
+    try {
+      System.load(Constants.CAM_NATIVE_LIB);
+    } catch (final UnsatisfiedLinkError e1) {
+      ExceptionUtils.logError(CameraDevice.class, e1);
     }
+  }
 
-    /**
-     * Webcam instance.
-     */
-    private VideoCapture webcam;
+  /**
+   * Webcam instance.
+   */
+  private VideoCapture webcam;
 
-    /**
-     * The matrix.
-     */
-    private Mat matrix;
+  /**
+   * The matrix.
+   */
+  private Mat matrix;
 
-    /**
-     * Camera Constructor.
-     * 
-     * @param c
-     */
-    public CameraDevice() {
-	super(DeviceID.CAMERA);
+  /**
+   * Camera Constructor.
+   */
+  public CameraDevice() {
+    super(DeviceId.CAMERA);
+  }
+
+  @Override
+  public void update(AclMessage msg) {}
+
+  @Override
+  protected void init() {
+    webcam = new VideoCapture(0);
+    webcam.open("http://192.168.1.163:8080/?dummy=param.mjpg");
+  }
+
+  @Override
+  public void shutdown() {
+    webcam.release();
+  }
+
+  @Override
+  protected void alternate() {
+    matrix = new Mat();
+    while (webcam.read(matrix) == false) {
     }
+    String fileName = Constants.IMG_DIR + File.separator + "img_latest.png";
+    Highgui.imwrite(fileName, matrix);
+    matrix.release();
+  }
 
-    @Override
-    public void update(ACLMessage msg) {
-    }
-
-    @Override
-    protected void init() {
-	webcam = new VideoCapture(0);
-	webcam.open("http://192.168.1.163:8080/?dummy=param.mjpg");
-    }
-
-    @Override
-    public void shutdown() {
-	webcam.release();
-    }
-
-    @Override
-    protected void alternate() {
-	matrix = new Mat();
-	while (webcam.read(matrix) == false)
-	    ;
-	String fileName = Constants.IMG_DIR + File.separator + "img_latest.png";
-	Highgui.imwrite(fileName, matrix);
-	matrix.release();
-    }
-
-    @Override
-    public boolean selfTest() {
-	return webcam.isOpened();
-    }
+  @Override
+  public boolean selfTest() {
+    return webcam.isOpened();
+  }
 
 }
