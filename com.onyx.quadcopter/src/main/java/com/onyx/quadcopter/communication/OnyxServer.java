@@ -48,10 +48,10 @@ public class OnyxServer extends Device implements Runnable {
      */
     private OnyxServerChannelHandler handler;
 
-    /**
-     * Ping clients for data.
-     */
-    private static final String pingRequest = "PING";
+//    /**
+//     * Ping clients for data.
+//     */
+//    private static final String pingRequest = "PING";
 
     public OnyxServer() {
 	super(DeviceID.COMM_SERVER);
@@ -91,7 +91,7 @@ public class OnyxServer extends Device implements Runnable {
 	super.update();
 
 	// Send client a request for data.
-	handler.addData(pingRequest);
+	//handler.addData(pingRequest);
     }
 
     @Override

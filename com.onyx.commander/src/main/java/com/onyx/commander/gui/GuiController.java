@@ -1,5 +1,7 @@
 package com.onyx.commander.gui;
 
+import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,7 +9,9 @@ import com.onyx.commander.communication.OnyxClient;
 import com.onyx.commander.main.Main;
 import com.onyx.commander.utils.Constants;
 
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -19,8 +23,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.WindowEvent;
 
-public class GuiController {
+public class GuiController implements EventHandler<WindowEvent> {
 
     /**
      * Logger.
@@ -88,6 +93,18 @@ public class GuiController {
 	    + "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
     private static final String CMD_REGEX = "[a-zA-Z0-9\\.-]*:[a-zA-Z0-9\\.-]*";
+    
+    private Task<Void> connectionStatus = new Task<Void>() {
+	@Override
+	protected Void call() throws Exception {
+	    if (client.isConnected()) {
+	        connStatusLbl.setText(connStatusLbl.getText() + " " + "connected");
+	    } else {
+	        connStatusLbl.setText(connStatusLbl.getText() + " " + "disconnected");
+	    }
+	    return null;
+	}
+    };
 
     @FXML
     protected void connect(final ActionEvent event) {
@@ -96,6 +113,7 @@ public class GuiController {
 	    client = new OnyxClient(ip, Constants.SERVER_PORT);
 	    LOGGER.debug("Connecting to " + ip);
 	    Main.COORDINATOR.submit(client);
+	    Main.COORDINATOR.scheduleAtFixedRate(connectionStatus, 0, 1, TimeUnit.SECONDS);
 	    loadWebview(ip);
 	} else {
 	    LOGGER.debug("Cannot connect non valid IP address.");
@@ -115,14 +133,12 @@ public class GuiController {
 	cameraVBox.getChildren().add(vlcdr);
 	Main.COORDINATOR.submit(vlcdr);
     }
-    
-    
 
     @FXML
     protected void sendCommand() {
 	String cmd = commandTextField.getText();
 	if (cmd.matches(CMD_REGEX)) {
-            client.addMessage(cmd);
+            client.sendMessage(cmd);
 	} else {
 	    LOGGER.debug("Invalid command format.");
 	}
@@ -149,5 +165,12 @@ public class GuiController {
 	assert commandOutputTextArea != null : "fx:id=\"commandOutputTextArea\" was not injected: check your FXML file 'commander.fxml'.";
 	cameraImageView.setImage(new Image(GuiController.class.getResourceAsStream("/default.jpg")));
 
+    }
+
+    @Override
+    public void handle(WindowEvent event) {
+	//Called on shutdown.
+	client.shutdown();
+	System.exit(0);
     }
 }
