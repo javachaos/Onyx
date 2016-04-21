@@ -1,7 +1,7 @@
 package com.onyx.commander.main;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class Main extends Application {
     /**
      * Thread coordinator.
      */
-    public static final ExecutorService COORDINATOR = Executors.newWorkStealingPool(Constants.NUM_THREADS);
+    public static final ScheduledExecutorService COORDINATOR = Executors.newScheduledThreadPool(Constants.NUM_THREADS);
     
     public static void main(String[] args) {
 	launch(args);

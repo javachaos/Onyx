@@ -40,6 +40,8 @@ public class OnyxClient implements Runnable {
 
     private String lastMsg;
 
+    private boolean isConnected;
+
     public OnyxClient(final String servHost, final int servPort) {
 	this.host = servHost;
 	this.port = servPort;
@@ -59,7 +61,7 @@ public class OnyxClient implements Runnable {
 	    Channel ch = b.connect(host, port).sync().channel();
 	    ChannelFuture lastWriteFuture = null;
 
-	    while(true) {
+	    while(isConnected = ch.isOpen()) {
 		String m = msgs.peek();
 		if (m != null && !m.isEmpty()) {
 		    lastWriteFuture = ch.writeAndFlush(lastMsg = msgs.pop() + System.lineSeparator());
@@ -67,7 +69,6 @@ public class OnyxClient implements Runnable {
 
 		if (lastMsg != null && lastMsg.equals("COMM:CLOSE")) {
 		    ch.closeFuture().sync();
-		    break;
 		}
 	    }
 
@@ -82,8 +83,20 @@ public class OnyxClient implements Runnable {
 	}
     }
 
-    public void addMessage(String cmd) {
+    /**
+     * Send a message to the Onyx server.
+     * @param cmd
+     */
+    public void sendMessage(String cmd) {
 	msgs.push(cmd);
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public boolean isConnected() {
+	return isConnected;
     }
     
     /**
