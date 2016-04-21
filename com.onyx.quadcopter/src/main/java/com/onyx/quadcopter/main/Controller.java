@@ -15,6 +15,7 @@ import com.onyx.quadcopter.control.RedButton;
 import com.onyx.quadcopter.devices.Blackboard;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceID;
+import com.onyx.quadcopter.devices.GPSDevice;
 import com.onyx.quadcopter.devices.GyroMagAcc;
 import com.onyx.quadcopter.devices.Motor;
 import com.onyx.quadcopter.devices.OLEDDevice;
@@ -113,6 +114,7 @@ public class Controller extends Device implements Runnable, StartStopable {
 	addDevice(new RedButton());
 	addDevice(new OLEDDevice());
 	addDevice(new GyroMagAcc());
+	addDevice(new GPSDevice());
 	addDevice(new Motor(DeviceID.MOTOR1, Constants.GPIO_MOTOR1));
 	addDevice(new Motor(DeviceID.MOTOR2, Constants.GPIO_MOTOR2));
 	addDevice(new Motor(DeviceID.MOTOR3, Constants.GPIO_MOTOR3));

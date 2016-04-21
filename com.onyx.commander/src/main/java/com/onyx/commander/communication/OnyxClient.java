@@ -61,14 +61,16 @@ public class OnyxClient implements Runnable {
 	    Channel ch = b.connect(host, port).sync().channel();
 	    ChannelFuture lastWriteFuture = null;
 
-	    while(isConnected = ch.isOpen()) {
+	    for(;;) {
 		String m = msgs.peek();
 		if (m != null && !m.isEmpty()) {
 		    lastWriteFuture = ch.writeAndFlush(lastMsg = msgs.pop() + System.lineSeparator());
 		}
-
+		isConnected = true;
 		if (lastMsg != null && lastMsg.equals("COMM:CLOSE")) {
 		    ch.closeFuture().sync();
+		    isConnected = false;
+		    break;
 		}
 	    }
 
