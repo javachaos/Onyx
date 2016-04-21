@@ -401,7 +401,12 @@ public abstract class Device implements Executable, Updateable {
   public void initialize() {
     if (!isInitialized()) {
       LOGGER.debug("Initializing " + getName());
-      init();
+      try {
+        init();
+      } catch (Throwable t1) {
+        LOGGER.error(t1.getMessage());
+        throw new RuntimeException(t1);
+      }
       if (controller == null) {
         controller = Controller.getInstance();
       }
