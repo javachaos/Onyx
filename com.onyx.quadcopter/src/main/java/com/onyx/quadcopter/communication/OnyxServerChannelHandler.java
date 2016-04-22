@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Handles a server-side channel.
@@ -109,7 +110,7 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
             acl.setValue(0.0);
             acl.setContent("");
             Controller.getInstance().sendMessage(acl);
-            ThreadUtils.await(1);
+            ThreadUtils.await(1, 1, TimeUnit.SECONDS);
             break;
           default:
             break;

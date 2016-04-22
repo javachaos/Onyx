@@ -10,8 +10,8 @@ package com.onyx.quadcopter.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Stack;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -30,7 +30,7 @@ public final class ThreadUtils {
   /**
    * Count down latch stack.
    */
-  private static Stack<CountDownLatch> latchStack = new Stack<CountDownLatch>();
+  private static ConcurrentStack<CountDownLatch> latchStack = new ConcurrentStack<CountDownLatch>();
 
   /**
    * Unused Ctor.
@@ -48,6 +48,25 @@ public final class ThreadUtils {
       CountDownLatch latch = new CountDownLatch(waitCount);
       latchStack.push(latch);
       latch.await();
+    } catch (InterruptedException e1) {
+      ExceptionUtils.fatalError(ThreadUtils.class, e1);
+    }
+  }
+  
+
+  /**
+   * Thread wait. With timeout value.
+   * 
+   * @param waitCount the number of countdowns to wait for.
+   * @param timeout the number of timeunits to wait for before timing out.
+   * @param unit the timeunit.
+   */
+  public static void await(final int waitCount, long timeout, TimeUnit unit) {
+    try {
+      LOGGER.debug("Latch awaiting count down.");
+      CountDownLatch latch = new CountDownLatch(waitCount);
+      latchStack.push(latch);
+      latch.await(timeout, unit);
     } catch (InterruptedException e1) {
       ExceptionUtils.fatalError(ThreadUtils.class, e1);
     }

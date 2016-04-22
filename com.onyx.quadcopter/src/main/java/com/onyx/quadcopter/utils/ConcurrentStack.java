@@ -71,4 +71,13 @@ public class ConcurrentStack<E> {
     }
     return top.item;
   }
+
+  /**
+   * Return true if this stack is empty.
+   * @return
+   *    true if this stack is empty.
+   */
+  public boolean isEmpty() {
+    return size() == 0;
+  }
 }
