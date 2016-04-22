@@ -248,14 +248,14 @@ public final class GuiController implements EventHandler<WindowEvent> {
     assert commandOutputTextArea != null : "fx:id=\"commandOutputTextArea\""
         + " was not injected: check your FXML file 'commander.fxml'.";
     cameraImageView.setImage(new Image(GuiController.class.getResourceAsStream("/default.jpg")));
-    Main.COORDINATOR.scheduleAtFixedRate(connectionStatus, 0, 10, TimeUnit.MILLISECONDS);
+    Main.COORDINATOR.scheduleAtFixedRate(updateStatus, 0, 1, TimeUnit.MILLISECONDS);
 
   }
 
   /**
    * Connection status label update task.
    */
-  private Task<Void> connectionStatus = new Task<Void>() {
+  private Task<Void> updateStatus = new Task<Void>() {
     @Override
     protected Void call() throws Exception {
       if (client == null) {
@@ -268,10 +268,26 @@ public final class GuiController implements EventHandler<WindowEvent> {
         connStatusLbl.setText(connStatusLbl.getText() + " " + "disconnected.");
         vlcdrFuture.cancel(!client.isConnected());
       }
+      while (!client.getInMessages().isEmpty()) {
+        addCommandResponse(client.getInMessages().pop());
+      }
+      
       return null;
     }
   };
 
+
+  /**
+   * Add the response pop to the Command response text area.
+   * @param pop
+   *      the response to be added to the text area.
+   */
+  private void addCommandResponse(String pop) {
+    commandOutputTextArea.setText(commandOutputTextArea.getText() 
+        + pop 
+        + System.lineSeparator());
+  }
+  
   @Override
   public void handle(final WindowEvent event) {
     if (client != null) {

@@ -22,16 +22,20 @@ public class OnyxClientChannelInitializer extends ChannelInitializer<SocketChann
   private final SslContext sslCtx;
   private final String host;
   private final int port;
+  private final OnyxClient client; 
 
   /**
    * OnyxClientChannelInitializer.
+   * @param onyxClient 
    * 
    * @param sslCtx the sslCtx
    */
-  public OnyxClientChannelInitializer(SslContext sslCtx, final String host, final int port) {
+  public OnyxClientChannelInitializer(OnyxClient onyxClient, SslContext sslCtx,
+      final String host, final int port) {
     this.sslCtx = sslCtx;
     this.host = host;
     this.port = port;
+    this.client = onyxClient;
   }
 
   @Override
@@ -47,6 +51,6 @@ public class OnyxClientChannelInitializer extends ChannelInitializer<SocketChann
         new DelimiterBasedFrameDecoder(Constants.NIO_MAX_FRAMELEN, Delimiters.lineDelimiter()));
     pipeline.addLast(new StringDecoder());
     pipeline.addLast(new StringEncoder());
-    pipeline.addLast(new OnyxClientCommunicationHandler());
+    pipeline.addLast(new OnyxClientCommunicationHandler(client));
   }
 }

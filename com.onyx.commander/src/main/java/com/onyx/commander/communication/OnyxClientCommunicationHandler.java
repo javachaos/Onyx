@@ -14,9 +14,16 @@ public class OnyxClientCommunicationHandler extends SimpleChannelInboundHandler<
    */
   public static final Logger LOGGER = LoggerFactory.getLogger(OnyxClientCommunicationHandler.class);
 
+  private final OnyxClient client;
+  
+  public OnyxClientCommunicationHandler(OnyxClient client) {
+    this.client = client;
+  }
+
   @Override
   public void channelRead0(ChannelHandlerContext ctx, String msg) {
     LOGGER.debug(msg);
+    client.addInMessage(msg);
   }
 
   @Override

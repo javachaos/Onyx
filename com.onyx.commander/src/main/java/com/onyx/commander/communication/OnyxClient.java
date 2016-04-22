@@ -41,7 +41,9 @@ public class OnyxClient implements Runnable {
 
   private SslContext sslCtx;
 
-  private ConcurrentStack<String> msgs;
+  private ConcurrentStack<String> outMsgs;
+
+  private ConcurrentStack<String> inMsgs;
 
   private String lastMsg;
 
@@ -57,7 +59,8 @@ public class OnyxClient implements Runnable {
   public OnyxClient(final String servHost, final int servPort) {
     this.host = servHost;
     this.port = servPort;
-    msgs = new ConcurrentStack<String>();
+    outMsgs = new ConcurrentStack<String>();
+    inMsgs = new ConcurrentStack<String>();
   }
 
   @Override
@@ -69,15 +72,15 @@ public class OnyxClient implements Runnable {
       Bootstrap boot = new Bootstrap();
       boot.group(workerGroup);
       boot.channel(NioSocketChannel.class);
-      boot.handler(new OnyxClientChannelInitializer(sslCtx, host, port));
+      boot.handler(new OnyxClientChannelInitializer(this, sslCtx, host, port));
 
       Channel ch = boot.connect(host, port).sync().channel();
       ChannelFuture lastWriteFuture = null;
 
       for (;;) {
-        String msg = msgs.peek();
+        String msg = outMsgs.peek();
         if (msg != null && !msg.isEmpty()) {
-          lastWriteFuture = ch.writeAndFlush(lastMsg = msgs.pop() + System.lineSeparator());
+          lastWriteFuture = ch.writeAndFlush(lastMsg = outMsgs.pop() + System.lineSeparator());
         }
         isConnected = true;
         if (lastMsg != null && lastMsg.equals("COMM:CLOSE")) {
@@ -105,7 +108,7 @@ public class OnyxClient implements Runnable {
    *        the command string to send to the server.
    */
   public void sendMessage(String cmd) {
-    msgs.push(cmd);
+    outMsgs.push(cmd);
   }
 
   /**
@@ -120,6 +123,25 @@ public class OnyxClient implements Runnable {
    * Shutdown the connection.
    */
   public void shutdown() {
-    msgs.push("COMM:CLOSE");
+    outMsgs.push("COMM:CLOSE");
+  }
+
+  /**
+   * Add a message to the inMsg stack.
+   * @param msg
+   *    the next Input message from the server.
+   */
+  public void addInMessage(String msg) {
+    inMsgs.push(msg);
+  }
+  
+  /**
+   * Return the inMsgs stack.
+   * 
+   * @return
+   *    the inMsgs stack.
+   */
+  public ConcurrentStack<String> getInMessages() {
+    return inMsgs;
   }
 }

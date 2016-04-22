@@ -105,7 +105,7 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
             AclMessage acl = new AclMessage(MessageType.SEND);
             acl.setActionId(ActionId.GET_ORIENT);
             acl.setPriority(AclPriority.MEDIUM);
-            acl.setSender(DeviceId.COMM_CLIENT);
+            acl.setSender(DeviceId.COMM_SERVER);
             acl.setReciever(DeviceId.GYRO_MAG_ACC);
             acl.setValue(0.0);
             acl.setContent("");
