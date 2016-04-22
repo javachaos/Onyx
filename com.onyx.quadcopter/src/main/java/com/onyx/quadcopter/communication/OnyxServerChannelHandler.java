@@ -1,6 +1,12 @@
 package com.onyx.quadcopter.communication;
 
+import com.onyx.quadcopter.devices.DeviceId;
 import com.onyx.quadcopter.exceptions.OnyxException;
+import com.onyx.quadcopter.main.Controller;
+import com.onyx.quadcopter.messaging.AclMessage;
+import com.onyx.quadcopter.messaging.AclPriority;
+import com.onyx.quadcopter.messaging.ActionId;
+import com.onyx.quadcopter.messaging.MessageType;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -34,10 +40,6 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
 
   @Override
   public void channelActive(final ChannelHandlerContext ctx) {
-
-    // Once session is secured, send a greeting and register the channel to
-    // the global channel
-    // list so the channel received the messages from others.
     ctx.pipeline().get(SslHandler.class).handshakeFuture()
         .addListener(new GenericFutureListener<Future<Channel>>() {
           @Override
@@ -66,9 +68,61 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-    switch (msg) {
-      case "COMM:CLOSE":
-        ctx.close();
+    if (msg.equals("COMM:CLOSE")) {
+      ctx.close();
+    }
+    
+    final String[] data = msg.split(":");
+
+    switch (data[0]) {
+      case "MOTOR1-SPD":
+        Controller.getInstance().sendMessageHigh(DeviceId.MOTOR1,
+              "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
+        break;
+      case "MOTOR2-SPD":
+        Controller.getInstance().sendMessageHigh(DeviceId.MOTOR2,
+              "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
+        break;
+      case "MOTOR3-SPD":
+        Controller.getInstance().sendMessageHigh(DeviceId.MOTOR3,
+              "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
+        break;
+      case "MOTOR4-SPD":
+        Controller.getInstance().sendMessageHigh(DeviceId.MOTOR4,
+              "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
+        break;
+      case "PID-START":
+        Controller.getInstance().sendMessageHigh(DeviceId.PID, data[1], 0.0, ActionId.START_MOTORS);
+        break;
+      case "PID-CONTROL":
+        Controller.getInstance().sendMessageHigh(DeviceId.PID, data[1], 0.0, ActionId.CONTROL);
+        break;
+      case "DATA-GET":
+        String dataStr = null;
+        switch (data[1]) {
+          case "ORIENT":
+            AclMessage acl = new AclMessage(MessageType.SEND);
+            acl.setActionId(ActionId.GET_ORIENT);
+            acl.setPriority(AclPriority.MEDIUM);
+            acl.setSender(DeviceId.COMM_CLIENT);
+            acl.setReciever(DeviceId.GYRO_MAG_ACC);
+            acl.setValue(0.0);
+            acl.setContent("");
+            Controller.getInstance().sendMessage(acl);
+            break;
+          default:
+            break;
+        }
+        AclMessage aclmsg = new AclMessage(MessageType.EMPTY);
+        while (aclmsg.isEmpty()) {
+          //Block and wait until we get the requested data.
+          aclmsg = Controller.getInstance()
+              .getBlackboard()
+              .getMessage(DeviceId.COMM_SERVER);
+          dataStr = aclmsg.getContent();
+        }
+        ctx.writeAndFlush(dataStr + System.lineSeparator());
+        dataStr = null;
         break;
       default:
         break;

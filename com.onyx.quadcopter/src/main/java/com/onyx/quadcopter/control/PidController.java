@@ -181,7 +181,7 @@ public class PidController extends Device {
         orientation[1] = Double.parseDouble(d1[1]);
         orientation[2] = Double.parseDouble(d1[2]);
         break;
-      case CHANGE_ORIENT:
+      case CONTROL:
         String[] d2 = msg.getContent().split(":");
         mxPid.setPoint(Double.parseDouble(d2[0]));
         myPid.setPoint(Double.parseDouble(d2[1]));

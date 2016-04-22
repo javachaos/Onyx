@@ -91,7 +91,7 @@ public enum ActionId {
   /**
    * Change the orientation.
    */
-  CHANGE_ORIENT(16),
+  CONTROL(16),
 
   /**
    * Get gyro data.
