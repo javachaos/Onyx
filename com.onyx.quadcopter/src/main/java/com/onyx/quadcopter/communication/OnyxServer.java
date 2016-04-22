@@ -4,6 +4,7 @@ import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceId;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.messaging.AclMessage;
+import com.onyx.quadcopter.utils.ConcurrentStack;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
 
@@ -51,6 +52,11 @@ public class OnyxServer extends Device implements Runnable {
    * Communication handler.
    */
   private OnyxServerChannelHandler handler;
+  
+  /**
+   * ConcurrentStack of responses.
+   */
+  private ConcurrentStack<String> responses;
 
   // /**
   // * Ping clients for data.
@@ -67,7 +73,7 @@ public class OnyxServer extends Device implements Runnable {
 
   @Override
   public void run() {
-    handler = new OnyxServerChannelHandler();
+    handler = new OnyxServerChannelHandler(this);
     LOGGER.debug("Starting CommServer.");
     try {
       SelfSignedCertificate ssc = new SelfSignedCertificate();
@@ -92,20 +98,11 @@ public class OnyxServer extends Device implements Runnable {
   @Override
   protected void update() {
     super.update();
-
-    // Send client a request for data.
-    // handler.addData(pingRequest);
   }
 
   @Override
   public void update(final AclMessage msg) {
-    switch (msg.getActionId()) {
-      case SEND_DATA:
-        handler.addData(msg.getContent());
-        break;
-      default:
-        break;
-    }
+    handler.addData(msg.getContent());
   }
 
   @Override
@@ -127,6 +124,15 @@ public class OnyxServer extends Device implements Runnable {
   @Override
   public boolean selfTest() {
     return true;// TODO complete NettyCommServer selfTest.
+  }
+
+  /**
+   * Get the next response to send to client.
+   * @return
+   *    the next response to send to the client.
+   */
+  public String getNextResponse() {
+    return responses.pop();
   }
 
 }

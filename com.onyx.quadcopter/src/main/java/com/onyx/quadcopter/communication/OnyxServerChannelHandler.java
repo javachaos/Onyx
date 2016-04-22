@@ -7,7 +7,6 @@ import com.onyx.quadcopter.messaging.AclMessage;
 import com.onyx.quadcopter.messaging.AclPriority;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.messaging.MessageType;
-import com.onyx.quadcopter.utils.ThreadUtils;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -24,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Handles a server-side channel.
@@ -39,6 +37,11 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
   private static final ChannelGroup channels =
       new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
   private String lastMsg;
+  private final OnyxServer server;
+
+  public OnyxServerChannelHandler(OnyxServer onyxServer) {
+    this.server = onyxServer;
+  }
 
   @Override
   public void channelActive(final ChannelHandlerContext ctx) {
@@ -109,18 +112,11 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
             acl.setReciever(DeviceId.GYRO_MAG_ACC);
             acl.setValue(0.0);
             acl.setContent("");
-            Controller.getInstance().sendMessage(acl);
-            ThreadUtils.await(1, 1, TimeUnit.SECONDS);
+            server.sendMessage(acl);
             break;
           default:
             break;
         }
-        AclMessage aclmsg = new AclMessage(MessageType.EMPTY);
-        //Block and wait until we get the requested data.
-        aclmsg = Controller.getInstance()
-            .getBlackboard()
-            .getMessage(DeviceId.COMM_SERVER);
-        ctx.writeAndFlush(aclmsg.getContent() + System.lineSeparator());
         break;
       default:
         break;
