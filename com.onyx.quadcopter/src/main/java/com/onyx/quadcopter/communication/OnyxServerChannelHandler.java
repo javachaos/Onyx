@@ -76,31 +76,64 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
     if (msg.equals("COMM:CLOSE")) {
       ctx.close();
     }
-    
-    final String[] data = msg.split(":");
+    final String colon = ":";
+    final String[] data = msg.split(colon);
 
     switch (data[0]) {
       case "MOTOR1-SPD":
+        if (data.length != 2) {
+          LOGGER.error("Bad command syntax.");
+          addData("Bad command syntax. MOTOR1-SPD requires 1 args. [0.0-100.0] Motor speed.");
+          return;
+        }
         Controller.getInstance().sendMessageHigh(DeviceId.MOTOR1,
               "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
         break;
       case "MOTOR2-SPD":
+        if (data.length != 2) {
+          LOGGER.error("Bad command syntax.");
+          addData("Bad command syntax. MOTOR2-SPD requires 1 args. [0.0-100.0] Motor speed.");
+          return;
+        }
         Controller.getInstance().sendMessageHigh(DeviceId.MOTOR2,
               "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
         break;
       case "MOTOR3-SPD":
+        if (data.length != 2) {
+          LOGGER.error("Bad command syntax.");
+          addData("Bad command syntax. MOTOR3-SPD requires 1 args. [0.0-100.0] Motor speed.");
+          return;
+        }
         Controller.getInstance().sendMessageHigh(DeviceId.MOTOR3,
               "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
         break;
       case "MOTOR4-SPD":
+        if (data.length != 2) {
+          LOGGER.error("Bad command syntax.");
+          addData("Bad command syntax. MOTOR4-SPD requires 1 args. [0.0-100.0] Motor speed.");
+          return;
+        }
         Controller.getInstance().sendMessageHigh(DeviceId.MOTOR4,
               "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
         break;
       case "PID-START":
+        if (data.length != 2) {
+          LOGGER.error("Bad command syntax.");
+          addData("Bad command syntax. PID-START requires 1 args. True or False.");
+          return;
+        }
         Controller.getInstance().sendMessageHigh(DeviceId.PID, data[1], 0.0, ActionId.START_MOTORS);
         break;
       case "PID-CONTROL":
-        Controller.getInstance().sendMessageHigh(DeviceId.PID, data[1], 0.0, ActionId.CONTROL);
+        if (data.length != 5) {
+          LOGGER.error("Bad command syntax.");
+          addData("Bad command syntax. PID-CONTROL requires 4 args. Y:P:R:T");
+          return;
+        }
+        Controller.getInstance().sendMessageHigh(DeviceId.PID, data[1]
+            + colon + data[2]
+            + colon + data[3]
+            + colon + data[4], 0.0, ActionId.CONTROL);
         break;
       case "DATA-GET":
         switch (data[1]) {
