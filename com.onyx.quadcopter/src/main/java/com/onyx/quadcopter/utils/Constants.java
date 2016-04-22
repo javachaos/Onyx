@@ -473,4 +473,14 @@ public final class Constants {
 
   public static final int NIO_MAX_FRAMELEN = 8192;
 
+  /**
+   * Regular expression to match a double.
+   */
+  public static final String DOUBLE_REGEX = "[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?";
+
+  /**
+   * Maximum number of network commands.
+   */
+  public static final int NUM_NET_COMMANDS = 20;
+
 }

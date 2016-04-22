@@ -34,6 +34,8 @@ public class PwmControl {
    */
   private static final short PCA9685_ALL_LED = 0xff;
   
+  private int currentPulseWidth;
+  
   /**
    * Logger.
    */
@@ -75,6 +77,7 @@ public class PwmControl {
     if (pulseWidth > 2000 || pulseWidth < 1000) {
       LOGGER.error("Pulse width is out of range. [1000us - 2000us] expected.");
     } else {
+      currentPulseWidth = pulseWidth;
       pwm.ledFullOn(pin, false);
       pwm.ledOffTime(pin, 0);
       pwm.ledOnTime(pin, (int) (period - (pulseWidth / scale)));
@@ -107,6 +110,14 @@ public class PwmControl {
   public void shutdown() {
     disable();
     pwm.setModeSleep(true);
+  }
+
+  /**
+   * Get the current Pulse Width.
+   * @return the currentPulseWidth
+   */
+  public int getCurrentPulseWidth() {
+    return currentPulseWidth;
   }
 
 }

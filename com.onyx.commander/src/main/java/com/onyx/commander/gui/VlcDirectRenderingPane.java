@@ -192,11 +192,6 @@ public final class VlcDirectRenderingPane extends BorderPane implements Runnable
       }
     }
     mediaPlayerComponent.getMediaPlayer().unlock();
-    try {
-      Thread.sleep(1);
-    } catch (InterruptedException e1) {
-      e1.printStackTrace();
-    }
   }
 
   /**

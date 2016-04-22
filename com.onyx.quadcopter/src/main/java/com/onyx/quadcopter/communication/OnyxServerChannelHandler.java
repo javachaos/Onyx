@@ -1,12 +1,13 @@
 package com.onyx.quadcopter.communication;
 
-import com.onyx.quadcopter.devices.DeviceId;
+import com.onyx.quadcopter.commands.ChangeMotorSpeed;
+import com.onyx.quadcopter.commands.GetDataCmd;
+import com.onyx.quadcopter.commands.NetworkCommand;
+import com.onyx.quadcopter.commands.PidControlCmd;
+import com.onyx.quadcopter.commands.PidStartCmd;
 import com.onyx.quadcopter.exceptions.OnyxException;
-import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.AclMessage;
-import com.onyx.quadcopter.messaging.AclPriority;
-import com.onyx.quadcopter.messaging.ActionId;
-import com.onyx.quadcopter.messaging.MessageType;
+import com.onyx.quadcopter.utils.Constants;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * Handles a server-side channel.
@@ -39,8 +41,38 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
   private String lastMsg;
   private final OnyxServer server;
 
-  public OnyxServerChannelHandler(OnyxServer onyxServer) {
+  private final ArrayBlockingQueue<NetworkCommand> networkCommands;
+  
+  /**
+   * Onyx Server channel handler.
+   * 
+   * @param onyxServer
+   *    the onyx server instance.
+   */
+  public OnyxServerChannelHandler(final OnyxServer onyxServer) {
     this.server = onyxServer;
+    this.networkCommands = new ArrayBlockingQueue<NetworkCommand>(Constants.NUM_NET_COMMANDS);
+    init();
+  }
+
+  private void init() {
+    addNetworkCommand(new ChangeMotorSpeed(this));
+    addNetworkCommand(new GetDataCmd(this));
+    addNetworkCommand(new PidControlCmd(this));
+    addNetworkCommand(new PidStartCmd(this));
+  }
+  
+  /**
+   * Add a network command.
+   * @param cmd
+   *     the command to be added to this Server handler.
+   */
+  public void addNetworkCommand(final NetworkCommand cmd) {
+    try {
+      networkCommands.put(cmd);
+    } catch (InterruptedException e1) {
+      LOGGER.error(e1.getMessage());
+    }
   }
 
   @Override
@@ -67,6 +99,11 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
     throw new OnyxException(cause.getMessage(), LOGGER);
   }
 
+  /**
+   * Add Data to each connected channel.
+   * @param data
+   *    the string data to send.
+   */
   public synchronized void addData(final String data) {
     channels.parallelStream().forEach(e -> e.writeAndFlush(data + System.lineSeparator()));
   }
@@ -76,89 +113,16 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
     if (msg.equals("COMM:CLOSE")) {
       ctx.close();
     }
-    final String colon = ":";
-    final String[] data = msg.split(colon);
-
-    switch (data[0]) {
-      case "MOTOR1-SPD":
-        if (data.length != 2) {
-          LOGGER.error("Bad command syntax.");
-          addData("Bad command syntax. MOTOR1-SPD requires 1 args. [0.0-100.0] Motor speed.");
-          return;
-        }
-        Controller.getInstance().sendMessageHigh(DeviceId.MOTOR1,
-              "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
-        break;
-      case "MOTOR2-SPD":
-        if (data.length != 2) {
-          LOGGER.error("Bad command syntax.");
-          addData("Bad command syntax. MOTOR2-SPD requires 1 args. [0.0-100.0] Motor speed.");
-          return;
-        }
-        Controller.getInstance().sendMessageHigh(DeviceId.MOTOR2,
-              "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
-        break;
-      case "MOTOR3-SPD":
-        if (data.length != 2) {
-          LOGGER.error("Bad command syntax.");
-          addData("Bad command syntax. MOTOR3-SPD requires 1 args. [0.0-100.0] Motor speed.");
-          return;
-        }
-        Controller.getInstance().sendMessageHigh(DeviceId.MOTOR3,
-              "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
-        break;
-      case "MOTOR4-SPD":
-        if (data.length != 2) {
-          LOGGER.error("Bad command syntax.");
-          addData("Bad command syntax. MOTOR4-SPD requires 1 args. [0.0-100.0] Motor speed.");
-          return;
-        }
-        Controller.getInstance().sendMessageHigh(DeviceId.MOTOR4,
-              "null", Double.parseDouble(data[1]), ActionId.CHANGE_MOTOR_SPEED);
-        break;
-      case "PID-START":
-        if (data.length != 2) {
-          LOGGER.error("Bad command syntax.");
-          addData("Bad command syntax. PID-START requires 1 args. True or False.");
-          return;
-        }
-        Controller.getInstance().sendMessageHigh(DeviceId.PID, data[1], 0.0, ActionId.START_MOTORS);
-        break;
-      case "PID-CONTROL":
-        if (data.length != 5) {
-          LOGGER.error("Bad command syntax.");
-          addData("Bad command syntax. PID-CONTROL requires 4 args. Y:P:R:T");
-          return;
-        }
-        Controller.getInstance().sendMessageHigh(DeviceId.PID, data[1]
-            + colon + data[2]
-            + colon + data[3]
-            + colon + data[4], 0.0, ActionId.CONTROL);
-        break;
-      case "DATA-GET":
-        switch (data[1]) {
-          case "ORIENT":
-            AclMessage acl = new AclMessage(MessageType.SEND);
-            acl.setActionId(ActionId.GET_ORIENT);
-            acl.setPriority(AclPriority.MEDIUM);
-            acl.setSender(DeviceId.COMM_SERVER);
-            acl.setReciever(DeviceId.GYRO_MAG_ACC);
-            acl.setValue(0.0);
-            acl.setContent("");
-            server.sendMessage(acl);
-            break;
-          default:
-            break;
-        }
-        break;
-      default:
-        break;
-    }
+    networkCommands.parallelStream().forEach(e -> e.run(msg));
     LOGGER.debug(msg);
     lastMsg = msg;
   }
 
   public String getLastMsg() {
     return lastMsg;
+  }
+
+  public void sendMessage(AclMessage acl) {
+    server.sendMessage(acl);
   }
 }

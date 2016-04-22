@@ -1,7 +1,6 @@
 package com.onyx.quadcopter.devices;
 
 import com.onyx.quadcopter.messaging.AclMessage;
-import com.onyx.quadcopter.messaging.AclPriority;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.utils.Constants;
 import com.onyx.quadcopter.utils.ExceptionUtils;
@@ -48,13 +47,6 @@ public class GyroMagAcc extends Device {
   public void update(final AclMessage msg) {
     switch (msg.getActionId()) {
       case GET_ORIENT:
-        if (msg.getSender() == DeviceId.COMM_SERVER) {
-          sendMessage(msg.getSender(), orient[0] + ":" + orient[1] + ":" + orient[2],
-              lsm.getTemperature(), msg.getActionId(), AclPriority.HIGH);
-        } else {
-          sendReply(orient[0] + ":" + orient[1] + ":" + orient[2], lsm.getTemperature());
-        }
-        break;
       case SEND_DATA:
         sendReply(orient[0] + ":" + orient[1] + ":" + orient[2], lsm.getTemperature());
         break;

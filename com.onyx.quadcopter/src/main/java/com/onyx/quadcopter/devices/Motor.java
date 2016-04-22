@@ -52,6 +52,12 @@ public class Motor extends Device {
         setSpeed((int) msg.getValue());
         LOGGER.debug("PWM Speed changed to " + currentSpeed + "%.");
         break;
+      case GET_SPEED:
+        sendReply(currentSpeed + "");
+        break;
+      case GET_PULSE_WIDTH:
+        sendReply(pwm.getCurrentPulseWidth() + "");
+        break;
       default:
         break;
     }

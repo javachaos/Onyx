@@ -58,11 +58,6 @@ public class OnyxServer extends Device implements Runnable {
    */
   private ConcurrentStack<String> responses;
 
-  // /**
-  // * Ping clients for data.
-  // */
-  // private static final String pingRequest = "PING";
-
   public OnyxServer() {
     super(DeviceId.COMM_SERVER);
 

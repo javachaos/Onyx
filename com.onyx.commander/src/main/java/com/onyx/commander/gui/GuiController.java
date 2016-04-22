@@ -4,10 +4,10 @@ import com.onyx.commander.communication.OnyxClient;
 import com.onyx.commander.main.Main;
 import com.onyx.commander.utils.Constants;
 
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -19,12 +19,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Gui Controller class.
@@ -146,11 +146,16 @@ public final class GuiController implements EventHandler<WindowEvent> {
    */
   @FXML
   private ImageView cameraImageView;
+  
+  @FXML
+  private LineChart<Double, Double> engineSpeedChart;
 
   /**
    * VLC Direct rendering future.
    */
   private Future<?> vlcdrFuture;
+
+  private UpdateUiService uiUpdateService;
 
   /**
    * IP Regex.
@@ -177,6 +182,13 @@ public final class GuiController implements EventHandler<WindowEvent> {
       LOGGER.debug("Connecting to " + ip);
       Main.COORDINATOR.submit(client);
       loadWebview(ip);
+      uiUpdateService = new UpdateUiService(client, vlcdrFuture, 
+          connStatusLbl,
+          commandOutputTextArea,
+          engineSpeedChart);
+      uiUpdateService.setExecutor(Main.COORDINATOR);
+      uiUpdateService.setPeriod(Duration.seconds(0.25));
+      uiUpdateService.start();
     } else {
       LOGGER.debug("Cannot connect non valid IP address.");
     }
@@ -247,45 +259,9 @@ public final class GuiController implements EventHandler<WindowEvent> {
         + " was not injected: check your FXML file 'commander.fxml'.";
     assert commandOutputTextArea != null : "fx:id=\"commandOutputTextArea\""
         + " was not injected: check your FXML file 'commander.fxml'.";
+    assert engineSpeedChart != null : "fx:id=\"engineSpeedChart\""
+        + " was not injected: check your FXML file 'commander.fxml'.";
     cameraImageView.setImage(new Image(GuiController.class.getResourceAsStream("/default.jpg")));
-    Main.COORDINATOR.scheduleAtFixedRate(updateStatus, 0, 1, TimeUnit.MILLISECONDS);
-
-  }
-
-  /**
-   * Connection status label update task.
-   */
-  private Task<Void> updateStatus = new Task<Void>() {
-    @Override
-    protected Void call() throws Exception {
-      if (client == null) {
-        return null;
-      }
-      if (client.isConnected()) {
-        connStatusLbl.setText(connStatusLbl.getText() + " " + "connected.");
-      }
-      if (!client.isConnected()) {
-        connStatusLbl.setText(connStatusLbl.getText() + " " + "disconnected.");
-        vlcdrFuture.cancel(!client.isConnected());
-      }
-      while (!client.getInMessages().isEmpty()) {
-        addCommandResponse(client.getInMessages().pop());
-      }
-      
-      return null;
-    }
-  };
-
-
-  /**
-   * Add the response pop to the Command response text area.
-   * @param pop
-   *      the response to be added to the text area.
-   */
-  private void addCommandResponse(String pop) {
-    commandOutputTextArea.setText(commandOutputTextArea.getText() 
-        + pop 
-        + System.lineSeparator());
   }
   
   @Override

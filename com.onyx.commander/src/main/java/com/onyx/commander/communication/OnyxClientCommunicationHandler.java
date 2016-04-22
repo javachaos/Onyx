@@ -6,7 +6,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class OnyxClientCommunicationHandler extends SimpleChannelInboundHandler<String> {
 
   /**

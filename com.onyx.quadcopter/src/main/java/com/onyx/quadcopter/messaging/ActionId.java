@@ -101,7 +101,7 @@ public enum ActionId {
   /**
    * Start motors in preparation for flight.
    */
-  START_MOTORS(18);
+  START_MOTORS(18), GET_SPEED(19), GET_PULSE_WIDTH(20);
 
   /**
    * The internal ID field.
