@@ -7,6 +7,7 @@ import com.onyx.quadcopter.messaging.AclMessage;
 import com.onyx.quadcopter.messaging.AclPriority;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.messaging.MessageType;
+import com.onyx.quadcopter.utils.ThreadUtils;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -98,7 +99,6 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
         Controller.getInstance().sendMessageHigh(DeviceId.PID, data[1], 0.0, ActionId.CONTROL);
         break;
       case "DATA-GET":
-        String dataStr = null;
         switch (data[1]) {
           case "ORIENT":
             AclMessage acl = new AclMessage(MessageType.SEND);
@@ -109,20 +109,17 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
             acl.setValue(0.0);
             acl.setContent("");
             Controller.getInstance().sendMessage(acl);
+            ThreadUtils.await(1);
             break;
           default:
             break;
         }
         AclMessage aclmsg = new AclMessage(MessageType.EMPTY);
-        while (aclmsg.isEmpty()) {
-          //Block and wait until we get the requested data.
-          aclmsg = Controller.getInstance()
-              .getBlackboard()
-              .getMessage(DeviceId.COMM_SERVER);
-          dataStr = aclmsg.getContent();
-        }
-        ctx.writeAndFlush(dataStr + System.lineSeparator());
-        dataStr = null;
+        //Block and wait until we get the requested data.
+        aclmsg = Controller.getInstance()
+            .getBlackboard()
+            .getMessage(DeviceId.COMM_SERVER);
+        ctx.writeAndFlush(aclmsg.getContent() + System.lineSeparator());
         break;
       default:
         break;
