@@ -32,7 +32,17 @@ public class GpsDevice extends Device {
 
   @Override
   public void update(AclMessage msg) {
-    // TODO Complete msg handling.
+    switch (msg.getActionId()) {
+      case SEND_DATA:
+        try {
+          sendReply(new String(nmeaBuffer, Constants.ENCODING));
+        } catch (UnsupportedEncodingException e1) {
+          LOGGER.error(e1.getMessage());
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   @Override

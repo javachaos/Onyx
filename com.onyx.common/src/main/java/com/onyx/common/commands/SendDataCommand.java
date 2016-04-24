@@ -1,5 +1,7 @@
 package com.onyx.common.commands;
 
+import java.util.UUID;
+
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.ActionId;
 import com.onyx.common.messaging.DeviceId;
@@ -14,9 +16,15 @@ public class SendDataCommand extends Command {
   
   private String data;
 
-  public SendDataCommand(DeviceId sender, final String data) {
+  /**
+   * UUID of this command.
+   */
+  private UUID uuid;
+
+  public SendDataCommand(DeviceId sender, final String data, final UUID uuid) {
     super(CommandType.SEND_DATA, sender);
     this.data = data;
+    this.uuid = uuid;
   }
 
   @Override
@@ -26,6 +34,7 @@ public class SendDataCommand extends Command {
     msg.setContent(data);
     msg.setSender(getSender());
     msg.setReciever(DeviceId.COMM_CLIENT);
+    msg.setUuid(uuid);
     return msg;
   }
 

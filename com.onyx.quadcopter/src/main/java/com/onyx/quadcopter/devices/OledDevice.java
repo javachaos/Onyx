@@ -60,6 +60,9 @@ public class OledDevice extends Device {
       case CHANGE_DISPLAY:
         showNext();
         break;
+      case SEND_DATA:
+        sendReply(msgs.toString());
+        break;
       default:
         break;
     }

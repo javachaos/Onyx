@@ -89,6 +89,11 @@ public abstract class Device implements Executable, Updateable {
     if (isNewMessage()) {
       while (getMessages().size() > 0) {
         AclMessage msg = getMessages().poll();
+        previousMessage = lastMessage;
+        if (previousMessage == null) {
+          previousMessage = msg;
+        }
+        lastMessage = msg;
         this.update(msg);
       }
     }
@@ -115,11 +120,6 @@ public abstract class Device implements Executable, Updateable {
    */
   protected void gatherMessages() {
     AclMessage msg = getController().getBlackboard().getMessage(this);
-    previousMessage = lastMessage;
-    if (previousMessage == null) {
-      previousMessage = msg;
-    }
-    lastMessage = msg;
     while (msg != null && msg.isValid()) {
       messages.offer(msg);
       msg = getController().getBlackboard().getMessage(this);

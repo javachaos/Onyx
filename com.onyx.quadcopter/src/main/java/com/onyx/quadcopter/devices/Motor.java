@@ -57,6 +57,7 @@ public class Motor extends Device {
         sendReply(currentSpeed + "");
         break;
       case GET_PULSE_WIDTH:
+      case SEND_DATA:
         sendReply(pwm.getCurrentPulseWidth() + "");
         break;
       default:
