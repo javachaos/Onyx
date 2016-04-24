@@ -1,8 +1,8 @@
 package com.onyx.commander.main;
 
 import com.onyx.commander.gui.GuiController;
-import com.onyx.commander.utils.Constants;
-import com.onyx.quadcopter.tasks.ShutdownHook;
+import com.onyx.common.utils.Constants;
+import com.onyx.common.utils.ShutdownHook;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
 
 public class Main extends Application {
 
@@ -54,7 +53,7 @@ public class Main extends Application {
    * Shutdown hook.
    */
   private static void addHook() {
-    Runtime.getRuntime().addShutdownHook(new ShutdownHook(Thread.currentThread()));
+    Runtime.getRuntime().addShutdownHook(new ShutdownHook(COORDINATOR, Thread.currentThread()));
   }
 
 }

@@ -1,10 +1,9 @@
 package com.onyx.quadcopter.devices;
 
+import com.onyx.common.utils.Constants;
+import com.onyx.common.utils.ExceptionUtils;
 import com.onyx.quadcopter.display.Display;
 import com.onyx.quadcopter.messaging.AclMessage;
-import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.ExceptionUtils;
-
 import com.pi4j.io.gpio.RaspiPin;
 import com.pi4j.io.i2c.impl.I2CBusImpl;
 

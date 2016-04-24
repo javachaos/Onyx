@@ -1,5 +1,6 @@
 package com.onyx.quadcopter.communication;
 
+import com.onyx.common.utils.Constants;
 import com.onyx.quadcopter.commands.ChangeMotorSpeed;
 import com.onyx.quadcopter.commands.GetDataCmd;
 import com.onyx.quadcopter.commands.NetworkCommand;
@@ -7,7 +8,6 @@ import com.onyx.quadcopter.commands.PidControlCmd;
 import com.onyx.quadcopter.commands.PidStartCmd;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.messaging.AclMessage;
-import com.onyx.quadcopter.utils.Constants;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;

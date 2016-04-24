@@ -1,12 +1,12 @@
 package com.onyx.quadcopter.communication;
 
+import com.onyx.common.concurrent.ConcurrentStack;
+import com.onyx.common.utils.Constants;
+import com.onyx.common.utils.ExceptionUtils;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceId;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.messaging.AclMessage;
-import com.onyx.quadcopter.utils.ConcurrentStack;
-import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.ExceptionUtils;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;

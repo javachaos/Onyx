@@ -1,15 +1,14 @@
 package com.onyx.quadcopter.main;
 
-import com.onyx.quadcopter.tasks.ShutdownHook;
-import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.ExceptionUtils;
+import com.onyx.common.utils.Constants;
+import com.onyx.common.utils.ExceptionUtils;
+import com.onyx.common.utils.ShutdownHook;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-
 
 public class Main {
 
@@ -55,7 +54,7 @@ public class Main {
    * Shutdown hook.
    */
   private static void addHook() {
-    Runtime.getRuntime().addShutdownHook(new ShutdownHook(Thread.currentThread()));
+    Runtime.getRuntime().addShutdownHook(new ShutdownHook(COORDINATOR, Thread.currentThread()));
   }
 
   /**

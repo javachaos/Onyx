@@ -1,9 +1,9 @@
 package com.onyx.quadcopter.tasks;
 
+import com.onyx.common.utils.Constants;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
-import com.onyx.quadcopter.utils.Constants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

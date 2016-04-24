@@ -2,7 +2,7 @@ package com.onyx.commander.gui;
 
 import com.onyx.commander.communication.OnyxClient;
 import com.onyx.commander.main.Main;
-import com.onyx.commander.utils.Constants;
+import com.onyx.common.utils.Constants;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

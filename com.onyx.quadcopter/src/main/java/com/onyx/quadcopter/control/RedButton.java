@@ -1,8 +1,8 @@
 package com.onyx.quadcopter.control;
 
+import com.onyx.common.state.OnyxState;
 import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.devices.DeviceId;
-import com.onyx.quadcopter.main.OnyxState;
 import com.onyx.quadcopter.main.StateMonitor;
 import com.onyx.quadcopter.messaging.AclMessage;
 import com.onyx.quadcopter.messaging.AclPriority;

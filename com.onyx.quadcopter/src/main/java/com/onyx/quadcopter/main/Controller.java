@@ -2,6 +2,7 @@ package com.onyx.quadcopter.main;
 
 import com.google.common.collect.MapMaker;
 
+import com.onyx.common.utils.Constants;
 import com.onyx.quadcopter.communication.OnyxServer;
 import com.onyx.quadcopter.control.PidController;
 import com.onyx.quadcopter.control.RedButton;
@@ -15,8 +16,6 @@ import com.onyx.quadcopter.devices.OledDevice;
 import com.onyx.quadcopter.messaging.AclMessage;
 import com.onyx.quadcopter.tasks.Task;
 import com.onyx.quadcopter.utils.Cleaner;
-import com.onyx.quadcopter.utils.Constants;
-
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 
@@ -36,7 +35,7 @@ import java.util.concurrent.TimeUnit;
  * @author fred
  *
  */
-public final class Controller extends Device implements Runnable, StartStopable {
+public final class Controller extends Device implements Runnable {
 
   /**
    * Logger.
@@ -280,13 +279,11 @@ public final class Controller extends Device implements Runnable, StartStopable 
     devices.values().parallelStream().filter(e -> e.isInitialized()).forEach(e -> e.execute());
   }
 
-  @Override
   public synchronized void start() {
     initialize();
     isRunning = true;
   }
 
-  @Override
   public synchronized void stop() {
     isRunning = false;
     shutdown();

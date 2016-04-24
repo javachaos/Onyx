@@ -1,6 +1,6 @@
 package com.onyx.quadcopter.control;
 
-import com.onyx.quadcopter.utils.Constants;
+import com.onyx.common.utils.Constants;
 
 /**
  * Represents a PID along one axis.

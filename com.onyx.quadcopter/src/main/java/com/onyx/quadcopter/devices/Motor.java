@@ -1,8 +1,8 @@
 package com.onyx.quadcopter.devices;
 
+import com.onyx.common.utils.Constants;
 import com.onyx.quadcopter.control.PwmControl;
 import com.onyx.quadcopter.messaging.AclMessage;
-import com.onyx.quadcopter.utils.Constants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

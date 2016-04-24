@@ -15,6 +15,11 @@ public class OnyxClientCommunicationHandler extends SimpleChannelInboundHandler<
 
   private final OnyxClient client;
   
+  /**
+   * Onyx Client Comm handler.
+   * @param client
+   *    the client.
+   */
   public OnyxClientCommunicationHandler(OnyxClient client) {
     this.client = client;
   }

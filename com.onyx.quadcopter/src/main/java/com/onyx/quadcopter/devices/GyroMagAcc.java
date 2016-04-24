@@ -1,9 +1,9 @@
 package com.onyx.quadcopter.devices;
 
+import com.onyx.common.utils.Constants;
+import com.onyx.common.utils.ExceptionUtils;
 import com.onyx.quadcopter.messaging.AclMessage;
 import com.onyx.quadcopter.messaging.ActionId;
-import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.ExceptionUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

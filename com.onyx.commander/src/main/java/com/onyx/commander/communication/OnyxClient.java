@@ -1,6 +1,13 @@
 package com.onyx.commander.communication;
 
-import com.onyx.quadcopter.utils.ConcurrentStack;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.net.ssl.SSLException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.onyx.common.concurrent.ConcurrentStack;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -11,11 +18,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.net.ssl.SSLException;
 
 /**
  * Onyx Client.
@@ -44,6 +46,7 @@ public class OnyxClient implements Runnable {
   private ConcurrentStack<String> inMsgs;
   private String lastMsg;
   private boolean isConnected;
+  private AtomicInteger messageId;
 
   /**
    * Last message recieved from Server.
@@ -109,7 +112,7 @@ public class OnyxClient implements Runnable {
    *        the command string to send to the server.
    */
   public String sendMessageAwaitReply(final String cmd) {
-    outMsgs.push(cmd);
+    outMsgs.push(messageId.getAndIncrement()+"#" + cmd);
     while (isConnected) {
       //Wait for response.
       if (!inMsgs.peek().equals(lastInMsg)) {

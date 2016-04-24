@@ -1,11 +1,11 @@
 package com.onyx.quadcopter.devices;
 
+import com.onyx.common.utils.Constants;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.AclMessage;
 import com.onyx.quadcopter.messaging.AclPriority;
 import com.onyx.quadcopter.messaging.ActionId;
 import com.onyx.quadcopter.messaging.MessageType;
-import com.onyx.quadcopter.utils.Constants;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

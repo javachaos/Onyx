@@ -1,4 +1,4 @@
-package com.onyx.quadcopter.main;
+package com.onyx.common.state;
 /******************************************************************************
  * Copyright (c) 2016 Fred Laderoute. All rights reserved. This program and the accompanying
  * materials are made available under the terms of the GNU Public License v3.0 which accompanies
@@ -53,4 +53,5 @@ public enum OnyxState {
    * Calibrate the ESCs.
    */
   CALIBRATION;
+
 }

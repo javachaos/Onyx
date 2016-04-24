@@ -7,10 +7,9 @@ package com.onyx.quadcopter.main;
  * Contributors: Fred Laderoute - initial API and implementation
  ******************************************************************************/
 
+import com.onyx.common.state.AbstractStateMonitor;
+import com.onyx.common.state.OnyxState;
 import com.onyx.quadcopter.tasks.CalibrationTask;
-import com.onyx.quadcopter.tasks.ShutdownAgent;
-import com.onyx.quadcopter.utils.Constants;
-import com.onyx.quadcopter.utils.ThreadUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,36 +21,12 @@ import org.slf4j.LoggerFactory;
  * @author fred
  *
  */
-public final class StateMonitor implements Runnable {
+public final class StateMonitor extends AbstractStateMonitor implements Runnable {
 
   /**
    * Logger.
    */
   public static final Logger LOGGER = LoggerFactory.getLogger(StateMonitor.class);
-
-  /**
-   * The exit status.
-   */
-  private int status = 0;
-  /**
-   * The app state manager.
-   */
-  private static OnyxState state;
-
-  /**
-   * The previous application state.
-   */
-  private OnyxState previousState = null;
-
-  /**
-   * True if the application state has changed since the last update.
-   */
-  private boolean stateChanged;
-
-  /**
-   * True if the monitor is running.
-   */
-  private volatile boolean isRunning = false;
 
   /**
    * Controller instance.
@@ -62,25 +37,17 @@ public final class StateMonitor implements Runnable {
    * State monitor constructor.
    */
   public StateMonitor(final Controller controller) {
+    super(Main.COORDINATOR);
     if (controller != null) {
       this.controller = controller;
     }
-    init();
-  }
-
-  /**
-   * Return true if the state monitor is running.
-   *
-   * @return true if the monitor is running.
-   */
-  public boolean isRunning() {
-    return isRunning;
   }
 
   /**
    * Initialize the state monitor.
    */
-  private void init() {
+  @Override
+  protected void init() {
     isRunning = true;
     state = OnyxState.STARTUP;
     previousState = OnyxState.SHUTDOWN;
@@ -89,6 +56,7 @@ public final class StateMonitor implements Runnable {
   /**
    * Called every application update cycle. to ensure the application state is correct.
    */
+  @Override
   public void update() {
     checkState();
     switch (state) {
@@ -136,24 +104,6 @@ public final class StateMonitor implements Runnable {
   }
 
   /**
-   * True if the state has changed since the last update.
-   *
-   * @return true if the state has changed.
-   */
-  public boolean isStateChanged() {
-    return stateChanged;
-  }
-
-  /**
-   * Set the stateChanged variable.
-   *
-   * @param changed the state to be set.
-   */
-  private void setStateChanged(final boolean changed) {
-    stateChanged = changed;
-  }
-
-  /**
    * Return the state of the application.
    *
    * @return the state of the application.
@@ -185,27 +135,6 @@ public final class StateMonitor implements Runnable {
    */
   public static void airborneState() {
     state = OnyxState.AIRBORNE;
-  }
-
-  /**
-   * Shutdown state.
-   */
-  public static void shutdownState() {
-    state = OnyxState.SHUTDOWN;
-  }
-
-  /**
-   * Error state.
-   */
-  public static void errorState() {
-    state = OnyxState.ERROR;
-  }
-
-  /**
-   * Startup state.
-   */
-  public static void startupState() {
-    state = OnyxState.STARTUP;
   }
 
   /**
@@ -337,29 +266,5 @@ public final class StateMonitor implements Runnable {
     if (isStateChanged()) {
       // TODO Complete
     }
-  }
-
-  /**
-   * Check if the state has changed.
-   */
-  private void checkState() {
-    if (state != previousState) {
-      setStateChanged(true);
-      LOGGER.debug("Entering " + state.name() + " state.");
-    } else if (state == previousState) {
-      setStateChanged(false);
-    }
-  }
-
-  /**
-   * Exit the application normally.
-   */
-  public void exit() {
-    isRunning = false;
-    LOGGER.info("Application exiting.");
-    ThreadUtils.shutdown();
-    Main.COORDINATOR.schedule(new ShutdownAgent(Main.COORDINATOR), Constants.SLEEP_TIME,
-        Constants.MONITOR_TIMEUNIT);
-    System.exit(status);
   }
 }

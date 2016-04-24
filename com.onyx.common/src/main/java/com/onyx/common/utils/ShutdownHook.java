@@ -1,4 +1,4 @@
-package com.onyx.commander.utils;
+package com.onyx.common.utils;
 /******************************************************************************
  * Copyright (c) 2014 Fred Laderoute. All rights reserved. This program and the accompanying
  * materials are made available under the terms of the GNU Public License v3.0 which accompanies
@@ -7,11 +7,10 @@ package com.onyx.commander.utils;
  * Contributors: Fred Laderoute - initial API and implementation
  ******************************************************************************/
 
-import com.onyx.quadcopter.main.Main;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
@@ -34,18 +33,24 @@ public class ShutdownHook extends Thread {
   private final Thread mainThread;
 
   /**
+   * Executor service.
+   */
+  private final ScheduledExecutorService ses;
+
+  /**
    * Constructs a new shutdown hook.
    *
    * @param main the main thread.
    */
-  public ShutdownHook(final Thread main) {
+  public ShutdownHook(final ScheduledExecutorService ses, final Thread main) {
     mainThread = main;
+    this.ses = ses;
   }
 
   @Override
   public final void run() {
     try {
-      Main.COORDINATOR.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
+      ses.awaitTermination(Constants.TERMINATION_TIMEOUT, TimeUnit.SECONDS);
       mainThread.join();
     } catch (final InterruptedException e1) {
       LOGGER.error(e1.getMessage());

@@ -1,6 +1,6 @@
 package com.onyx.commander.communication;
 
-import com.onyx.quadcopter.utils.Constants;
+import com.onyx.common.utils.Constants;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;

@@ -1,4 +1,4 @@
-package com.onyx.quadcopter.utils;
+package com.onyx.common.utils;
 /******************************************************************************
  * Copyright (c) 2016 Fred Laderoute. All rights reserved. This program and the accompanying
  * materials are made available under the terms of the GNU Public License v3.0 which accompanies
@@ -10,6 +10,8 @@ package com.onyx.quadcopter.utils;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
+
+import com.onyx.common.utils.PropertyManager;
 
 /**
  * Constants.
@@ -482,5 +484,9 @@ public final class Constants {
    * Maximum number of network commands.
    */
   public static final int NUM_NET_COMMANDS = 20;
+  
+  public static final int SERVER_PORT = 8888;
+  
+  public static final double DPI_MULTIPLIER = 1.0;
 
 }

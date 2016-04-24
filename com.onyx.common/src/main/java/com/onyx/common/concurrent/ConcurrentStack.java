@@ -1,4 +1,4 @@
-package com.onyx.quadcopter.utils;
+package com.onyx.common.concurrent;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;

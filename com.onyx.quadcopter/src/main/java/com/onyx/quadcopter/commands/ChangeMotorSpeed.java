@@ -1,10 +1,10 @@
 package com.onyx.quadcopter.commands;
 
+import com.onyx.common.utils.Constants;
 import com.onyx.quadcopter.communication.OnyxServerChannelHandler;
 import com.onyx.quadcopter.devices.DeviceId;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.messaging.ActionId;
-import com.onyx.quadcopter.utils.Constants;
 
 public class ChangeMotorSpeed extends NetworkCommand {
 
