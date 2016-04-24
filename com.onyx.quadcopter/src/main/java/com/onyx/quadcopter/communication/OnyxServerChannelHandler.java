@@ -1,7 +1,6 @@
 package com.onyx.quadcopter.communication;
 
 import com.onyx.common.commands.Command;
-import com.onyx.common.messaging.AclMessage;
 import com.onyx.quadcopter.exceptions.OnyxException;
 
 import io.netty.channel.Channel;
@@ -67,7 +66,7 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<Comman
    * @param msg
    *    the string data to send.
    */
-  public synchronized void addData(final AclMessage msg) {
+  public synchronized void addData(final Command msg) {
     channels.parallelStream().forEach(e -> e.writeAndFlush(msg));
   }
 

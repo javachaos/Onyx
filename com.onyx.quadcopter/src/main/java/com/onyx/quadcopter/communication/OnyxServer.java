@@ -1,6 +1,7 @@
 package com.onyx.quadcopter.communication;
 
 import com.onyx.common.commands.Command;
+import com.onyx.common.commands.SendDataCommand;
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.DeviceId;
 import com.onyx.common.utils.Constants;
@@ -102,7 +103,11 @@ public class OnyxServer extends Device implements Runnable {
 
   @Override
   public void update(final AclMessage msg) {
-    handler.addData(msg);
+    final Command cmd = new SendDataCommand(
+        msg.getSender(), 
+        msg.getContent(), 
+        msg.getUuid());
+    handler.addData(cmd);
   }
 
   @Override
