@@ -1,6 +1,7 @@
 package com.onyx.commander.gui;
 
 import com.onyx.commander.communication.OnyxClient;
+import com.onyx.common.commands.GetDataCommand;
 
 import javafx.application.Platform;
 import javafx.concurrent.ScheduledService;
@@ -88,13 +89,17 @@ public class UpdateUiService extends ScheduledService<String> {
             }
             final double time = (double) System.currentTimeMillis() - startTime;
             final double motor1spd = Double.parseDouble(
-                client.sendMessageAwaitReply("GET_DATA:MOTOR1-SPD"));
+                client.sendMessageAwaitReply(
+                    new GetDataCommand("MOTOR1")).getAclMessage().getContent());
             final double motor2spd = Double.parseDouble(
-                client.sendMessageAwaitReply("GET_DATA:MOTOR2-SPD"));
+                client.sendMessageAwaitReply(
+                    new GetDataCommand("MOTOR2")).getAclMessage().getContent());
             final double motor3spd = Double.parseDouble(
-                client.sendMessageAwaitReply("GET_DATA:MOTOR3-SPD"));
+                client.sendMessageAwaitReply(
+                    new GetDataCommand("MOTOR3")).getAclMessage().getContent());
             final double motor4spd = Double.parseDouble(
-                client.sendMessageAwaitReply("GET_DATA:MOTOR4-SPD"));
+                client.sendMessageAwaitReply(
+                    new GetDataCommand("MOTOR4")).getAclMessage().getContent());
             motor1Series.getData().add(new XYChart.Data<Double, Double>(
                 time, motor1spd));
             motor2Series.getData().add(new XYChart.Data<Double, Double>(

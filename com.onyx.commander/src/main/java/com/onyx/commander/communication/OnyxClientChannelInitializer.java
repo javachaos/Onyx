@@ -1,14 +1,11 @@
 package com.onyx.commander.communication;
 
-import com.onyx.common.utils.Constants;
-
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.ssl.SslContext;
 
 /**
@@ -42,10 +39,8 @@ public class OnyxClientChannelInitializer extends ChannelInitializer<SocketChann
   public void initChannel(SocketChannel ch) throws Exception {
     ChannelPipeline pipeline = ch.pipeline();
     pipeline.addLast(sslCtx.newHandler(ch.alloc(), host, port));
-    pipeline.addLast(
-        new DelimiterBasedFrameDecoder(Constants.NIO_MAX_FRAMELEN, Delimiters.lineDelimiter()));
-    pipeline.addLast(new StringDecoder());
-    pipeline.addLast(new StringEncoder());
+    pipeline.addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(getClass().getClassLoader())));
+    pipeline.addLast(new ObjectEncoder());
     pipeline.addLast(new OnyxClientCommunicationHandler(client));
   }
 }

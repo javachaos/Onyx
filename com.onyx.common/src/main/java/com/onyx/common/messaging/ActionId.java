@@ -1,4 +1,4 @@
-package com.onyx.quadcopter.messaging;
+package com.onyx.common.messaging;
 
 /**
  * Represents an ActionID for an ACL message.
@@ -101,7 +101,15 @@ public enum ActionId {
   /**
    * Start motors in preparation for flight.
    */
-  START_MOTORS(18), GET_SPEED(19), GET_PULSE_WIDTH(20);
+  START_MOTORS(18), 
+  
+  GET_SPEED(19), 
+  
+  GET_PULSE_WIDTH(20), 
+  
+  SHUTDOWN(21), 
+  
+  CLOSE_CONNECTION(22);
 
   /**
    * The internal ID field.

@@ -5,4 +5,4 @@
  * @author fred
  *
  */
-package com.onyx.quadcopter.commands;
+package com.onyx.common.commands;

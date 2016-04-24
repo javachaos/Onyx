@@ -1,11 +1,12 @@
 package com.onyx.quadcopter.devices;
 
+import com.onyx.common.messaging.AclMessage;
+import com.onyx.common.messaging.AclPriority;
+import com.onyx.common.messaging.ActionId;
+import com.onyx.common.messaging.DeviceId;
+import com.onyx.common.messaging.MessageType;
 import com.onyx.common.utils.Constants;
 import com.onyx.quadcopter.main.Controller;
-import com.onyx.quadcopter.messaging.AclMessage;
-import com.onyx.quadcopter.messaging.AclPriority;
-import com.onyx.quadcopter.messaging.ActionId;
-import com.onyx.quadcopter.messaging.MessageType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +112,7 @@ public abstract class Device implements Executable, Updateable {
   /**
    * Accumulate all messages from the blackboard for this device.
    */
-  private void gatherMessages() {
+  protected void gatherMessages() {
     AclMessage msg = getController().getBlackboard().getMessage(this);
     previousMessage = lastMessage;
     if (previousMessage == null) {

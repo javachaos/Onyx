@@ -1,10 +1,10 @@
 package com.onyx.quadcopter.control;
 
+import com.onyx.common.messaging.AclMessage;
+import com.onyx.common.messaging.ActionId;
+import com.onyx.common.messaging.DeviceId;
 import com.onyx.common.utils.Constants;
 import com.onyx.quadcopter.devices.Device;
-import com.onyx.quadcopter.devices.DeviceId;
-import com.onyx.quadcopter.messaging.AclMessage;
-import com.onyx.quadcopter.messaging.ActionId;
 
 /**
  * A simple PID Controller.

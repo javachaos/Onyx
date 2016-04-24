@@ -1,12 +1,15 @@
 package com.onyx.commander.communication;
 
+
+import com.onyx.common.commands.Command;
+
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class OnyxClientCommunicationHandler extends SimpleChannelInboundHandler<String> {
+public class OnyxClientCommunicationHandler extends SimpleChannelInboundHandler<Command> {
 
   /**
    * Logger.
@@ -25,8 +28,8 @@ public class OnyxClientCommunicationHandler extends SimpleChannelInboundHandler<
   }
 
   @Override
-  public void channelRead0(ChannelHandlerContext ctx, String msg) {
-    LOGGER.debug(msg);
+  public void channelRead0(ChannelHandlerContext ctx, Command msg) {
+    LOGGER.debug(msg.getAclMessage().getContent());
     client.addInMessage(msg);
   }
 

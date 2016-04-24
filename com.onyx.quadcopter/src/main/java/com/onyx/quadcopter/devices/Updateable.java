@@ -1,6 +1,6 @@
 package com.onyx.quadcopter.devices;
 
-import com.onyx.quadcopter.messaging.AclMessage;
+import com.onyx.common.messaging.AclMessage;
 
 public interface Updateable {
 

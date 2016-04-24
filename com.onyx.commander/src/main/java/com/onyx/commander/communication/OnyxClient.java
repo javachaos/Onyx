@@ -1,12 +1,7 @@
 package com.onyx.commander.communication;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.net.ssl.SSLException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.onyx.common.commands.CloseCommand;
+import com.onyx.common.commands.Command;
 import com.onyx.common.concurrent.ConcurrentStack;
 
 import io.netty.bootstrap.Bootstrap;
@@ -18,6 +13,11 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.SSLException;
 
 /**
  * Onyx Client.
@@ -42,16 +42,12 @@ public class OnyxClient implements Runnable {
   private int port;
 
   private SslContext sslCtx;
-  private ConcurrentStack<String> outMsgs;
-  private ConcurrentStack<String> inMsgs;
-  private String lastMsg;
+  private ConcurrentStack<Command> outMsgs;
+  private ConcurrentStack<Command> inMsgs;
   private boolean isConnected;
-  private AtomicInteger messageId;
-
-  /**
-   * Last message recieved from Server.
-   */
-  private String lastInMsg = "COMM:START";
+  
+  private Command lastOutMsg;
+  private Command lastInMsg;
 
   /**
    * Onyx Client ctor.
@@ -63,8 +59,8 @@ public class OnyxClient implements Runnable {
   public OnyxClient(final String servHost, final int servPort) {
     this.host = servHost;
     this.port = servPort;
-    outMsgs = new ConcurrentStack<String>();
-    inMsgs = new ConcurrentStack<String>();
+    outMsgs = new ConcurrentStack<Command>();
+    inMsgs = new ConcurrentStack<Command>();
   }
 
   @Override
@@ -79,14 +75,14 @@ public class OnyxClient implements Runnable {
       boot.handler(new OnyxClientChannelInitializer(this, sslCtx, host, port));
       Channel ch = boot.connect(host, port).sync().channel();
       
-      ChannelFuture lastWriteFuture = ch.writeAndFlush(lastInMsg + System.lineSeparator());
+      ChannelFuture lastWriteFuture = ch.writeAndFlush(lastInMsg);
       for (;;) {
-        String msg = outMsgs.peek();
-        if (msg != null && !msg.isEmpty()) {
-          lastWriteFuture = ch.writeAndFlush(lastMsg = outMsgs.pop() + System.lineSeparator());
+        Command msg = outMsgs.peek();
+        if (msg != null && !msg.isValid()) {
+          lastWriteFuture = ch.writeAndFlush(lastOutMsg = outMsgs.pop());
         }
         isConnected = true;
-        if (lastMsg != null && lastMsg.equals("COMM:CLOSE")) {
+        if (lastOutMsg != null && lastOutMsg.equals("COMM:CLOSE")) {
           ch.closeFuture().sync();
           isConnected = false;
           break;
@@ -108,14 +104,13 @@ public class OnyxClient implements Runnable {
    * Send a message to the Onyx server.
    * Blocks until the response is recieved.
    * 
-   * @param cmd
+   * @param msg
    *        the command string to send to the server.
    */
-  public String sendMessageAwaitReply(final String cmd) {
-    outMsgs.push(messageId.getAndIncrement()+"#" + cmd);
+  public Command sendMessageAwaitReply(Command msg) {
+    outMsgs.push(msg);
     while (isConnected) {
-      //Wait for response.
-      if (!inMsgs.peek().equals(lastInMsg)) {
+      if (inMsgs.peek().getCommandId().compareTo(lastInMsg.getCommandId()) == 0) {
         lastInMsg = inMsgs.pop();
         break;
       }
@@ -135,7 +130,7 @@ public class OnyxClient implements Runnable {
    * Shutdown the connection.
    */
   public void shutdown() {
-    outMsgs.push("COMM:CLOSE");
+    outMsgs.push(new CloseCommand());
   }
 
   /**
@@ -143,7 +138,7 @@ public class OnyxClient implements Runnable {
    * @param msg
    *    the next Input message from the server.
    */
-  public void addInMessage(String msg) {
+  public void addInMessage(Command msg) {
     inMsgs.push(msg);
   }
 
@@ -153,7 +148,7 @@ public class OnyxClient implements Runnable {
    * @return
    *    the inMsgs stack.
    */
-  public ConcurrentStack<String> getInMessages() {
+  public ConcurrentStack<Command> getInMessages() {
     return inMsgs;
   }
 }

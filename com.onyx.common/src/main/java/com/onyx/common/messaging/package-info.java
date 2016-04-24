@@ -5,4 +5,4 @@
  * @author fred
  *
  */
-package com.onyx.common.communication;
+package com.onyx.common.messaging;

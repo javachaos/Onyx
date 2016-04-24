@@ -1,12 +1,13 @@
 package com.onyx.quadcopter.control;
 
+import com.onyx.common.commands.ShutdownCommand;
+import com.onyx.common.messaging.AclMessage;
+import com.onyx.common.messaging.AclPriority;
+import com.onyx.common.messaging.ActionId;
+import com.onyx.common.messaging.DeviceId;
 import com.onyx.common.state.OnyxState;
 import com.onyx.quadcopter.devices.Device;
-import com.onyx.quadcopter.devices.DeviceId;
 import com.onyx.quadcopter.main.StateMonitor;
-import com.onyx.quadcopter.messaging.AclMessage;
-import com.onyx.quadcopter.messaging.AclPriority;
-import com.onyx.quadcopter.messaging.ActionId;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
 import com.pi4j.io.gpio.PinPullResistance;
 import com.pi4j.io.gpio.PinState;
@@ -121,9 +122,7 @@ public class RedButton extends Device implements GpioPinListenerDigital {
       }
     } else if (hdt >= SHUTDOWN_SEQ) {
       LOGGER.debug("Initiating Shutdown Sequence...");
-      sendMessage(DeviceId.OLED_DEVICE, "Initiating Shutdown Sequence...", ActionId.PRINT,
-          AclPriority.MAX);
-      StateMonitor.shutdownState();
+      sendMessage(new ShutdownCommand().getAclMessage());
     }
   }
 

@@ -1,4 +1,4 @@
-package com.onyx.quadcopter.messaging;
+package com.onyx.common.messaging;
 
 /**
  * Defines an ACL message type.

@@ -1,9 +1,9 @@
 package com.onyx.quadcopter.tasks;
 
+import com.onyx.common.messaging.DeviceId;
 import com.onyx.common.utils.Constants;
 import com.onyx.common.utils.ExceptionUtils;
 import com.onyx.quadcopter.devices.Device;
-import com.onyx.quadcopter.devices.DeviceId;
 import com.onyx.quadcopter.exceptions.OnyxException;
 import com.onyx.quadcopter.main.Controller;
 import com.onyx.quadcopter.utils.StartupState;

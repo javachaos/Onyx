@@ -1,12 +1,12 @@
 package com.onyx.quadcopter.communication;
 
 import com.onyx.common.concurrent.ConcurrentStack;
+import com.onyx.common.messaging.AclMessage;
+import com.onyx.common.messaging.DeviceId;
 import com.onyx.common.utils.Constants;
 import com.onyx.common.utils.ExceptionUtils;
 import com.onyx.quadcopter.devices.Device;
-import com.onyx.quadcopter.devices.DeviceId;
 import com.onyx.quadcopter.exceptions.OnyxException;
-import com.onyx.quadcopter.messaging.AclMessage;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
@@ -36,6 +36,9 @@ public class OnyxServer extends Device implements Runnable {
    */
   public static final Logger LOGGER = LoggerFactory.getLogger(OnyxServer.class);
 
+  /**
+   * Server Port.
+   */
   static final int PORT = Constants.PORT;
 
   /**
@@ -58,30 +61,36 @@ public class OnyxServer extends Device implements Runnable {
    */
   private ConcurrentStack<String> responses;
 
+  private OnyxServerChannelInitializer initializer;
+
   public OnyxServer() {
     super(DeviceId.COMM_SERVER);
-
   }
 
   @Override
-  protected void init() {}
-
-  @Override
-  public void run() {
-    handler = new OnyxServerChannelHandler(this);
-    LOGGER.debug("Starting CommServer.");
+  protected void init() {
     try {
       SelfSignedCertificate ssc = new SelfSignedCertificate();
       SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
+      handler = new OnyxServerChannelHandler(this);
+      initializer = new OnyxServerChannelInitializer(sslCtx, handler);
+    } catch (final SSLException | CertificateException e1) {
+      ExceptionUtils.logError(getClass(), e1);
+      throw new OnyxException(e1.getMessage(), LOGGER);
+    }
+  }
+
+  @Override
+  public void run() {
+    LOGGER.debug("Starting CommServer.");
+    try {
       final ServerBootstrap b = new ServerBootstrap();
       b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
           .handler(new LoggingHandler(LogLevel.INFO))
-          .childHandler(new OnyxServerChannelInitializer(sslCtx, handler));
-
+          .childHandler(initializer);
       b.bind(PORT).sync().channel().closeFuture().sync();
-
       LOGGER.debug("CommServer Started.");
-    } catch (final InterruptedException | SSLException | CertificateException e1) {
+    } catch (final InterruptedException e1) {
       ExceptionUtils.logError(getClass(), e1);
       throw new OnyxException(e1.getMessage(), LOGGER);
     } finally {
@@ -97,7 +106,7 @@ public class OnyxServer extends Device implements Runnable {
 
   @Override
   public void update(final AclMessage msg) {
-    handler.addData(msg.getContent());
+    handler.addData(msg);
   }
 
   @Override
@@ -110,7 +119,7 @@ public class OnyxServer extends Device implements Runnable {
 
   @Override
   protected void alternate() {
-    final String peek = handler.getLastMsg();
+    final String peek = handler.getLastCmd().getAclMessage().getContent();
     if (peek != null) {
       setDisplay("Latest Comm: " + peek);
     }

@@ -1,8 +1,7 @@
-package com.onyx.quadcopter.messaging;
-
-import com.onyx.quadcopter.devices.DeviceId;
+package com.onyx.common.messaging;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 
 /**
@@ -59,6 +58,11 @@ public final class AclMessage implements Serializable, Comparable<AclMessage> {
   private AclPriority priority = AclPriority.MEDIUM;
 
   /**
+   * UUID for this ACL Message.
+   */
+  private final UUID uuid;
+
+  /**
    * Contruct a new ACL message given a message type and an ActionID.
    *
    * @param type the MessageType which defines the message type of this message
@@ -71,6 +75,7 @@ public final class AclMessage implements Serializable, Comparable<AclMessage> {
     }
     setId(type);
     setActionId(id);
+    uuid = UUID.randomUUID();
   }
 
   /**
@@ -293,6 +298,15 @@ public final class AclMessage implements Serializable, Comparable<AclMessage> {
   @Override
   public int compareTo(AclMessage other) {
     return getPriority().compareTo(other.getPriority());
+  }
+  
+  /**
+   * Get the UUID for this Message.
+   * @return
+   *     the UUID for this ACL Message.
+   */
+  public UUID getUuid() {
+    return uuid;
   }
 
 }

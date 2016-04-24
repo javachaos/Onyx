@@ -1,8 +1,9 @@
 package com.onyx.quadcopter.devices;
 
+import com.onyx.common.messaging.AclMessage;
+import com.onyx.common.messaging.DeviceId;
 import com.onyx.common.utils.Constants;
 import com.onyx.common.utils.ExceptionUtils;
-import com.onyx.quadcopter.messaging.AclMessage;
 
 import org.opencv.core.Mat;
 import org.opencv.highgui.Highgui;

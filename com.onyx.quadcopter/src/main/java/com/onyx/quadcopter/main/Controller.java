@@ -2,18 +2,20 @@ package com.onyx.quadcopter.main;
 
 import com.google.common.collect.MapMaker;
 
+import com.onyx.common.messaging.AclMessage;
+import com.onyx.common.messaging.AclPriority;
+import com.onyx.common.messaging.ActionId;
+import com.onyx.common.messaging.DeviceId;
 import com.onyx.common.utils.Constants;
 import com.onyx.quadcopter.communication.OnyxServer;
 import com.onyx.quadcopter.control.PidController;
 import com.onyx.quadcopter.control.RedButton;
 import com.onyx.quadcopter.devices.Blackboard;
 import com.onyx.quadcopter.devices.Device;
-import com.onyx.quadcopter.devices.DeviceId;
 import com.onyx.quadcopter.devices.GpsDevice;
 import com.onyx.quadcopter.devices.GyroMagAcc;
 import com.onyx.quadcopter.devices.Motor;
 import com.onyx.quadcopter.devices.OledDevice;
-import com.onyx.quadcopter.messaging.AclMessage;
 import com.onyx.quadcopter.tasks.Task;
 import com.onyx.quadcopter.utils.Cleaner;
 import com.pi4j.io.gpio.GpioController;
@@ -264,19 +266,27 @@ public final class Controller extends Device implements Runnable {
   @Override
   public void run() {
     if (isRunning() && isInitialized()) {
-      update();
+      controllerUpdate();
       blackboard.update();
     }
   }
-  
-  @Override
-  public void update(final AclMessage msg) {
-    // UNUSED
-  }
 
   @Override
-  protected synchronized void update() {
+  public void update(final AclMessage msg) {
+    switch (msg.getActionId()) {
+      case SHUTDOWN:
+        sendMessage(DeviceId.OLED_DEVICE, "Initiating Shutdown Sequence...", ActionId.PRINT,
+            AclPriority.MAX);
+        StateMonitor.shutdownState();
+        break;
+      default:
+        break;
+    }
+  }
+
+  protected synchronized void controllerUpdate() {
     devices.values().parallelStream().filter(e -> e.isInitialized()).forEach(e -> e.execute());
+    execute();
   }
 
   public synchronized void start() {

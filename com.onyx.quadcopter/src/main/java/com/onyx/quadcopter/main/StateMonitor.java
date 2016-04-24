@@ -14,7 +14,6 @@ import com.onyx.quadcopter.tasks.CalibrationTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * State monitor to monitor the application state.
  *

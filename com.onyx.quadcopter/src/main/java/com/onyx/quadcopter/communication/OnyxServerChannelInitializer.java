@@ -1,15 +1,14 @@
 package com.onyx.quadcopter.communication;
 
-import com.onyx.common.utils.Constants;
+import com.onyx.common.commands.Command;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
-import io.netty.handler.codec.string.StringDecoder;
-import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.codec.serialization.ClassResolvers;
+import io.netty.handler.codec.serialization.ObjectDecoder;
+import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.ssl.SslContext;
 
 public class OnyxServerChannelInitializer extends ChannelInitializer<SocketChannel> {
@@ -18,10 +17,10 @@ public class OnyxServerChannelInitializer extends ChannelInitializer<SocketChann
    * SSL Ctx.
    */
   private final SslContext sslCtx;
-  private final SimpleChannelInboundHandler<String> handler;
+  private final SimpleChannelInboundHandler<Command> handler;
 
   public OnyxServerChannelInitializer(SslContext sslCtx,
-      SimpleChannelInboundHandler<String> handler) {
+      SimpleChannelInboundHandler<Command> handler) {
     this.sslCtx = sslCtx;
     this.handler = handler;
   }
@@ -36,12 +35,8 @@ public class OnyxServerChannelInitializer extends ChannelInitializer<SocketChann
     // You will need something more complicated to identify both
     // and server in the real world.
     pipeline.addLast(sslCtx.newHandler(ch.alloc()));
-
-    // On top of the SSL handler, add the text line codec.
-    pipeline.addLast(
-        new DelimiterBasedFrameDecoder(Constants.NIO_MAX_FRAMELEN, Delimiters.lineDelimiter()));
-    pipeline.addLast(new StringDecoder());
-    pipeline.addLast(new StringEncoder());
+    pipeline.addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(getClass().getClassLoader())));
+    pipeline.addLast(new ObjectEncoder());
     // and then business logic.
     pipeline.addLast(handler);
   }

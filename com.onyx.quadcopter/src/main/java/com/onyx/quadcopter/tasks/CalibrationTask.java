@@ -1,14 +1,14 @@
 package com.onyx.quadcopter.tasks;
 
+import com.onyx.common.messaging.AclMessage;
+import com.onyx.common.messaging.AclPriority;
+import com.onyx.common.messaging.ActionId;
+import com.onyx.common.messaging.DeviceId;
+import com.onyx.common.messaging.MessageType;
 import com.onyx.common.state.OnyxState;
 import com.onyx.common.utils.Constants;
 import com.onyx.common.utils.ExceptionUtils;
-import com.onyx.quadcopter.devices.DeviceId;
 import com.onyx.quadcopter.main.StateMonitor;
-import com.onyx.quadcopter.messaging.AclMessage;
-import com.onyx.quadcopter.messaging.AclPriority;
-import com.onyx.quadcopter.messaging.ActionId;
-import com.onyx.quadcopter.messaging.MessageType;
 
 public class CalibrationTask extends Task<AclMessage> {
 

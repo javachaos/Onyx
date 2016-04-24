@@ -2,6 +2,7 @@ package com.onyx.commander.gui;
 
 import com.onyx.commander.communication.OnyxClient;
 import com.onyx.commander.main.Main;
+import com.onyx.common.commands.CommandUtils;
 import com.onyx.common.utils.Constants;
 
 import javafx.event.ActionEvent;
@@ -213,7 +214,9 @@ public final class GuiController implements EventHandler<WindowEvent> {
   protected void sendCommand() {
     String cmd = commandTextField.getText();
     if (cmd.matches(CMD_REGEX)) {
-      addCommandResponse(client.sendMessageAwaitReply(cmd));
+      addCommandResponse(
+          client.sendMessageAwaitReply(
+              CommandUtils.parseCommand(cmd)).getAclMessage().getContent());
     } else {
       LOGGER.debug("Invalid command format.");
     }

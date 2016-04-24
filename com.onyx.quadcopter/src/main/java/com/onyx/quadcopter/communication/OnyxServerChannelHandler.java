@@ -1,13 +1,8 @@
 package com.onyx.quadcopter.communication;
 
-import com.onyx.common.utils.Constants;
-import com.onyx.quadcopter.commands.ChangeMotorSpeed;
-import com.onyx.quadcopter.commands.GetDataCmd;
-import com.onyx.quadcopter.commands.NetworkCommand;
-import com.onyx.quadcopter.commands.PidControlCmd;
-import com.onyx.quadcopter.commands.PidStartCmd;
+import com.onyx.common.commands.Command;
+import com.onyx.common.messaging.AclMessage;
 import com.onyx.quadcopter.exceptions.OnyxException;
-import com.onyx.quadcopter.messaging.AclMessage;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -23,13 +18,11 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ArrayBlockingQueue;
-
 /**
  * Handles a server-side channel.
  */
 @Sharable
-public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String> {
+public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<Command> {
 
   /**
    * Logger.
@@ -37,10 +30,8 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
   public static final Logger LOGGER = LoggerFactory.getLogger(OnyxServerChannelHandler.class);
   private static final ChannelGroup channels =
       new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-  private String lastMsg;
+  private Command lastCmd;
   private final OnyxServer server;
-
-  private final ArrayBlockingQueue<NetworkCommand> networkCommands;
   
   /**
    * Onyx Server channel handler.
@@ -50,28 +41,6 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
    */
   public OnyxServerChannelHandler(final OnyxServer onyxServer) {
     this.server = onyxServer;
-    this.networkCommands = new ArrayBlockingQueue<NetworkCommand>(Constants.NUM_NET_COMMANDS);
-    init();
-  }
-
-  private void init() {
-    addNetworkCommand(new ChangeMotorSpeed(this));
-    addNetworkCommand(new GetDataCmd(this));
-    addNetworkCommand(new PidControlCmd(this));
-    addNetworkCommand(new PidStartCmd(this));
-  }
-  
-  /**
-   * Add a network command.
-   * @param cmd
-   *     the command to be added to this Server handler.
-   */
-  public void addNetworkCommand(final NetworkCommand cmd) {
-    try {
-      networkCommands.put(cmd);
-    } catch (InterruptedException e1) {
-      LOGGER.error(e1.getMessage());
-    }
   }
 
   @Override
@@ -95,34 +64,25 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<String
 
   /**
    * Add Data to each connected channel.
-   * @param data
+   * @param msg
    *    the string data to send.
    */
-  public synchronized void addData(final String data) {
-    channels.parallelStream().forEach(e -> e.writeAndFlush(data + System.lineSeparator()));
+  public synchronized void addData(final AclMessage msg) {
+    channels.parallelStream().forEach(e -> e.writeAndFlush(msg));
   }
 
   @Override
-  protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-    switch (msg) {
-      case "COMM:CLOSE":
-        ctx.close();
-        break;
-      case "COMM:START":
-        addData(msg);
-        break;
-      default:
-        networkCommands.parallelStream().forEach(e -> e.run(msg));
-        LOGGER.debug(msg);
-        lastMsg = msg;
-    }
+  protected void channelRead0(ChannelHandlerContext ctx, Command msg) throws Exception {
+    sendMessage(msg.getAclMessage());
+    LOGGER.debug(msg.getAclMessage().getContent());
+    lastCmd = msg;
   }
 
-  public String getLastMsg() {
-    return lastMsg;
+  public Command getLastCmd() {
+    return lastCmd;
   }
 
-  public void sendMessage(AclMessage acl) {
+  private void sendMessage(AclMessage acl) {
     server.sendMessage(acl);
   }
 }
