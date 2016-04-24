@@ -24,5 +24,10 @@ public class CloseCommand extends Command {
     msg.setReciever(DeviceId.COMM_SERVER);
     return msg;
   }
+  
+  @Override
+  public String toString() {
+    return super.getString();
+  }
 
 }

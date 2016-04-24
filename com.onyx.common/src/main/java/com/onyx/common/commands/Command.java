@@ -76,7 +76,9 @@ public abstract class Command implements Serializable {
   }
   
   @Override
-  public String toString() {
+  public abstract String toString();
+  
+  public String getString() {
     return "[" + type + "] (" + msg.getUuid() + ")" + msg.toString();
   }
 }

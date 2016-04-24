@@ -42,4 +42,9 @@ public class ShutdownCommand extends Command {
     return msg;
   }
 
+  @Override
+  public String toString() {
+    return super.getString();
+  }
+
 }

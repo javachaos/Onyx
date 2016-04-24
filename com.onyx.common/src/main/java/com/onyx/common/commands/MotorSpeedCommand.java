@@ -79,5 +79,10 @@ public class MotorSpeedCommand extends Command {
     }
     return msg;  
   }
+  
+  @Override
+  public String toString() {
+    return super.getString();
+  }
 
 }

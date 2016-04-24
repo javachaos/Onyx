@@ -112,6 +112,7 @@ public class OnyxClient implements Runnable {
    *        the command string to send to the server.
    */
   public Command sendMessageAwaitReply(Command msg) {
+    
     outMsgs.offer(msg);
     while (isConnected) {
       if (inMsgs.peek().getCommandId().compareTo(lastOutMsg.getCommandId()) == 0) {
