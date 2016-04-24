@@ -96,12 +96,6 @@
         <scope>system</scope>
       </dependency>
       <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>1.0.13</version>
-        <scope>compile</scope>
-      </dependency>
-      <dependency>
           <groupId>org.xerial</groupId>
           <artifactId>sqlite-jdbc</artifactId>
           <version>3.7.15-M1</version>
@@ -111,11 +105,6 @@
           <groupId>com.onyx.quadcopter</groupId>
           <artifactId>onyx</artifactId>
           <version>0.0.1-SNAPSHOT</version>
-      </dependency>
-      <dependency>
-        <groupId>io.netty</groupId>
-        <artifactId>netty-all</artifactId>
-        <version>4.1.0.CR7</version>
       </dependency>
       <dependency>
 	    <groupId>net.sf.jipcam</groupId>

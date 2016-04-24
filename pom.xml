@@ -44,6 +44,24 @@
                       </plugin>
 		</plugins>
 	</build>
+	<dependencies>
+	<dependency>
+	    <groupId>junit</groupId>
+	    <artifactId>junit</artifactId>
+	    <version>4.11</version>
+	</dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>1.0.13</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-all</artifactId>
+        <version>4.1.0.CR7</version>
+      </dependency>
+	</dependencies>
 	<scm>
 	    <connection>scm:git:https://bitbucket.org/javanerd/onyx.git</connection>
 	    <developerConnection>scm:git:https://bitbucket.org/javanerd/onyx.git</developerConnection>
