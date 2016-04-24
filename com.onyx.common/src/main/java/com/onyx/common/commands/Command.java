@@ -1,24 +1,29 @@
 package com.onyx.common.commands;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.DeviceId;
+import com.onyx.common.messaging.MessageType;
 
-public abstract class Command {
+public abstract class Command implements Serializable {
 
+  /**
+   * Generated SUID.
+   */
+  private static final long serialVersionUID = 4316230993090229307L;
+  
   /**
    * The type of command.
    */
   private final CommandType type;
   private final DeviceId sender;
-  
-  private final UUID commandId;
+  protected AclMessage msg = new AclMessage(MessageType.EMPTY);
   
   public Command(final CommandType type, final DeviceId sender) {
     this.type = type;
     this.sender = sender;
-    this.commandId = UUID.randomUUID();
   }
 
   /**
@@ -35,7 +40,19 @@ public abstract class Command {
    * @return
    *    the AclMessage to execute this command.
    */
-  public abstract AclMessage getAclMessage();
+  protected abstract AclMessage getAclMessage();
+  
+  /**
+   * Get the ACL Message for this command.
+   * @return
+   *    the acl message for this command.
+   */
+  public AclMessage getMessage() {
+    if (!msg.isValid()) {
+      msg = getAclMessage();
+    }
+    return msg;
+  }
 
   /**
    * @return the sender
@@ -45,13 +62,16 @@ public abstract class Command {
   }
 
   public boolean isValid() {
-    return getAclMessage().isValid() && sender != null;
+    return msg.isValid() && sender != null;
   }
 
   /**
    * @return the commandId
    */
   public UUID getCommandId() {
-    return commandId;
+    if (!msg.isValid()) {
+      msg = getAclMessage();
+    }
+    return msg.getUuid();
   }
 }

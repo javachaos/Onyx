@@ -9,6 +9,11 @@ import com.onyx.common.messaging.MessageType;
 public class PidStartCommand extends Command {
   
   /**
+   * Generated SUID.
+   */
+  private static final long serialVersionUID = -3717501742803718516L;
+
+  /**
    * Start the PID Controller.
    * @param sender
    *    the device tasked with sending this message.

@@ -9,6 +9,8 @@ import com.onyx.common.utils.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.UUID;
+
 public class GyroMagAcc extends Device {
 
   /**
@@ -40,8 +42,10 @@ public class GyroMagAcc extends Device {
     setDisplay("Yaw: " + orient[0] + System.lineSeparator() + "Pitch: " + orient[1]
         + System.lineSeparator() + "Roll: " + orient[2]);
     float[] gyro = lsm.getGyroscope();
-    sendMessage(DeviceId.PID, gyro[0] + ":" + gyro[1] + ":" + gyro[2], ActionId.GYRO);
-    sendMessage(DeviceId.PID, orient[0] + ":" + orient[1] + ":" + orient[2], ActionId.ORIENT);
+    sendMessage(DeviceId.PID,
+        gyro[0] + ":" + gyro[1] + ":" + gyro[2], ActionId.GYRO);
+    sendMessage(DeviceId.PID,
+        orient[0] + ":" + orient[1] + ":" + orient[2], ActionId.ORIENT);
   }
 
   @Override

@@ -7,16 +7,15 @@ package com.onyx.common.utils;
  * Contributors: Fred Laderoute - initial API and implementation
  ******************************************************************************/
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.io.File;
+import java.io.FileInputStream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * PropertyManager class used to get property values from the Property file defined in fileName.

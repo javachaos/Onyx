@@ -91,16 +91,16 @@ public class UpdateUiService extends ScheduledService<String> {
             final double time = (double) System.currentTimeMillis() - startTime;
             final double motor1spd = Double.parseDouble(
                 client.sendMessageAwaitReply(
-                    new GetDataCommand("MOTOR1")).getAclMessage().getContent());
+                    new GetDataCommand("MOTOR1")).getMessage().getContent());
             final double motor2spd = Double.parseDouble(
                 client.sendMessageAwaitReply(
-                    new GetDataCommand("MOTOR2")).getAclMessage().getContent());
+                    new GetDataCommand("MOTOR2")).getMessage().getContent());
             final double motor3spd = Double.parseDouble(
                 client.sendMessageAwaitReply(
-                    new GetDataCommand("MOTOR3")).getAclMessage().getContent());
+                    new GetDataCommand("MOTOR3")).getMessage().getContent());
             final double motor4spd = Double.parseDouble(
                 client.sendMessageAwaitReply(
-                    new GetDataCommand("MOTOR4")).getAclMessage().getContent());
+                    new GetDataCommand("MOTOR4")).getMessage().getContent());
             motor1Series.getData().add(new XYChart.Data<Double, Double>(
                 time, motor1spd));
             motor2Series.getData().add(new XYChart.Data<Double, Double>(

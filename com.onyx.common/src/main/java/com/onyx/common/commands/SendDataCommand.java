@@ -7,6 +7,11 @@ import com.onyx.common.messaging.MessageType;
 
 public class SendDataCommand extends Command {
 
+  /**
+   * Generated SUID.
+   */
+  private static final long serialVersionUID = -8342981818920036650L;
+  
   private String data;
 
   public SendDataCommand(DeviceId sender, final String data) {

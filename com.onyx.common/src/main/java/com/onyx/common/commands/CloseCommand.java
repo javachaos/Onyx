@@ -7,6 +7,11 @@ import com.onyx.common.messaging.MessageType;
 
 public class CloseCommand extends Command {
 
+  /**
+   * Generated SUID.
+   */
+  private static final long serialVersionUID = -8100911197785209407L;
+
   public CloseCommand() {
     super(CommandType.CLOSE, DeviceId.COMM_CLIENT);
   }

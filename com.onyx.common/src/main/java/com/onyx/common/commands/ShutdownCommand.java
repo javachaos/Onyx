@@ -14,6 +14,11 @@ import com.onyx.common.messaging.MessageType;
 public class ShutdownCommand extends Command {
 
   /**
+   * Generated SUID.
+   */
+  private static final long serialVersionUID = -2812678237358097336L;
+
+  /**
    * Create a new shutdown command.
    */
   public ShutdownCommand(final DeviceId sender) {

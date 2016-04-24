@@ -14,6 +14,11 @@ import com.onyx.common.messaging.MessageType;
 public class MotorSpeedCommand extends Command {
 
   /**
+   * Generated SUID.
+   */
+  private static final long serialVersionUID = -3652608805183898841L;
+
+  /**
    * Desired motor speed.
    */
   private final double speed;

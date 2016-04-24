@@ -8,6 +8,11 @@ import com.onyx.common.messaging.MessageType;
 
 public class PidControlCommand extends Command {
 
+  /**
+   * Generated SUID.
+   */
+  private static final long serialVersionUID = -827787683371379101L;
+  
   private String yaw;
   private String pitch;
   private String roll;

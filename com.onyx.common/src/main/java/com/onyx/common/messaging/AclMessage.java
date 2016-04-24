@@ -60,7 +60,7 @@ public final class AclMessage implements Serializable, Comparable<AclMessage> {
   /**
    * UUID for this ACL Message.
    */
-  private final UUID uuid;
+  private UUID uuid;
 
   /**
    * Contruct a new ACL message given a message type and an ActionID.
@@ -85,6 +85,15 @@ public final class AclMessage implements Serializable, Comparable<AclMessage> {
    */
   public AclMessage(final MessageType id) {
     this(id, ActionId.NULL);
+  }
+  
+  /**
+   * Set the UUID for this AclMessage.
+   * @param uuid
+   *    the UUID for this acl message.
+   */
+  public void setUuid(final UUID uuid) {
+    this.uuid = uuid;
   }
 
   /**

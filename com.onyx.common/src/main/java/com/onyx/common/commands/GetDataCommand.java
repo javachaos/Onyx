@@ -14,6 +14,11 @@ import com.onyx.common.messaging.MessageType;
 public class GetDataCommand extends Command {
 
   /**
+   * Generated SUID.
+   */
+  private static final long serialVersionUID = -1124261640235297587L;
+  
+  /**
    * Device name.
    */
   private String device;

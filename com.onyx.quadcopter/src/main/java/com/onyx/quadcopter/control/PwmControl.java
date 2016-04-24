@@ -1,9 +1,9 @@
 package com.onyx.quadcopter.control;
 
+import com.onyx.common.utils.Constants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.onyx.common.utils.Constants;
 
 import upm_pca9685.PCA9685;
 
@@ -73,7 +73,6 @@ public class PwmControl {
    * @param pulseWidth the pulseWidth to be written.
    */
   public void pwmWrite(final int pulseWidth) {
-    // TODO Test PWMWrite
     if (pulseWidth > 2000 || pulseWidth < 1000) {
       LOGGER.error("Pulse width is out of range. [1000us - 2000us] expected.");
     } else {

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import upm_ublox6.Ublox6;
 
 import java.io.UnsupportedEncodingException;
+import java.util.UUID;
 
 public class GpsDevice extends Device {
 

@@ -216,7 +216,7 @@ public final class GuiController implements EventHandler<WindowEvent> {
     if (cmd.matches(CMD_REGEX)) {
       addCommandResponse(
           client.sendMessageAwaitReply(
-              CommandUtils.parseCommand(cmd)).getAclMessage().getContent());
+              CommandUtils.parseCommand(cmd)).getMessage().getContent());
     } else {
       LOGGER.debug("Invalid command format.");
     }

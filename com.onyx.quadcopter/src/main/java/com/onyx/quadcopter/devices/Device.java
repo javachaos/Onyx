@@ -11,6 +11,7 @@ import com.onyx.quadcopter.main.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.UUID;
 import java.util.concurrent.PriorityBlockingQueue;
 
 
@@ -208,9 +209,30 @@ public abstract class Device implements Executable, Updateable {
    * @param text the text to send to the display.
    */
   public void setDisplay(final String text) {
-    sendMessage(DeviceId.OLED_DEVICE, text, ActionId.DISPLAY, AclPriority.MEDIUM);
+    sendMessage(DeviceId.OLED_DEVICE, text,
+        ActionId.DISPLAY, AclPriority.MEDIUM);
   }
 
+  /**
+   * Send a message to receiver.
+   * 
+   * @param receiver the message recipient
+   * @param content the contents of the message
+   * @param action the actionId
+   */
+  public void sendMessage(final MessageType type, final DeviceId receiver, final String content,
+      final double value, final ActionId action, final AclPriority priority, final UUID uuid) {
+    final AclMessage m = new AclMessage(type);
+    m.setActionId(action);
+    m.setContent(content);
+    m.setReciever(receiver);
+    m.setSender(getId());
+    m.setValue(value);
+    m.setPriority(priority);
+    m.setUuid(uuid);
+    getController().getBlackboard().addMessage(m);
+  }
+  
   /**
    * Send a message to receiver.
    * 
@@ -261,7 +283,8 @@ public abstract class Device implements Executable, Updateable {
    * @param content the contents of the message
    * @param action the actionId
    */
-  public void sendMessage(final DeviceId receiver, final String content, final ActionId action) {
+  public void sendMessage(
+      final DeviceId receiver, final String content, final ActionId action) {
     sendMessage(receiver, content, 0.0, action, AclPriority.MEDIUM);
   }
 
@@ -274,7 +297,7 @@ public abstract class Device implements Executable, Updateable {
   public void sendMessage(AclMessage aclm) {
     sendMessage(aclm.getMessageType(),
         aclm.getReciever(), aclm.getContent(), aclm.getValue(), aclm.getActionId(),
-        aclm.getPriority());
+        aclm.getPriority(), aclm.getUuid());
   }
   
 
@@ -310,7 +333,8 @@ public abstract class Device implements Executable, Updateable {
    * @param content the contents of the message
    * @param action the actionId
    */
-  public void sendMessageLow(final DeviceId receiver, final String content, final ActionId action) {
+  public void sendMessageLow(final DeviceId receiver,
+      final String content, final ActionId action) {
     sendMessage(receiver, content, 0.0, action, AclPriority.LOW);
   }
 
@@ -326,7 +350,8 @@ public abstract class Device implements Executable, Updateable {
    */
   public void sendReply(final String content, final double value, final ActionId action,
       final AclPriority priority) {
-    sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value, action, priority);
+    sendMessage(MessageType.REPLY,
+        lastMessage.getSender(), content, value, action, priority, lastMessage.getUuid());
   }
 
   /**
@@ -337,8 +362,10 @@ public abstract class Device implements Executable, Updateable {
    * @param action
    *    the actionid of this message.
    */
-  public void sendReply(final String content, final ActionId action, final AclPriority priority) {
-    sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, action, priority);
+  public void sendReply(final String content,
+      final ActionId action, final AclPriority priority) {
+    sendMessage(MessageType.REPLY,
+        lastMessage.getSender(), content, 0.0, action, priority, lastMessage.getUuid());
   }
 
   /**
@@ -349,7 +376,7 @@ public abstract class Device implements Executable, Updateable {
    */
   public void sendReply(final String content) {
     sendMessage(MessageType.REPLY, lastMessage.getSender(), content, 0.0, lastMessage.getActionId(),
-        lastMessage.getPriority());
+        lastMessage.getPriority(), lastMessage.getUuid());
   }
 
   /**
@@ -362,7 +389,7 @@ public abstract class Device implements Executable, Updateable {
    */
   public void sendReply(final String content, final double value) {
     sendMessage(MessageType.REPLY, lastMessage.getSender(), content, value,
-        lastMessage.getActionId(), lastMessage.getPriority());
+        lastMessage.getActionId(), lastMessage.getPriority(), lastMessage.getUuid());
   }
 
   /**

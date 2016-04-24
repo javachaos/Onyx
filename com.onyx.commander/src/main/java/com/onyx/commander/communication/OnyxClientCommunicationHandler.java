@@ -29,7 +29,7 @@ public class OnyxClientCommunicationHandler extends SimpleChannelInboundHandler<
 
   @Override
   public void channelRead0(ChannelHandlerContext ctx, Command msg) {
-    LOGGER.debug(msg.getAclMessage().getContent());
+    LOGGER.debug(msg.getMessage().getContent());
     client.addInMessage(msg);
   }
 

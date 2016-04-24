@@ -119,7 +119,7 @@ public class OnyxServer extends Device implements Runnable {
 
   @Override
   protected void alternate() {
-    final String peek = handler.getLastCmd().getAclMessage().getContent();
+    final String peek = handler.getLastCmd().getMessage().getContent();
     if (peek != null) {
       setDisplay("Latest Comm: " + peek);
     }
