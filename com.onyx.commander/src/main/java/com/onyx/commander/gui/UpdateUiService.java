@@ -86,7 +86,7 @@ public class UpdateUiService extends ScheduledService<String> {
             }
             if (!client.isConnected()) {
               connStatusLbl.setText("Connection Status: disconnected.");
-              vlcdrFuture.cancel(!client.isConnected());
+              vlcdrFuture.cancel(true);
             }
             final double time = (double) System.currentTimeMillis() - startTime;
             final double motor1spd = Double.parseDouble(

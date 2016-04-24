@@ -1,7 +1,5 @@
 package com.onyx.quadcopter.control;
 
-import java.util.UUID;
-
 import com.onyx.common.commands.ShutdownCommand;
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.AclPriority;

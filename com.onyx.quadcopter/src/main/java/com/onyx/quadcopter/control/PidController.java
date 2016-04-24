@@ -1,11 +1,10 @@
 package com.onyx.quadcopter.control;
 
-import java.util.UUID;
-
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.ActionId;
 import com.onyx.common.messaging.DeviceId;
 import com.onyx.common.utils.Constants;
+
 import com.onyx.quadcopter.devices.Device;
 
 /**

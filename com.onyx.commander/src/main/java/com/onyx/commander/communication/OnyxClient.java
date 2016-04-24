@@ -75,8 +75,9 @@ public class OnyxClient implements Runnable {
       boot.channel(NioSocketChannel.class);
       boot.handler(new OnyxClientChannelInitializer(this, sslCtx, host, port));
       Channel ch = boot.connect(host, port).sync().channel();
-      
+
       ChannelFuture lastWriteFuture = ch.writeAndFlush(lastInMsg);
+
       for (;;) {
         Command msg = outMsgs.peek();
         if (msg != null && !msg.isValid()) {
@@ -111,7 +112,7 @@ public class OnyxClient implements Runnable {
   public Command sendMessageAwaitReply(Command msg) {
     outMsgs.push(msg);
     while (isConnected) {
-      if (inMsgs.peek().getCommandId().compareTo(lastInMsg.getCommandId()) == 0) {
+      if (inMsgs.peek().getCommandId().compareTo(lastOutMsg.getCommandId()) == 0) {
         lastInMsg = inMsgs.pop();
         break;
       }

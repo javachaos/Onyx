@@ -1,5 +1,6 @@
 package com.onyx.quadcopter.communication;
 
+import com.onyx.common.commands.Command;
 import com.onyx.common.concurrent.ConcurrentStack;
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.DeviceId;
@@ -119,7 +120,11 @@ public class OnyxServer extends Device implements Runnable {
 
   @Override
   protected void alternate() {
-    final String peek = handler.getLastCmd().getMessage().getContent();
+    final Command c = handler.getLastCmd();
+    String peek = null;
+    if (c != null && c.isValid()) {
+      peek = c.getMessage().getContent();
+    }
     if (peek != null) {
       setDisplay("Latest Comm: " + peek);
     }
