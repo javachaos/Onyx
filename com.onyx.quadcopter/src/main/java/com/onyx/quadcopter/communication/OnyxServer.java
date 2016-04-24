@@ -1,7 +1,6 @@
 package com.onyx.quadcopter.communication;
 
 import com.onyx.common.commands.Command;
-import com.onyx.common.concurrent.ConcurrentStack;
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.DeviceId;
 import com.onyx.common.utils.Constants;
@@ -23,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.security.cert.CertificateException;
+
 import javax.net.ssl.SSLException;
 
 /**
@@ -56,11 +56,6 @@ public class OnyxServer extends Device implements Runnable {
    * Communication handler.
    */
   private OnyxServerChannelHandler handler;
-  
-  /**
-   * ConcurrentStack of responses.
-   */
-  private ConcurrentStack<String> responses;
 
   private OnyxServerChannelInitializer initializer;
 
@@ -134,14 +129,4 @@ public class OnyxServer extends Device implements Runnable {
   public boolean selfTest() {
     return true;// TODO complete NettyCommServer selfTest.
   }
-
-  /**
-   * Get the next response to send to client.
-   * @return
-   *    the next response to send to the client.
-   */
-  public String getNextResponse() {
-    return responses.pop();
-  }
-
 }

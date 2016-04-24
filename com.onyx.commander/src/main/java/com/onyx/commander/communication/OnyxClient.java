@@ -3,7 +3,7 @@ package com.onyx.commander.communication;
 import com.onyx.common.commands.CloseCommand;
 import com.onyx.common.commands.Command;
 import com.onyx.common.commands.CommandType;
-import com.onyx.common.concurrent.ConcurrentStack;
+import com.onyx.common.utils.Constants;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -17,6 +17,8 @@ import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ArrayBlockingQueue;
 
 import javax.net.ssl.SSLException;
 
@@ -43,8 +45,8 @@ public class OnyxClient implements Runnable {
   private int port;
 
   private SslContext sslCtx;
-  private ConcurrentStack<Command> outMsgs;
-  private ConcurrentStack<Command> inMsgs;
+  private ArrayBlockingQueue<Command> outMsgs;
+  private ArrayBlockingQueue<Command> inMsgs;
   private boolean isConnected;
   
   private Command lastOutMsg;
@@ -60,8 +62,8 @@ public class OnyxClient implements Runnable {
   public OnyxClient(final String servHost, final int servPort) {
     this.host = servHost;
     this.port = servPort;
-    outMsgs = new ConcurrentStack<Command>();
-    inMsgs = new ConcurrentStack<Command>();
+    outMsgs = new ArrayBlockingQueue<Command>(Constants.NETWORK_BUFFER_SIZE);
+    inMsgs = new ArrayBlockingQueue<Command>(Constants.NETWORK_BUFFER_SIZE);
   }
 
   @Override
@@ -81,7 +83,7 @@ public class OnyxClient implements Runnable {
       for (;;) {
         Command msg = outMsgs.peek();
         if (msg != null && !msg.isValid()) {
-          lastWriteFuture = ch.writeAndFlush(lastOutMsg = outMsgs.pop());
+          lastWriteFuture = ch.writeAndFlush(lastOutMsg = outMsgs.poll());
         }
         isConnected = true;
         if (lastOutMsg != null && lastOutMsg.getCommandType() == CommandType.CLOSE) {
@@ -110,10 +112,10 @@ public class OnyxClient implements Runnable {
    *        the command string to send to the server.
    */
   public Command sendMessageAwaitReply(Command msg) {
-    outMsgs.push(msg);
+    outMsgs.offer(msg);
     while (isConnected) {
       if (inMsgs.peek().getCommandId().compareTo(lastOutMsg.getCommandId()) == 0) {
-        lastInMsg = inMsgs.pop();
+        lastInMsg = inMsgs.poll();
         break;
       }
     }
@@ -132,7 +134,7 @@ public class OnyxClient implements Runnable {
    * Shutdown the connection.
    */
   public void shutdown() {
-    outMsgs.push(new CloseCommand());
+    outMsgs.offer(new CloseCommand());
   }
 
   /**
@@ -141,7 +143,7 @@ public class OnyxClient implements Runnable {
    *    the next Input message from the server.
    */
   public void addInMessage(Command msg) {
-    inMsgs.push(msg);
+    inMsgs.offer(msg);
   }
 
   /**
@@ -150,7 +152,7 @@ public class OnyxClient implements Runnable {
    * @return
    *    the inMsgs stack.
    */
-  public ConcurrentStack<Command> getInMessages() {
+  public ArrayBlockingQueue<Command> getInMessages() {
     return inMsgs;
   }
 }

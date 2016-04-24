@@ -7,13 +7,12 @@ package com.onyx.common.utils;
  * Contributors: Fred Laderoute - initial API and implementation
  ******************************************************************************/
 
-import com.onyx.common.concurrent.ConcurrentStack;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 
 
@@ -33,7 +32,7 @@ public final class ThreadUtils {
   /**
    * Count down latch stack.
    */
-  private static ConcurrentStack<CountDownLatch> latchStack = new ConcurrentStack<CountDownLatch>();
+  private static ArrayBlockingQueue<CountDownLatch> latchStack = new ArrayBlockingQueue<CountDownLatch>(10);
 
   /**
    * Unused Ctor.
@@ -49,7 +48,7 @@ public final class ThreadUtils {
     try {
       LOGGER.debug("Latch awaiting count down.");
       CountDownLatch latch = new CountDownLatch(waitCount);
-      latchStack.push(latch);
+      latchStack.offer(latch);
       latch.await();
     } catch (InterruptedException e1) {
       ExceptionUtils.fatalError(ThreadUtils.class, e1);
@@ -68,7 +67,7 @@ public final class ThreadUtils {
     try {
       LOGGER.debug("Latch awaiting count down.");
       CountDownLatch latch = new CountDownLatch(waitCount);
-      latchStack.push(latch);
+      latchStack.offer(latch);
       if (latch.await(timeout, unit)) {
         LOGGER.debug("No countdown required to latches to await.");
       }
@@ -82,10 +81,10 @@ public final class ThreadUtils {
    */
   public static void countDown() {
     if (!latchStack.isEmpty()) {
-      CountDownLatch latch = latchStack.pop();
+      CountDownLatch latch = latchStack.poll();
       latch.countDown();
       if (latch.getCount() != 0) {
-        latchStack.push(latch);
+        latchStack.offer(latch);
       }
       LOGGER.debug("Latch count down complete.");
     }
@@ -96,7 +95,7 @@ public final class ThreadUtils {
    */
   public static void shutdown() {
     while (!latchStack.isEmpty()) {
-      CountDownLatch latch = latchStack.pop();
+      CountDownLatch latch = latchStack.poll();
       while (latch.getCount() > 0) {
         latch.countDown();
       }
