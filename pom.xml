@@ -3,7 +3,7 @@
 
   <groupId>com.onyx</groupId>
   <artifactId>com.onyx</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Project Onyx</name>
