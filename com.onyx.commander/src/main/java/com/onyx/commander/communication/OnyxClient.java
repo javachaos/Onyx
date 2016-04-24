@@ -2,6 +2,7 @@ package com.onyx.commander.communication;
 
 import com.onyx.common.commands.CloseCommand;
 import com.onyx.common.commands.Command;
+import com.onyx.common.commands.CommandType;
 import com.onyx.common.concurrent.ConcurrentStack;
 
 import io.netty.bootstrap.Bootstrap;
@@ -82,7 +83,7 @@ public class OnyxClient implements Runnable {
           lastWriteFuture = ch.writeAndFlush(lastOutMsg = outMsgs.pop());
         }
         isConnected = true;
-        if (lastOutMsg != null && lastOutMsg.equals("COMM:CLOSE")) {
+        if (lastOutMsg != null && lastOutMsg.getCommandType() == CommandType.CLOSE) {
           ch.closeFuture().sync();
           isConnected = false;
           break;

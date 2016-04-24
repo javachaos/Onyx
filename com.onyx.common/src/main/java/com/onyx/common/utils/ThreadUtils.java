@@ -69,7 +69,9 @@ public final class ThreadUtils {
       LOGGER.debug("Latch awaiting count down.");
       CountDownLatch latch = new CountDownLatch(waitCount);
       latchStack.push(latch);
-      latch.await(timeout, unit);
+      if (latch.await(timeout, unit)) {
+        LOGGER.debug("No countdown required to latches to await.");
+      }
     } catch (InterruptedException e1) {
       ExceptionUtils.fatalError(ThreadUtils.class, e1);
     }

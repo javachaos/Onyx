@@ -73,16 +73,12 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<Comman
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, Command msg) throws Exception {
-    sendMessage(msg.getAclMessage());
+    server.sendMessage(msg.getAclMessage());
     LOGGER.debug(msg.getAclMessage().getContent());
     lastCmd = msg;
   }
 
   public Command getLastCmd() {
     return lastCmd;
-  }
-
-  private void sendMessage(AclMessage acl) {
-    server.sendMessage(acl);
   }
 }

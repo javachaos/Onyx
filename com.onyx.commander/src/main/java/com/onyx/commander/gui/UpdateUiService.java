@@ -42,6 +42,7 @@ public class UpdateUiService extends ScheduledService<String> {
   public UpdateUiService(OnyxClient client,Future<?> videoFuture, Node... nodes) {
     this.client = client;
     this.nodes = nodes;
+    this.vlcdrFuture = videoFuture;
     init();
     startTime = System.currentTimeMillis();
   }
