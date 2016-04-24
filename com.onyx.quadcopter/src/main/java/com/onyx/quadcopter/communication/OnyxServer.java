@@ -65,29 +65,23 @@ public class OnyxServer extends Device implements Runnable {
   }
 
   @Override
-  protected void init() {
-    try {
-      SelfSignedCertificate ssc = new SelfSignedCertificate();
-      SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
-      handler = new OnyxServerChannelHandler(this);
-      initializer = new OnyxServerChannelInitializer(sslCtx, handler);
-    } catch (final SSLException | CertificateException e1) {
-      ExceptionUtils.logError(getClass(), e1);
-      throw new OnyxException(e1.getMessage(), LOGGER);
-    }
-  }
+  protected void init() {}
 
   @Override
   public void run() {
     LOGGER.debug("Starting CommServer.");
     try {
+      SelfSignedCertificate ssc = new SelfSignedCertificate();
+      SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
+      handler = new OnyxServerChannelHandler(this);
+      initializer = new OnyxServerChannelInitializer(sslCtx, handler);
       final ServerBootstrap b = new ServerBootstrap();
       b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
           .handler(new LoggingHandler(LogLevel.INFO))
           .childHandler(initializer);
       b.bind(PORT).sync().channel().closeFuture().sync();
       LOGGER.debug("CommServer Started.");
-    } catch (final InterruptedException e1) {
+    } catch (final InterruptedException | SSLException | CertificateException e1) {
       ExceptionUtils.logError(getClass(), e1);
       throw new OnyxException(e1.getMessage(), LOGGER);
     } finally {
