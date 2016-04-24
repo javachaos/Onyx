@@ -78,7 +78,7 @@ public class OnyxClient implements Runnable {
       boot.handler(new OnyxClientChannelInitializer(this, sslCtx, host, port));
       Channel ch = boot.connect(host, port).sync().channel();
 
-      ChannelFuture lastWriteFuture = ch.writeAndFlush(lastInMsg);
+      ChannelFuture lastWriteFuture = null;
 
       for (;;) {
         Command msg = outMsgs.peek();
