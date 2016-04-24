@@ -49,6 +49,8 @@ public class OnyxClient implements Runnable {
 
   private boolean isConnected;
 
+  private String lastInMsg = "COMM:START";
+
   /**
    * Onyx Client ctor.
    * @param servHost
@@ -73,10 +75,9 @@ public class OnyxClient implements Runnable {
       boot.group(workerGroup);
       boot.channel(NioSocketChannel.class);
       boot.handler(new OnyxClientChannelInitializer(this, sslCtx, host, port));
-
       Channel ch = boot.connect(host, port).sync().channel();
-      ChannelFuture lastWriteFuture = null;
-
+      
+      ChannelFuture lastWriteFuture = ch.writeAndFlush(lastInMsg + System.lineSeparator());
       for (;;) {
         String msg = outMsgs.peek();
         if (msg != null && !msg.isEmpty()) {
@@ -100,15 +101,24 @@ public class OnyxClient implements Runnable {
       workerGroup.shutdownGracefully();
     }
   }
-
+  
   /**
    * Send a message to the Onyx server.
+   * Blocks until the response is recieved.
    * 
    * @param cmd
    *        the command string to send to the server.
    */
-  public void sendMessage(String cmd) {
+  public String sendMessageAwaitReply(final String cmd) {
     outMsgs.push(cmd);
+    while (isConnected) {
+      //Wait for response.
+      if (!inMsgs.peek().equals(lastInMsg)) {
+        lastInMsg = inMsgs.pop();
+        break;
+      }
+    }
+    return lastInMsg;
   }
 
   /**

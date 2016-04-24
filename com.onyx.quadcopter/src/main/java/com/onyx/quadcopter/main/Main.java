@@ -32,10 +32,15 @@ public class Main {
 
   /**
    * Main method. Application Entry Point.
-   * @param args
-   *     unused app arguments.
    */
   public static void main(final String[] args) {
+    begin();
+  }
+  
+  /**
+   * Begin execution.
+   */
+  static void begin() {
     Thread.setDefaultUncaughtExceptionHandler(new OnyxExceptionHandler());
     final Controller controller = Controller.getInstance();
     final StateMonitor monitor = new StateMonitor(controller);

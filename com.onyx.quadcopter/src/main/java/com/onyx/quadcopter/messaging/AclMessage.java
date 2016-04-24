@@ -189,7 +189,6 @@ public final class AclMessage implements Serializable, Comparable<AclMessage> {
 
   /**
    * Validate this ACL message to ensure that it can be sent to the blackboard.
-   *
    * @return true if this message is valid.
    */
   public boolean isValid() {
