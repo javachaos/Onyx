@@ -40,15 +40,14 @@ public class OnyxClient implements Runnable {
   private int port;
 
   private SslContext sslCtx;
-
   private ConcurrentStack<String> outMsgs;
-
   private ConcurrentStack<String> inMsgs;
-
   private String lastMsg;
-
   private boolean isConnected;
 
+  /**
+   * Last message recieved from Server.
+   */
   private String lastInMsg = "COMM:START";
 
   /**
@@ -144,7 +143,7 @@ public class OnyxClient implements Runnable {
   public void addInMessage(String msg) {
     inMsgs.push(msg);
   }
-  
+
   /**
    * Return the inMsgs stack.
    * 
