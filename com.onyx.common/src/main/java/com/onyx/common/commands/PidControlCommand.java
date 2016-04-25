@@ -38,10 +38,5 @@ public class PidControlCommand extends Command {
     msg.setSender(getSender());
     return msg;
   }
-  
-  @Override
-  public String toString() {
-    return super.getString();
-  }
 
 }

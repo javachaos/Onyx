@@ -37,10 +37,5 @@ public class SendDataCommand extends Command {
     msg.setUuid(uuid);
     return msg;
   }
-  
-  @Override
-  public String toString() {
-    return super.getString();
-  }
 
 }

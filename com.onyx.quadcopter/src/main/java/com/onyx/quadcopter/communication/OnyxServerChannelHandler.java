@@ -1,6 +1,7 @@
 package com.onyx.quadcopter.communication;
 
 import com.onyx.common.commands.Command;
+import com.onyx.common.commands.CommandType;
 import com.onyx.quadcopter.exceptions.OnyxException;
 
 import io.netty.channel.Channel;
@@ -72,6 +73,10 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<Comman
 
   @Override
   protected void channelRead0(ChannelHandlerContext ctx, Command msg) throws Exception {
+    if (msg.getCommandType() == CommandType.CLOSE) {
+      ctx.close();
+      return;
+    }
     server.sendMessage(msg.getMessage());
     LOGGER.debug(msg.toString());
     lastCmd = msg;

@@ -97,11 +97,19 @@ public class OnyxServer extends Device implements Runnable {
 
   @Override
   public void update(final AclMessage msg) {
-    final Command cmd = new SendDataCommand(
-        msg.getSender(), 
-        msg.getContent(), 
-        msg.getUuid());
-    handler.addData(cmd);
+    switch (msg.getActionId()) {
+      case SEND_DATA:
+        final Command cmd = new SendDataCommand(
+            msg.getSender(), 
+            msg.getContent(), 
+            msg.getUuid());
+        handler.addData(cmd);
+        break;
+      case CLOSE_CONNECTION:
+        break;
+      default:
+        break;
+    }
   }
 
   @Override

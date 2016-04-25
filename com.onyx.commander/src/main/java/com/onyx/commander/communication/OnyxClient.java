@@ -115,7 +115,7 @@ public class OnyxClient implements Runnable {
     
     outMsgs.offer(msg);
     while (isConnected) {
-      if (inMsgs.peek().getCommandId().compareTo(lastOutMsg.getCommandId()) == 0) {
+      if (inMsgs.peek().getCommandId().compareTo(msg.getCommandId()) == 0) {
         lastInMsg = inMsgs.poll();
         break;
       }

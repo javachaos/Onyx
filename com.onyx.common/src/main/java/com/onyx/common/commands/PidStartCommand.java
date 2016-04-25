@@ -38,10 +38,4 @@ public class PidStartCommand extends Command {
     msg.setSender(getSender());
     return null;
   }
-  
-  @Override
-  public String toString() {
-    return super.getString();
-  }
-
 }

@@ -41,11 +41,5 @@ public class GetDataCommand extends Command {
     msg.setPriority(AclPriority.MEDIUM);
     return msg;
   }
-  
-  @Override
-  public String toString() {
-    return super.getString();
-  }
-
 
 }
