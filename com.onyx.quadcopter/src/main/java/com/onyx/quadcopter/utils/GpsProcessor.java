@@ -1,10 +1,15 @@
 package com.onyx.quadcopter.utils;
 
 import com.onyx.common.utils.Constants;
+import com.onyx.quadcopter.devices.GpsDevice;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 
 /**
  * GPS Processor.
@@ -12,6 +17,8 @@ import java.io.OutputStream;
  *
  */
 public class GpsProcessor {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(GpsDevice.class);
   
   /**
    * Command array.
@@ -33,6 +40,7 @@ public class GpsProcessor {
    */
   public GpsProcessor() {
     processBuilder = new ProcessBuilder(CMD_ARRAY);
+    LOGGER.debug("GPS Processor: created");
   }
   
   /**
@@ -41,6 +49,7 @@ public class GpsProcessor {
   public void start() {
     try {
       process = processBuilder.start();
+      LOGGER.debug("GPS Processor: started");
     } catch (IOException e1) {
       e1.printStackTrace();
     }
@@ -51,6 +60,7 @@ public class GpsProcessor {
    */
   public void stop() {
     process.destroy();
+    LOGGER.debug("GPS Processor: stopped");
   }
   
   /**
