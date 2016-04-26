@@ -50,8 +50,8 @@ public class GpsDevice extends Device implements IObjectListener {
   protected void init() {
     try {
       gps = new GPSdEndpoint(Constants.LOCALHOST, Constants.GPSD_PORT, new ResultParser());
-      gps.start();
       gps.addListener(this);
+      gps.start();
     } catch (IOException e1) {
       LOGGER.error(e1.getMessage());
     }
