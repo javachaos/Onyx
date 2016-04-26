@@ -34,9 +34,7 @@ public class GpsDevice extends Device implements SentenceListener {
   public void update(AclMessage msg) {
     switch (msg.getActionId()) {
       case SEND_DATA:
-        synchronized (lastSent) {
           sendReply(lastSent.toSentence());
-        }
         break;
       default:
         break;
@@ -59,11 +57,9 @@ public class GpsDevice extends Device implements SentenceListener {
 
   @Override
   protected void alternate() {
-    synchronized (lastSent) {
       LOGGER.debug(lastSent.toSentence());
       sendMessage(DeviceId.OLED_DEVICE, "Fix Quality: " + lastSent.getFixQuality(),
           ActionId.DISPLAY);
-    }
   }
 
   @Override
@@ -85,13 +81,10 @@ public class GpsDevice extends Device implements SentenceListener {
 
   @Override
   public void sentenceRead(SentenceEvent event) {
-    
     GGASentence ss = (GGASentence) event.getSentence();
     if (ss.isValid()) {
       LOGGER.trace("GGA position: " + ss.getPosition());
-      synchronized (lastSent) {
         lastSent = ss;
-      }
     } else {
       LOGGER.error("Invalid NMEA sentence.");
     }
