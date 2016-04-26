@@ -495,4 +495,6 @@ public final class Constants {
 
   public static final String GPS_DEVICE = "/dev/ttyS0";
 
+  public static final int GPS_BAUD = 9600;
+
 }

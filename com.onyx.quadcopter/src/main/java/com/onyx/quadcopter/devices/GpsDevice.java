@@ -1,23 +1,35 @@
 package com.onyx.quadcopter.devices;
 
+
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.ActionId;
 import com.onyx.common.messaging.DeviceId;
-import com.onyx.quadcopter.utils.GpsProcessor;
+import com.onyx.common.utils.Constants;
+
+import gnu.io.CommPortIdentifier;
+import gnu.io.SerialPort;
 
 import net.sf.marineapi.nmea.event.AbstractSentenceListener;
+import net.sf.marineapi.nmea.io.ExceptionListener;
 import net.sf.marineapi.nmea.io.SentenceReader;
 import net.sf.marineapi.nmea.sentence.GGASentence;
+import net.sf.marineapi.nmea.sentence.SentenceValidator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GpsDevice extends Device {
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Enumeration;
+
+public class GpsDevice extends Device implements ExceptionListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GpsDevice.class);
   private GGASentence lastSent;
-  private GpsProcessor gps;
-  
+  //private GpsProcessor gps;
+
   public GpsDevice() {
     super(DeviceId.GPS_DEVICE);
   }
@@ -36,34 +48,45 @@ public class GpsDevice extends Device {
       default:
         break;
     }
-    
+
   }
 
   @Override
   protected void init() {
-    gps = new GpsProcessor();
-    gps.start();
-    final SentenceReader reader = new SentenceReader(gps.getInputStream());
-    reader.addSentenceListener(new GgaListener());
-    reader.start();
+    //gps = new GpsProcessor();
+    //gps.start();
+    //final SentenceReader reader = new SentenceReader(gps.getInputStream());
+    SerialPort sp = getSerialPort();
+
+    if (sp != null) {
+      InputStream is = null;
+      try {
+        is = sp.getInputStream();
+      } catch (IOException e1) {
+        LOGGER.error(e1.getMessage());
+      }
+      final SentenceReader reader = new SentenceReader(is);
+      reader.addSentenceListener(new GgaListener());
+      reader.setExceptionListener(this);
+      reader.start();
+    }
   }
 
   @Override
   public void shutdown() {
-    gps.stop();
+    //gps.stop();
   }
 
   @Override
   protected void alternate() {
     LOGGER.debug(lastSent.toSentence());
-    sendMessage(DeviceId.OLED_DEVICE, "Fix Quality: " + lastSent.getFixQuality(),
-        ActionId.DISPLAY);
+    sendMessage(DeviceId.OLED_DEVICE, "Fix Quality: " + lastSent.getFixQuality(), ActionId.DISPLAY);
   }
 
   @Override
   public boolean selfTest() {
     return true;
-  }  
+  }
 
   private class GgaListener extends AbstractSentenceListener<GGASentence> {
     @Override
@@ -75,6 +98,59 @@ public class GpsDevice extends Device {
         LOGGER.error("Invalid NMEA sentence.");
       }
     }
+  }
+
+  @Override
+  public void onException(Exception e1) { // Do nothing.
+  }
+
+  /**
+   * Scan serial ports for NMEA data.
+   * 
+   * @return SerialPort from which NMEA data was found, or null if data was not found in any of the
+   *         ports.
+   */
+  private SerialPort getSerialPort() {
+    try {
+      Enumeration<?> e1 = CommPortIdentifier.getPortIdentifiers();
+
+      while (e1.hasMoreElements()) {
+        CommPortIdentifier id = (CommPortIdentifier) e1.nextElement();
+
+        if (id.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+          SerialPort sp = (SerialPort) id.open(Constants.GPS_DEVICE, 30);
+          sp.setSerialPortParams(Constants.GPS_BAUD, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+              SerialPort.PARITY_NONE);
+          InputStream is = sp.getInputStream();
+          InputStreamReader isr = new InputStreamReader(is);
+          BufferedReader buf = new BufferedReader(isr);
+          LOGGER.info("Scanning port " + sp.getName());
+
+          // try each port few times before giving up
+          for (int i = 0; i < 5; i++) {
+            try {
+              String data = buf.readLine();
+              if (SentenceValidator.isValid(data)) {
+                LOGGER.info("NMEA data found!");
+                return sp;
+              }
+            } catch (Exception ex) {
+              ex.printStackTrace();
+            }
+          }
+          is.close();
+          isr.close();
+          buf.close();
+        }
+      }
+
+      LOGGER.info("NMEA data was not found..");
+
+    } catch (Exception e2) {
+      LOGGER.error(e2.getMessage());
+    }
+
+    return null;
   }
 
 }
