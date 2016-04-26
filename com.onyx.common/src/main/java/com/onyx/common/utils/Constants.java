@@ -493,4 +493,6 @@ public final class Constants {
 
   public static final int GPSD_PORT = 2947;
 
+  public static final String GPS_DEVICE = "/dev/ttyS0";
+
 }

@@ -164,23 +164,13 @@
     </dependency>
     <dependency>
         <groupId>com.intel.upm</groupId>
-        <artifactId>upm_i2clcd</artifactId>
-        <version>0.0.1</version>
-    </dependency>
-    <dependency>
-        <groupId>com.intel.upm</groupId>
-        <artifactId>upm_ublox6</artifactId>
-        <version>0.0.1</version>
-    </dependency>
-    <dependency>
-        <groupId>com.intel.upm</groupId>
         <artifactId>mraa</artifactId>
         <version>0.0.1</version>
     </dependency>
     <dependency>
-        <groupId>de.taimos</groupId>
-        <artifactId>gpsd4java</artifactId>
-        <version>1.5</version>
+        <groupId>net.sf.marineapi</groupId>
+        <artifactId>marineapi</artifactId>
+        <version>0.9.0</version>
     </dependency>
   </dependencies>
   <repositories>
