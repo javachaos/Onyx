@@ -33,6 +33,7 @@ public class GpsDevice extends Device implements IObjectListener {
 
   @Override
   protected void update() {
+    super.update();
   }
 
   @Override
@@ -43,6 +44,11 @@ public class GpsDevice extends Device implements IObjectListener {
         break;
       default:
         break;
+    }
+    try {
+      LOGGER.debug("Poll: {}", gps.poll());
+    } catch (IOException e1) {
+      LOGGER.error(e1.getMessage());
     }
   }
 
