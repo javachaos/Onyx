@@ -23,7 +23,7 @@ public class GpsProcessor {
   /**
    * Command array.
    */
-  private static final String[] CMD_ARRAY = {"/bin/bash", "/usr/bin/gpscat", Constants.GPS_DEVICE}; 
+  private static final String[] CMD_ARRAY = {"/usr/bin/gpscat", Constants.GPS_DEVICE}; 
     
   /**
    * The process builder for this Gps Processor.
