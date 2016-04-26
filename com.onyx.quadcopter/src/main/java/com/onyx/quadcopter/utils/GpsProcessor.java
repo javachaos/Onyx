@@ -1,14 +1,16 @@
 package com.onyx.quadcopter.utils;
 
+
 import com.onyx.common.utils.Constants;
 import com.onyx.quadcopter.devices.GpsDevice;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
 
 
 /**
@@ -65,20 +67,22 @@ public class GpsProcessor {
   
   /**
    * Get the input stream for the GPS process.
+   * 
    * @return
    *    the input stream for the GPS process.
    */
-  public InputStream getInputStream() {
-    return process.getInputStream();
+  public BufferedInputStream getInputStream() {
+    return new BufferedInputStream(process.getInputStream());
   }
   
   /**
    * Get the output stream for the GPS process.
+   * 
    * @return
    *    the output stream for the GPS process.
    */
-  public OutputStream getOutputStream() {
-    return process.getOutputStream();
+  public BufferedOutputStream getOutputStream() {
+    return new BufferedOutputStream(process.getOutputStream());
   }
 
 }
