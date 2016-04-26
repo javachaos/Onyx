@@ -489,4 +489,8 @@ public final class Constants {
   
   public static final double DPI_MULTIPLIER = 1.0;
 
+  public static final String LOCALHOST = "127.0.0.1";
+
+  public static final int GPSD_PORT = 2947;
+
 }
