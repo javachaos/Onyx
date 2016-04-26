@@ -1,7 +1,7 @@
 package com.onyx.commander.gui;
 
 import com.onyx.commander.communication.OnyxClient;
-import com.onyx.common.commands.GetDataCommand;
+import com.onyx.common.commands.Command;
 
 import javafx.application.Platform;
 import javafx.concurrent.ScheduledService;
@@ -11,6 +11,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 
 import java.util.concurrent.Future;
 
@@ -20,15 +21,13 @@ public class UpdateUiService extends ScheduledService<String> {
   private Node[] nodes;
 
   private Label connStatusLbl;
-  //private TextArea commandOutputTextArea;
   private Future<?> vlcdrFuture;
   private LineChart<Double, Double> engineSpeedChart;
   private Series<Double, Double> motor1Series;
   private Series<Double, Double> motor2Series;
   private Series<Double, Double> motor3Series;
   private Series<Double, Double> motor4Series;
-  
-  private double startTime;
+  private TextArea commandOutputTextArea;
   
   /**
    * Create a new UI Update service.
@@ -44,7 +43,6 @@ public class UpdateUiService extends ScheduledService<String> {
     this.nodes = nodes;
     this.vlcdrFuture = videoFuture;
     init();
-    startTime = System.currentTimeMillis();
   }
   
   /**
@@ -53,8 +51,8 @@ public class UpdateUiService extends ScheduledService<String> {
   @SuppressWarnings("unchecked")
   public void init() {
     connStatusLbl = (Label) nodes[0];
-    //commandOutputTextArea = (TextArea) nodes[1];
-    engineSpeedChart = (LineChart<Double, Double>) nodes[1];
+    commandOutputTextArea = (TextArea) nodes[1];
+    engineSpeedChart = (LineChart<Double, Double>) nodes[2];
     motor1Series = new XYChart.Series<Double, Double>();
     motor1Series.setName("Motor 1");
     motor2Series = new XYChart.Series<Double, Double>();
@@ -68,6 +66,18 @@ public class UpdateUiService extends ScheduledService<String> {
     engineSpeedChart.getData().add(motor3Series);
     engineSpeedChart.getData().add(motor4Series);
     engineSpeedChart.setAnimated(true);
+  }
+  
+
+  /**
+   * Add the response pop to the Command response text area.
+   * @param pop
+   *      the response to be added to the text area.
+   */
+  private void addCommandResponse(String pop) {
+    commandOutputTextArea.setText(commandOutputTextArea.getText() 
+        + pop 
+        + System.lineSeparator());
   }
   
   @Override
@@ -88,27 +98,10 @@ public class UpdateUiService extends ScheduledService<String> {
               connStatusLbl.setText("Connection Status: disconnected.");
               vlcdrFuture.cancel(true);
             }
-//            final double time = (double) System.currentTimeMillis() - startTime;
-//            final double motor1spd = Double.parseDouble(
-//                client.sendMessageAwaitReply(
-//                    new GetDataCommand("MOTOR1")).getMessage().getContent());
-//            final double motor2spd = Double.parseDouble(
-//                client.sendMessageAwaitReply(
-//                    new GetDataCommand("MOTOR2")).getMessage().getContent());
-//            final double motor3spd = Double.parseDouble(
-//                client.sendMessageAwaitReply(
-//                    new GetDataCommand("MOTOR3")).getMessage().getContent());
-//            final double motor4spd = Double.parseDouble(
-//                client.sendMessageAwaitReply(
-//                    new GetDataCommand("MOTOR4")).getMessage().getContent());
-//            motor1Series.getData().add(new XYChart.Data<Double, Double>(
-//                time, motor1spd));
-//            motor2Series.getData().add(new XYChart.Data<Double, Double>(
-//                time, motor2spd));
-//            motor3Series.getData().add(new XYChart.Data<Double, Double>(
-//                time, motor3spd));
-//            motor4Series.getData().add(new XYChart.Data<Double, Double>(
-//                time, motor4spd));
+            Command msg =  client.getNextMessage();
+            if (msg != null) {
+              addCommandResponse(msg.getMessage().getContent());
+            }
           }
         });
         return null;

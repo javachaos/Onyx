@@ -168,7 +168,7 @@ public final class GuiController implements EventHandler<WindowEvent> {
   /**
    * Command Regex.
    */
-  private static final String CMD_REGEX = "[a-zA-Z0-9\\.-_]+:[([a-zA-Z0-9\\.-]*)([,]*)]+";
+  private static final String CMD_REGEX = "[a-zA-Z0-9\\.-_]+:[([a-zA-Z0-9\\.-_]*)([,]*)]+";
 
   /**
    * Connect event.
@@ -185,6 +185,7 @@ public final class GuiController implements EventHandler<WindowEvent> {
       loadWebview(ip);
       uiUpdateService = new UpdateUiService(client, vlcdrFuture, 
           connStatusLbl,
+          commandOutputTextArea,
           engineSpeedChart);
       uiUpdateService.setExecutor(Main.COORDINATOR);
       uiUpdateService.setPeriod(Duration.seconds(0.25));
@@ -214,23 +215,10 @@ public final class GuiController implements EventHandler<WindowEvent> {
   protected void sendCommand() {
     String cmd = commandTextField.getText();
     if (cmd.matches(CMD_REGEX)) {
-      addCommandResponse(
-          client.sendMessageAwaitReply(
-              CommandUtils.parseCommand(cmd)).getMessage().getContent());
+      client.sendMessage(CommandUtils.parseCommand(cmd));
     } else {
       LOGGER.debug("Invalid command format.");
     }
-  }
-
-  /**
-   * Add the response pop to the Command response text area.
-   * @param pop
-   *      the response to be added to the text area.
-   */
-  private void addCommandResponse(String pop) {
-    commandOutputTextArea.setText(commandOutputTextArea.getText() 
-        + pop 
-        + System.lineSeparator());
   }
 
   /**

@@ -47,7 +47,7 @@ public final class StateMonitor extends AbstractStateMonitor implements Runnable
    */
   @Override
   protected void init() {
-    isRunning = true;
+    isRunning.set(true);
     state = OnyxState.STARTUP;
     previousState = OnyxState.SHUTDOWN;
   }
@@ -97,7 +97,7 @@ public final class StateMonitor extends AbstractStateMonitor implements Runnable
    */
   @Override
   public void run() {
-    if (isRunning) {
+    if (isRunning.get()) {
       update();
     }
   }

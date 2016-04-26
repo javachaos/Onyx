@@ -1,11 +1,28 @@
 package com.onyx.common.state;
 
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.onyx.common.utils.Constants;
 import com.onyx.common.utils.ShutdownAgent;
 import com.onyx.common.utils.ThreadUtils;
 
+/**
+ * <p>This class represents an abstract state monitor.
+ * This class is the base class for all state monitor implementations
+ * within the Onyx system.</p>
+ * 
+ * <p>Application State is managed by a set enum types of {@link OnyxState Onyx states}.</p>
+ * 
+ * <p>Upon switching states the internal static state of this class is changed,
+ * the previous state is held for convenience and the boolean type
+ * isStateChanged is set to true which may be accessed by call to {@link #isStateChanged()}</p>
+ * 
+ * <p>This is intended to be ThreadSafe.</p>
+ * 
+ * @author fred
+ *
+ */
 public abstract class AbstractStateMonitor implements Runnable {
   
   /**
@@ -26,12 +43,12 @@ public abstract class AbstractStateMonitor implements Runnable {
   /**
    * True if the application state has changed since the last update.
    */
-  private boolean stateChanged;
+  private AtomicBoolean stateChanged = new AtomicBoolean(false);
 
   /**
    * True if the monitor is running.
    */
-  protected volatile boolean isRunning = false;
+  protected AtomicBoolean isRunning = new AtomicBoolean(false);
   
   private ScheduledExecutorService COORDINATOR;
   
@@ -52,7 +69,7 @@ public abstract class AbstractStateMonitor implements Runnable {
    */
   @Override
   public void run() {
-    if (isRunning) {
+    if (isRunning.get()) {
       update();
     }
   }
@@ -63,7 +80,7 @@ public abstract class AbstractStateMonitor implements Runnable {
    * @return true if the monitor is running.
    */
   public boolean isRunning() {
-    return isRunning;
+    return isRunning.get();
   }
   
   /**
@@ -72,7 +89,7 @@ public abstract class AbstractStateMonitor implements Runnable {
    * @return true if the state has changed.
    */
   public boolean isStateChanged() {
-    return stateChanged;
+    return stateChanged.get();
   }
 
   /**
@@ -81,7 +98,7 @@ public abstract class AbstractStateMonitor implements Runnable {
    * @param changed the state to be set.
    */
   protected void setStateChanged(final boolean changed) {
-    stateChanged = changed;
+    stateChanged.set(changed);
   }
   
   /**
@@ -107,23 +124,23 @@ public abstract class AbstractStateMonitor implements Runnable {
   /**
    * Exit the application normally.
    */
-  public void exit() {
-    isRunning = false;
+  public synchronized void exit() {
+    isRunning.set(false);
     ThreadUtils.shutdown();
     COORDINATOR.schedule(new ShutdownAgent(COORDINATOR), Constants.SLEEP_TIME,
         Constants.MONITOR_TIMEUNIT);
     System.exit(status);
   }
 
-  public static void errorState() {
+  public synchronized static void errorState() {
     state = OnyxState.ERROR;
   }
   
-  public static void startupState() {
+  public synchronized static void startupState() {
     state = OnyxState.STARTUP;
   }
   
-  public static void shutdownState() {
+  public synchronized static void shutdownState() {
     state = OnyxState.SHUTDOWN;
   }
 }

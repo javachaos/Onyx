@@ -12,6 +12,9 @@ public class CloseCommand extends Command {
    */
   private static final long serialVersionUID = -8100911197785209407L;
 
+  /**
+   * Close client connection to server command.
+   */
   public CloseCommand() {
     super(CommandType.CLOSE, DeviceId.COMM_CLIENT);
   }
@@ -23,6 +26,5 @@ public class CloseCommand extends Command {
     msg.setSender(getSender());
     msg.setReciever(DeviceId.COMM_SERVER);
     return msg;
-    
   }
 }

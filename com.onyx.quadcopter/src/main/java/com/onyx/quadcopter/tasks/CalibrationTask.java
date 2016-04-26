@@ -32,7 +32,6 @@ public class CalibrationTask extends Task<AclMessage> {
         ActionId.PRINT, AclPriority.MAX);
     setAllSpeed(Constants.MOTOR_MAX_SPEED);
     while (!pressed) {
-      // Pause this thread but sleep it to avoid busy waiting.
       try {
         Thread.sleep(Constants.MOTOR_INIT_DELAY);
       } catch (InterruptedException e1) {

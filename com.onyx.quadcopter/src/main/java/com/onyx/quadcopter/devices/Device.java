@@ -15,7 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.PriorityBlockingQueue;
 
 
-public abstract class Device implements Executable, Updateable {
+public abstract class Device implements IDevice {
 
   /**
    * Logger.

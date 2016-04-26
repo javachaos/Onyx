@@ -2,7 +2,6 @@ package com.onyx.quadcopter.communication;
 
 import com.onyx.common.commands.Command;
 import com.onyx.common.commands.CommandType;
-import com.onyx.quadcopter.exceptions.OnyxException;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
@@ -56,10 +55,7 @@ public class OnyxServerChannelHandler extends SimpleChannelInboundHandler<Comman
 
   @Override
   public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
-    cause.printStackTrace();
-    ctx.close();
     LOGGER.error(cause.getMessage());
-    throw new OnyxException(cause.getMessage(), LOGGER);
   }
 
   /**

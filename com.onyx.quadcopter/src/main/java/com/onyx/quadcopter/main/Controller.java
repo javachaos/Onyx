@@ -32,7 +32,17 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * Controller class.
+ * <p>Controller class.</p>
+ * <p>This controller loops over a subset of devices
+ * which have been initialized. If a devices has not been
+ * initialized by a call to {@link #IDevice.initialize()}
+ * the device is not executed by this controller.</p>
+ * <p>This class holds state about the devices it contains,
+ * an instance of the {@link Blackboard}, a reference to {@link Cleaner}
+ * and one reference to the {@link OnyxServer} class.</p>
+ * <p>This class is a singleton class in that there is only one
+ * instance of this class throughout the lifetime of the Onyx
+ * system.</p>
  *
  * @author fred
  *

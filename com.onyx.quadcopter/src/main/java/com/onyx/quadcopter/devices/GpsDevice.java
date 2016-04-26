@@ -48,6 +48,7 @@ public class GpsDevice extends Device {
   @Override
   protected void init() {
     gps = new Ublox6(Constants.UART_PORT);
+    gps.setupTty();
   }
 
   @Override
