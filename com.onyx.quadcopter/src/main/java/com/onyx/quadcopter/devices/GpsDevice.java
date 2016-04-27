@@ -10,6 +10,7 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 
 import net.sf.marineapi.nmea.event.AbstractSentenceListener;
+import net.sf.marineapi.nmea.event.SentenceListener;
 import net.sf.marineapi.nmea.io.ExceptionListener;
 import net.sf.marineapi.nmea.io.SentenceReader;
 import net.sf.marineapi.nmea.sentence.GGASentence;
@@ -24,7 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 
-public class GpsDevice extends Device implements ExceptionListener {
+public class GpsDevice extends Device {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GpsDevice.class);
   private GGASentence lastSent;
@@ -63,8 +64,9 @@ public class GpsDevice extends Device implements ExceptionListener {
         LOGGER.error(e1.getMessage());
       }
       reader = new SentenceReader(is);
-      reader.addSentenceListener(new GgaListener());
-      reader.setExceptionListener(this);
+      SentenceListener sl = new GgaListener();
+      reader.addSentenceListener(sl);
+      reader.setExceptionListener((ExceptionListener) sl);
       reader.start();
     }
   }
@@ -83,23 +85,6 @@ public class GpsDevice extends Device implements ExceptionListener {
   @Override
   public boolean selfTest() {
     return true;
-  }
-
-  private class GgaListener extends AbstractSentenceListener<GGASentence> {
-    @Override
-    public void sentenceRead(GGASentence sentence) {
-      if (sentence != null && sentence.isValid()) {
-        LOGGER.trace("GGA position: " + sentence.getPosition());
-        lastSent = sentence;
-      } else {
-        LOGGER.error("Invalid NMEA sentence.");
-      }
-    }
-  }
-
-  @Override
-  public void onException(Exception e1) { // Do nothing.
-    e1.addSuppressed(e1);
   }
 
   /**
@@ -149,4 +134,22 @@ public class GpsDevice extends Device implements ExceptionListener {
     return sp;
   }
 
+  private class GgaListener extends AbstractSentenceListener<GGASentence>
+      implements ExceptionListener {
+    @Override
+    public void sentenceRead(GGASentence sentence) {
+      if (sentence != null && sentence.isValid()) {
+        LOGGER.trace("GGA position: " + sentence.getPosition());
+        lastSent = sentence;
+      } else {
+        LOGGER.error("Invalid NMEA sentence.");
+      }
+    }
+
+    @Override
+    public void onException(Exception e1) { // Do nothing.
+      e1.addSuppressed(e1);
+    }
+
+  }
 }
