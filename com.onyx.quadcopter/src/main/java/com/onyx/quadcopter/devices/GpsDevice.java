@@ -28,7 +28,7 @@ public class GpsDevice extends Device implements ExceptionListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GpsDevice.class);
   private GGASentence lastSent;
-  //private GpsProcessor gps;
+  private SentenceReader reader;
 
   public GpsDevice() {
     super(DeviceId.GPS_DEVICE);
@@ -53,9 +53,6 @@ public class GpsDevice extends Device implements ExceptionListener {
 
   @Override
   protected void init() {
-    //gps = new GpsProcessor();
-    //gps.start();
-    //final SentenceReader reader = new SentenceReader(gps.getInputStream());
     SerialPort sp = getSerialPort();
 
     if (sp != null) {
@@ -65,7 +62,7 @@ public class GpsDevice extends Device implements ExceptionListener {
       } catch (IOException e1) {
         LOGGER.error(e1.getMessage());
       }
-      final SentenceReader reader = new SentenceReader(is);
+      reader = new SentenceReader(is);
       reader.addSentenceListener(new GgaListener());
       reader.setExceptionListener(this);
       reader.start();
@@ -74,7 +71,7 @@ public class GpsDevice extends Device implements ExceptionListener {
 
   @Override
   public void shutdown() {
-    //gps.stop();
+    reader.stop();
   }
 
   @Override
@@ -102,6 +99,7 @@ public class GpsDevice extends Device implements ExceptionListener {
 
   @Override
   public void onException(Exception e1) { // Do nothing.
+    e1.addSuppressed(e1);
   }
 
   /**
@@ -111,6 +109,7 @@ public class GpsDevice extends Device implements ExceptionListener {
    *         ports.
    */
   private SerialPort getSerialPort() {
+    SerialPort sp = null;
     try {
       Enumeration<?> e1 = CommPortIdentifier.getPortIdentifiers();
 
@@ -118,7 +117,7 @@ public class GpsDevice extends Device implements ExceptionListener {
         CommPortIdentifier id = (CommPortIdentifier) e1.nextElement();
 
         if (id.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-          SerialPort sp = (SerialPort) id.open(Constants.GPS_DEVICE, 30);
+          sp = (SerialPort) id.open(Constants.GPS_DEVICE, 30);
           sp.setSerialPortParams(Constants.GPS_BAUD, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
               SerialPort.PARITY_NONE);
           InputStream is = sp.getInputStream();
@@ -132,10 +131,10 @@ public class GpsDevice extends Device implements ExceptionListener {
               String data = buf.readLine();
               if (SentenceValidator.isValid(data)) {
                 LOGGER.info("NMEA data found!");
-                return sp;
+                break;
               }
             } catch (Exception ex) {
-              ex.printStackTrace();
+              LOGGER.error(ex.getMessage());
             }
           }
           is.close();
@@ -143,14 +142,11 @@ public class GpsDevice extends Device implements ExceptionListener {
           buf.close();
         }
       }
-
       LOGGER.info("NMEA data was not found..");
-
     } catch (Exception e2) {
       LOGGER.error(e2.getMessage());
     }
-
-    return null;
+    return sp;
   }
 
 }
