@@ -10,6 +10,7 @@ import gnu.io.SerialPort;
 import net.sf.marineapi.nmea.io.ExceptionListener;
 import net.sf.marineapi.nmea.io.SentenceReader;
 import net.sf.marineapi.nmea.sentence.SentenceValidator;
+import net.sf.marineapi.nmea.util.Position;
 import net.sf.marineapi.provider.PositionProvider;
 import net.sf.marineapi.provider.event.PositionEvent;
 import net.sf.marineapi.provider.event.ProviderListener;
@@ -23,13 +24,20 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 
-public class GpsDevice extends Device implements ProviderListener<PositionEvent>, ExceptionListener {
+/**
+ * GPS Device.
+ * @author fred
+ *
+ */
+public class GpsDevice extends Device
+    implements ProviderListener<PositionEvent>, ExceptionListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GpsDevice.class);
   private String lastSent;
   private SentenceReader reader;
   private PositionProvider provider;
   private String lastFix = "NONE";
+  private Position lastPos;
 
   public GpsDevice() {
     super(DeviceId.GPS_DEVICE);
@@ -44,7 +52,9 @@ public class GpsDevice extends Device implements ProviderListener<PositionEvent>
   public void update(AclMessage msg) {
     switch (msg.getActionId()) {
       case SEND_DATA:
-        sendReply(lastSent);
+        sendReply(lastPos.getAltitude()  + ":" 
+            + lastPos.getLongitude() + (lastPos.isLongitudeEast() ? "E" : "W") 
+            + lastPos.getLatitude()  + (lastPos.isLatitudeNorth() ? "N" : "S"));
         break;
       default:
         break;
@@ -137,9 +147,11 @@ public class GpsDevice extends Device implements ProviderListener<PositionEvent>
   public void providerUpdate(PositionEvent evt) {
     lastFix = evt.getFixQuality().name();
     lastSent = evt.toString();
+    lastPos = evt.getPosition();
   }
 
   @Override
-  public void onException(Exception ex) {    
+  public void onException(Exception ex) {
+    LOGGER.error(ex.getMessage());
   }
 }
