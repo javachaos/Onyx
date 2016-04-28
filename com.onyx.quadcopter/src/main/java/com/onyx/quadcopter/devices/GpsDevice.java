@@ -7,6 +7,7 @@ import com.onyx.common.utils.Constants;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
+import net.sf.marineapi.nmea.io.ExceptionListener;
 import net.sf.marineapi.nmea.io.SentenceReader;
 import net.sf.marineapi.nmea.sentence.SentenceValidator;
 import net.sf.marineapi.provider.PositionProvider;
@@ -22,7 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 
-public class GpsDevice extends Device implements ProviderListener<PositionEvent> {
+public class GpsDevice extends Device implements ProviderListener<PositionEvent>, ExceptionListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GpsDevice.class);
   private String lastSent;
@@ -64,6 +65,7 @@ public class GpsDevice extends Device implements ProviderListener<PositionEvent>
       reader = new SentenceReader(is);
       provider = new PositionProvider(reader);
       provider.addListener(this);
+      reader.setExceptionListener(this);
       reader.start();
     }
   }
@@ -135,5 +137,9 @@ public class GpsDevice extends Device implements ProviderListener<PositionEvent>
   public void providerUpdate(PositionEvent evt) {
     lastFix = evt.getFixQuality().name();
     lastSent = evt.toString();
+  }
+
+  @Override
+  public void onException(Exception ex) {    
   }
 }
