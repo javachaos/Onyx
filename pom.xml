@@ -29,10 +29,10 @@
 		</plugins>
 	</build>
 	<scm>
-	    <connection>scm:git:https://bitbucket.org/javanerd/onyx.git</connection>
-	    <developerConnection>scm:git:https://bitbucket.org/javanerd/onyx.git</developerConnection>
+	    <connection>scm:git:https://github.com/javachaos/Onyx.git</connection>
+	    <developerConnection>scm:git:https://github.com/javachaos/Onyx.git</developerConnection>
 	    <tag>com.onyx-1.1.0</tag>
-	    <url>https://bitbucket.org/javanerd/onyx.git</url>
+	    <url>https://github.com/javachaos/Onyx.git</url>
 	</scm>
         <repositories>
 	    <repository>
