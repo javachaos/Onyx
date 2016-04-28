@@ -1,6 +1,5 @@
 package com.onyx.quadcopter.devices;
 
-
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.ActionId;
 import com.onyx.common.messaging.DeviceId;
@@ -8,13 +7,11 @@ import com.onyx.common.utils.Constants;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
-
-import net.sf.marineapi.nmea.event.AbstractSentenceListener;
-import net.sf.marineapi.nmea.event.SentenceListener;
-import net.sf.marineapi.nmea.io.ExceptionListener;
 import net.sf.marineapi.nmea.io.SentenceReader;
-import net.sf.marineapi.nmea.sentence.GGASentence;
 import net.sf.marineapi.nmea.sentence.SentenceValidator;
+import net.sf.marineapi.provider.PositionProvider;
+import net.sf.marineapi.provider.event.PositionEvent;
+import net.sf.marineapi.provider.event.ProviderListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +22,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 
-public class GpsDevice extends Device {
+public class GpsDevice extends Device implements ProviderListener<PositionEvent> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GpsDevice.class);
-  private GGASentence lastSent;
+  private String lastSent;
   private SentenceReader reader;
+  private PositionProvider provider;
+  private String lastFix = "NONE";
 
   public GpsDevice() {
     super(DeviceId.GPS_DEVICE);
@@ -44,12 +43,11 @@ public class GpsDevice extends Device {
   public void update(AclMessage msg) {
     switch (msg.getActionId()) {
       case SEND_DATA:
-        sendReply(lastSent.toSentence());
+        sendReply(lastSent);
         break;
       default:
         break;
     }
-
   }
 
   @Override
@@ -64,9 +62,8 @@ public class GpsDevice extends Device {
         LOGGER.error(e1.getMessage());
       }
       reader = new SentenceReader(is);
-      SentenceListener sl = new GgaListener();
-      reader.addSentenceListener(sl);
-      reader.setExceptionListener((ExceptionListener) sl);
+      provider = new PositionProvider(reader);
+      provider.addListener(this);
       reader.start();
     }
   }
@@ -78,8 +75,8 @@ public class GpsDevice extends Device {
 
   @Override
   protected void alternate() {
-    LOGGER.debug(lastSent.toSentence());
-    sendMessage(DeviceId.OLED_DEVICE, "Fix Quality: " + lastSent.getFixQuality(), ActionId.DISPLAY);
+    LOGGER.debug(lastSent);
+    sendMessage(DeviceId.OLED_DEVICE, "Fix Quality: " + lastFix, ActionId.DISPLAY);
   }
 
   @Override
@@ -134,22 +131,9 @@ public class GpsDevice extends Device {
     return sp;
   }
 
-  private class GgaListener extends AbstractSentenceListener<GGASentence>
-      implements ExceptionListener {
-    @Override
-    public void sentenceRead(GGASentence sentence) {
-      if (sentence != null && sentence.isValid()) {
-        LOGGER.trace("GGA position: " + sentence.getPosition());
-        lastSent = sentence;
-      } else {
-        LOGGER.error("Invalid NMEA sentence.");
-      }
-    }
-
-    @Override
-    public void onException(Exception e1) { // Do nothing.
-      e1.addSuppressed(e1);
-    }
-
+  @Override
+  public void providerUpdate(PositionEvent evt) {
+    lastFix = evt.getFixQuality().name();
+    lastSent = evt.toString();
   }
 }
