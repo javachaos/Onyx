@@ -36,6 +36,6 @@ public class PidStartCommand extends Command {
     msg.setReciever(DeviceId.PID);
     msg.setPriority(AclPriority.HIGH);
     msg.setSender(getSender());
-    return null;
+    return msg;
   }
 }
