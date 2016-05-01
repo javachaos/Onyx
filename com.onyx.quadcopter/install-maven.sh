@@ -30,29 +30,31 @@ unzip() {
 
 # Create maven profile in /etc/profile.d/
 make_profile() {
-    sudo touch $MVN_PROFILE
-    echo "#!/bin/bash" | sudo tee --append $MVN_PROFILE > /dev/null
-    echo "Creating M2_HOME environment variable."
-    echo "export M2_HOME=${INSTALL_DIR}/${DIR_NAME}" | sudo tee --append $MVN_PROFILE > /dev/null
-    echo "Creating M2 environment variable."
-    echo "export M2=\$M2_HOME/bin" | sudo tee --append $MVN_PROFILE > /dev/null
-    echo "Creating MAVEN_OPTS environment variable."
-    echo "export MAVEN_OPTS=\"${MVN_OPTS}\"" | sudo tee --append $MVN_PROFILE > /dev/null
-    echo "Updating PATH environment variable."
-    echo "export PATH=\$M2:\$PATH" | sudo tee --append $MVN_PROFILE > /dev/null
+    if [ ! -e $MVN_PROFILE ]
+    then
+      sudo touch $MVN_PROFILE
+      echo "#!/bin/bash" | sudo tee --append $MVN_PROFILE > /dev/null
+      echo "Creating M2_HOME environment variable."
+      echo "export M2_HOME=${INSTALL_DIR}" | sudo tee --append $MVN_PROFILE > /dev/null
+      echo "Creating M2 environment variable."
+      echo "export M2=\$M2_HOME/bin" | sudo tee --append $MVN_PROFILE > /dev/null
+      echo "Creating MAVEN_OPTS environment variable."
+      echo "export MAVEN_OPTS=\"${MVN_OPTS}\"" | sudo tee --append $MVN_PROFILE > /dev/null
+      echo "Updating PATH environment variable."
+      echo "export PATH=\$M2:\$PATH" | sudo tee --append $MVN_PROFILE > /dev/null
+    fi
 }
 
 # Copy maven files to install dir
 copy_files() {
 
-    if [ ! -e $INSTALL_DIR/$DIR_NAME ]
+    if [ ! -e $INSTALL_DIR ]
       then
-        echo "Creating directory ${INSTALL_DIR}/${DIR_NAME}."
-        sudo /bin/mkdir -p $INSTALL_DIR/$DIR_NAME
+        echo "Creating directory ${INSTALL_DIR}."
+        sudo /bin/mkdir -p $INSTALL_DIR
     fi
     echo "Copying files from ${DIR_NAME} to ${INSTALL_DIR}."
-    cd $DIR_NAME
-    sudo /bin/cp -R $CWD/* $INSTALL_DIR/$DIR_NAME
+    sudo /bin/cp -R $DIR_NAME/* $INSTALL_DIR/
 }
 
 # Update user environment

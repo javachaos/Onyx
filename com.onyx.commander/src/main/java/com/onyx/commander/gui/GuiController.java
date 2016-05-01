@@ -147,7 +147,7 @@ public final class GuiController implements EventHandler<WindowEvent> {
    */
   @FXML
   private ImageView cameraImageView;
-  
+
   @FXML
   private LineChart<Double, Double> engineSpeedChart;
 
