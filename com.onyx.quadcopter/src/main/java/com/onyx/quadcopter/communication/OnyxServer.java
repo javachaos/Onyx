@@ -10,6 +10,7 @@ import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.exceptions.OnyxException;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -78,7 +79,9 @@ public class OnyxServer extends Device implements Runnable {
       final ServerBootstrap b = new ServerBootstrap();
       b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
           .handler(new LoggingHandler(LogLevel.INFO))
-          .childHandler(initializer);
+          .childHandler(initializer)
+          .option(ChannelOption.SO_BACKLOG, 128)
+          .childOption(ChannelOption.SO_KEEPALIVE, true);
       b.bind(PORT).sync().channel().closeFuture().sync();
       LOGGER.debug("CommServer Started.");
     } catch (final InterruptedException | SSLException | CertificateException e1) {

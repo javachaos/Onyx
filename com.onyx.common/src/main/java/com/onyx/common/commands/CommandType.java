@@ -6,7 +6,7 @@ public enum CommandType {
   GET_DATA,
   PID_CONTROL,
   PID_START,
-  SHUTDOWN, 
-  SEND_DATA, 
+  SHUTDOWN,
+  SEND_DATA,
   EMPTY;
 }

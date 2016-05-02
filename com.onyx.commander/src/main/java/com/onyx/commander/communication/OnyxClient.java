@@ -9,6 +9,7 @@ import com.onyx.common.utils.Constants;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -95,6 +96,7 @@ public class OnyxClient implements Runnable {
       Bootstrap boot = new Bootstrap();
       boot.group(workerGroup);
       boot.channel(NioSocketChannel.class);
+      boot.option(ChannelOption.SO_KEEPALIVE, true);
       boot.handler(new OnyxClientChannelInitializer(this, sslCtx, host, port));
       Channel ch = boot.connect(host, port).sync().channel();
 
