@@ -27,7 +27,7 @@ public class CommandUtils {
       case PID_CONTROL:
         return new PidControlCommand(args[0],args[1],args[2],args[3]);
       case PID_START:
-        return new PidStartCommand();
+        return new PidStartCommand(args[0]);
       case SHUTDOWN:
         return new ShutdownCommand();
       default:

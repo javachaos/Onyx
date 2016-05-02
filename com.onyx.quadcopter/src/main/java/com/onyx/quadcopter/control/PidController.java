@@ -108,7 +108,6 @@ public class PidController extends Device {
   @Override
   protected void update() {
     super.update();
-
     computedGyro[0] =
         mxPid.compute((computedGyro[0] * 0.8) + ((gyro[0] / Constants.GYRO_SCALE) * 0.2));
     computedGyro[1] =
