@@ -14,36 +14,64 @@
   </properties>
 
   <modules>
-    <module>com.onyx.commander</module>
-    <module>com.onyx.quadcopter</module>
     <module>com.onyx.common</module>
   </modules>
 
-	<build>
-		<plugins>
-                      <plugin>
-                          <groupId>org.apache.maven.plugins</groupId>
-                          <artifactId>maven-release-plugin</artifactId>
-                          <version>2.5.3</version>
-                      </plugin>
-		</plugins>
-	</build>
-	<scm>
-	    <connection>scm:git:https://github.com/javachaos/Onyx.git</connection>
-	    <developerConnection>scm:git:https://github.com/javachaos/Onyx.git</developerConnection>
-	    <tag>com.onyx-1.1.0</tag>
-	    <url>https://github.com/javachaos/Onyx.git</url>
-	</scm>
-        <repositories>
-	    <repository>
-			<id>oss-snapshots-repo</id>
-			<name>Sonatype OSS Maven Repository</name>
-			<url>https://oss.sonatype.org/content/groups/public</url>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-	    </repository>
-        </repositories>
+  <profiles>
+    <profile>
+      <id>Onyx System</id>
+      <modules>
+        <module>com.onyx.quadcopter</module>
+      </modules>
+      <activation>
+        <os>
+          <name>linux</name>
+          <family>unix</family>
+          <arch>arm</arch>
+          <version>4.1.21-v7+</version>
+        </os>
+      </activation>
+    </profile>
+    <profile>
+      <id>Onyx Commander</id>
+      <modules>
+        <module>com.onyx.commander</module>
+      </modules>
+      <activation>
+        <os>
+          <name>linux</name>
+          <family>unix</family>
+          <arch>amd64</arch>
+          <version>3.19.0-32-generic</version>
+        </os>
+      </activation>
+    </profile>
+  </profiles>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.5.3</version>
+      </plugin>
+    </plugins>
+  </build>
+  <scm>
+    <connection>scm:git:https://github.com/javachaos/Onyx.git</connection>
+    <developerConnection>scm:git:https://github.com/javachaos/Onyx.git</developerConnection>
+    <tag>com.onyx-1.1.0</tag>
+    <url>https://github.com/javachaos/Onyx.git</url>
+  </scm>
+  <repositories>
+    <repository>
+      <id>oss-snapshots-repo</id>
+      <name>Sonatype OSS Maven Repository</name>
+      <url>https://oss.sonatype.org/content/groups/public</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>always</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
 </project>
 
