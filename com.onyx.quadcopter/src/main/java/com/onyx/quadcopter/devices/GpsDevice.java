@@ -152,8 +152,5 @@ public class GpsDevice extends Device
 
   @Override
   public void onException(Exception ex) {
-    if (ex != null) {
-        LOGGER.error(ex.getMessage());
-    }
   }
 }
