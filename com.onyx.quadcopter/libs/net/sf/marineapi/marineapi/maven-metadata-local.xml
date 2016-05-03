@@ -4,8 +4,8 @@
   <artifactId>marineapi</artifactId>
   <versioning>
     <versions>
-      <version>0.10.0-SNAPSHOT</version>
+      <version>0.10.1-SNAPSHOT</version>
     </versions>
-    <lastUpdated>20160503060227</lastUpdated>
+    <lastUpdated>20160503060748</lastUpdated>
   </versioning>
 </metadata>

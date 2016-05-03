@@ -2,22 +2,22 @@
 <metadata modelVersion="1.1.0">
   <groupId>net.sf.marineapi</groupId>
   <artifactId>marineapi</artifactId>
-  <version>0.10.0-SNAPSHOT</version>
+  <version>0.10.1-SNAPSHOT</version>
   <versioning>
     <snapshot>
       <localCopy>true</localCopy>
     </snapshot>
-    <lastUpdated>20160503060227</lastUpdated>
+    <lastUpdated>20160503060748</lastUpdated>
     <snapshotVersions>
       <snapshotVersion>
         <extension>jar</extension>
-        <value>0.10.0-SNAPSHOT</value>
-        <updated>20160503060227</updated>
+        <value>0.10.1-SNAPSHOT</value>
+        <updated>20160503060748</updated>
       </snapshotVersion>
       <snapshotVersion>
         <extension>pom</extension>
-        <value>0.10.0-SNAPSHOT</value>
-        <updated>20160503060227</updated>
+        <value>0.10.1-SNAPSHOT</value>
+        <updated>20160503060748</updated>
       </snapshotVersion>
     </snapshotVersions>
   </versioning>
