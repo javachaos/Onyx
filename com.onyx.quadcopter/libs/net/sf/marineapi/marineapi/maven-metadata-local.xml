@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>net.sf.marineapi</groupId>
+  <artifactId>marineapi</artifactId>
+  <versioning>
+    <versions>
+      <version>0.10.1-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20160503060748</lastUpdated>
+  </versioning>
+</metadata>

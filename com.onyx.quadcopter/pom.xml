@@ -3,11 +3,11 @@
   <parent>
 	<groupId>com.onyx</groupId>
 	<artifactId>com.onyx</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.0-SNAPSHOT</version>
   </parent>
   <groupId>com.onyx.quadcopter</groupId>
   <artifactId>onyx</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.1-SNAPSHOT</version>
   <name>Quadcopter project.</name>
   <description>Quadcopter control software.</description>
   
@@ -119,54 +119,63 @@
 	            </execution>
 	        </executions>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.7-SNAPSHOT</version>
+            </plugin>
       </plugins>
   </build>
   <dependencies>
-	  <dependency>
-	    <groupId>io.netty</groupId>
-	    <artifactId>netty-all</artifactId>
-	    <version>4.0.25.Final</version>
-	  </dependency>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>1.0.13</version>
-        <scope>compile</scope>
-      </dependency>
-	<dependency>
-	    <groupId>com.pi4j</groupId>
-	    <artifactId>pi4j-core</artifactId>
-	   <version>1.1-SNAPSHOT</version>
-	</dependency>
-	<dependency>
-	    <groupId>com.google.guava</groupId>
-	    <artifactId>guava</artifactId>
-	    <version>19.0</version>
-	</dependency>
-        <dependency>
-	    <groupId>org.javassist</groupId>
-	    <artifactId>javassist</artifactId>
-	    <version>3.20.0-GA</version>
-        </dependency>
     <dependency>
-	    <groupId>com.nativelibs4java</groupId>
-	    <artifactId>bridj</artifactId>
-	    <version>0.7.0</version>
+      <groupId>com.onyx.common</groupId>
+      <artifactId>common</artifactId>
+      <version>1.1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-        <groupId>com.github.sarxos</groupId>
-        <artifactId>webcam-capture</artifactId>
-        <version>0.3.10</version>
+       <groupId>com.pi4j</groupId>
+       <artifactId>pi4j-core</artifactId>
+       <version>1.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>19.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.javassist</groupId>
+        <artifactId>javassist</artifactId>
+        <version>3.20.0-GA</version>
+    </dependency>
+    <dependency>
+        <groupId>com.google.opencv</groupId>
+        <artifactId>opencv</artifactId>
+        <version>2.4.1</version>
+	</dependency>
+    <dependency>
+        <groupId>com.intel.upm</groupId>
+        <artifactId>upm_lsm9ds0</artifactId>
+        <version>0.0.1</version>
     </dependency>
     <dependency>
         <groupId>com.intel.upm</groupId>
-        <artifactId>lsm9ds0</artifactId>
+        <artifactId>upm_pca9685</artifactId>
         <version>0.0.1</version>
     </dependency>
     <dependency>
         <groupId>com.intel.upm</groupId>
         <artifactId>mraa</artifactId>
         <version>0.0.1</version>
+    </dependency>
+    <dependency>
+        <groupId>org.rxtx</groupId>
+        <artifactId>rxtx</artifactId>
+        <version>2.1.7</version>
+    </dependency>
+    <dependency>
+        <groupId>net.sf.marineapi</groupId>
+        <artifactId>marineapi</artifactId>
+        <version>0.10.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <repositories>
@@ -177,9 +186,13 @@
 	        <checksumPolicy>ignore</checksumPolicy>
 	    </releases>
 	    <snapshots>
-	        <enabled>false</enabled>
+	        <enabled>true</enabled>
 	    </snapshots>
 	    <url>file://${project.basedir}/libs</url>
+	</repository>
+	<repository>
+	    <id>Sonatype OSS Snapshot Repository</id>
+	    <url>http://oss.sonatype.org/content/repositories/snapshots</url>
 	</repository>
   </repositories>
 </project>

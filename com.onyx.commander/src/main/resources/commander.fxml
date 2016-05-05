@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -16,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<TitledPane fx:id="mainPane" animated="false" minHeight="400.0" minWidth="600.0" prefHeight="500.0" prefWidth="800.0" text="Commander" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.onyx.commander.gui.GuiController">
+<TitledPane fx:id="mainPane" animated="false" minHeight="400.0" minWidth="600.0" prefHeight="648.0" prefWidth="1009.0" text="Commander" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.onyx.commander.gui.GuiController">
   <content>
     <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="402.0" prefWidth="723.0">
          <children>
@@ -50,7 +53,11 @@
                               </VBox>
                               <TitledPane fx:id="cameraTitledPane" layoutX="206.0" layoutY="13.0" prefHeight="250.0" prefWidth="522.0" text="Camera Snapshot" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="13.0">
                                  <content>
-                                    <ImageView fx:id="cameraImageview" fitHeight="200.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+                                    <VBox fx:id="cameraVBox">
+                                       <children>
+                                          <ImageView fx:id="cameraImageView" fitHeight="447.0" fitWidth="755.0" pickOnBounds="true" preserveRatio="true" />
+                                       </children>
+                                    </VBox>
                                  </content>
                               </TitledPane>
                               <VBox layoutX="14.0" layoutY="14.0" prefHeight="85.0" prefWidth="180.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
@@ -106,6 +113,22 @@
                            </children></AnchorPane>
                   </content>
                 </Tab>
+                  <Tab text="Charts">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <LineChart fx:id="engineSpeedChart" layoutX="7.0" layoutY="14.0" prefHeight="549.0" prefWidth="966.0" title="Engine Speed / Time">
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                              </LineChart>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </Tab>
               </tabs>
             </TabPane>
          </children>

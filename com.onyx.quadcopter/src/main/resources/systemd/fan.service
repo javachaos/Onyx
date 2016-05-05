@@ -1,8 +1,0 @@
-[Unit]
-Description=Fan Control
-
-[Service]
-ExecStart=/opt/onyx/fan.sh
-
-[Install]
-WantedBy=default.target
