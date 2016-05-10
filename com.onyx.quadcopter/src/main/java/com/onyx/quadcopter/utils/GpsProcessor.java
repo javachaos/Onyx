@@ -11,8 +11,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 
-
-
 /**
  * GPS Processor.
  * @author fred

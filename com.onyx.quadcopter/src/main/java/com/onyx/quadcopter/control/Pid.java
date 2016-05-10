@@ -73,12 +73,14 @@ public class Pid {
    *    the input to the PID.
    * @return the output of the PID.
    */
-  public double compute(double input) {
+  public synchronized double compute(double input) {
     double output = 0;
     if (!auto) {
       return output;
     }
     long now = System.nanoTime();
+    
+    //Time difference from last compute.
     double deltaTime = (double) (now - lastTime);
 
     if (deltaTime >= sampleRate) {
@@ -100,6 +102,13 @@ public class Pid {
 
       lastInput = input;
       lastTime = now;
+    } else {
+    	try {
+			Thread.sleep((long) ((sampleRate - deltaTime) / 1000_000L));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+    	return compute(input);
     }
     return output;
   }
