@@ -1,5 +1,7 @@
 package com.onyx.quadcopter.control;
 
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 public class PidTest {
@@ -10,8 +12,15 @@ public class PidTest {
 		pid.setMaxOutput(1.0);
 		pid.setMinOutput(0.0);
 		pid.setPoint(0.5);
-		while(true) {
-		  System.out.println(pid.compute(Math.random()));
+		
+		int x = 0;
+		while(x < 100) {
+		  x++;
+		  double input = Math.random();
+		  double output = pid.compute(input);
+		  assertTrue(output < 1.0);
+		  assertTrue(output > 0.0);
+		  System.out.println("[PID] IN: " + input + " OUT: " + output);
 		}
 	}
 
