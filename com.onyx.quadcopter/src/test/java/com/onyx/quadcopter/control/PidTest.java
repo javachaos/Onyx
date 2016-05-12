@@ -25,8 +25,7 @@ public class PidTest {
 		  x++;
 		  double input = Math.random();
 		  double output = pid.compute(input);
-		  assertTrue(output < 1.0);
-		  assertTrue(output > 0.0);
+		  assertTrue(output < 1.0 && output > 0.0);
 		  LOGGER.debug("[PID] IN: " + input + " OUT: " + output);
 		}
 	}
