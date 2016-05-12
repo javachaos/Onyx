@@ -137,7 +137,7 @@ public class OnyxServer extends Device implements Runnable {
     }
     
     try {
-		setDisplay("IP: " + InetAddress.getLocalHost());
+		setDisplay("IP: " + InetAddress.getLocalHost().getHostAddress());
 	} catch (UnknownHostException e) {
 		LOGGER.error(e.getMessage());
 	}
