@@ -23,6 +23,8 @@ import io.netty.handler.ssl.util.SelfSignedCertificate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.SSLException;
@@ -133,6 +135,12 @@ public class OnyxServer extends Device implements Runnable {
     if (peek != null) {
       setDisplay("Latest Comm: " + peek);
     }
+    
+    try {
+		setDisplay("IP: " + InetAddress.getLocalHost());
+	} catch (UnknownHostException e) {
+		LOGGER.error(e.getMessage());
+	}
   }
 
   @Override
