@@ -110,8 +110,11 @@ public class OnyxClient implements Runnable {
           // write the command over the pipe and save the channel future
           lastFuture = ch.writeAndFlush(next);
         }
-
-        isConnected = true;
+        if (ch.isActive()) {
+          isConnected = true;
+        } else {
+          isConnected = false;
+        }
         
         // If the last command we sent out is a CLOSE command
         if (lastOutMsg != null && lastOutMsg.getCommandType() == CommandType.CLOSE) {
@@ -131,8 +134,10 @@ public class OnyxClient implements Runnable {
 
     } catch (SSLException | InterruptedException e1) {
       LOGGER.error(e1.getMessage());
+      isConnected = false;
     } finally {
       workerGroup.shutdownGracefully();
+      isConnected = false;
     }
   }
 

@@ -1,5 +1,14 @@
 package com.onyx.quadcopter.devices;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Enumeration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.ActionId;
 import com.onyx.common.messaging.DeviceId;
@@ -10,19 +19,9 @@ import gnu.io.SerialPort;
 import net.sf.marineapi.nmea.io.ExceptionListener;
 import net.sf.marineapi.nmea.io.SentenceReader;
 import net.sf.marineapi.nmea.sentence.SentenceValidator;
-import net.sf.marineapi.nmea.util.Position;
 import net.sf.marineapi.provider.PositionProvider;
 import net.sf.marineapi.provider.event.PositionEvent;
 import net.sf.marineapi.provider.event.ProviderListener;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Enumeration;
 
 /**
  * GPS Device.
@@ -37,7 +36,6 @@ public class GpsDevice extends Device
   private SentenceReader reader;
   private PositionProvider provider;
   private String lastFix = "NONE";
-  private Position lastPos;
 
   public GpsDevice() {
     super(DeviceId.GPS_DEVICE);
@@ -52,9 +50,7 @@ public class GpsDevice extends Device
   public void update(AclMessage msg) {
     switch (msg.getActionId()) {
       case SEND_DATA:
-        sendReply(lastPos.getAltitude()  + ":" 
-            + lastPos.getLongitude() + (lastPos.isLongitudeEast() ? "E" : "W") 
-            + lastPos.getLatitude()  + (lastPos.isLatitudeNorth() ? "N" : "S"));
+        sendReply(lastSent);
         break;
       default:
         break;
@@ -147,7 +143,6 @@ public class GpsDevice extends Device
   public void providerUpdate(PositionEvent evt) {
     lastFix = evt.getFixQuality().name();
     lastSent = evt.toString();
-    lastPos = evt.getPosition();
   }
 
   @Override

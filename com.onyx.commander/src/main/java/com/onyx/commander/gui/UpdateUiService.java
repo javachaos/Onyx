@@ -1,6 +1,7 @@
 package com.onyx.commander.gui;
 
 import com.onyx.commander.communication.OnyxClient;
+import com.onyx.commander.main.Main;
 import com.onyx.common.commands.Command;
 
 import javafx.application.Platform;
@@ -12,6 +13,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.util.Duration;
 
 import java.util.concurrent.Future;
 
@@ -29,6 +31,8 @@ public class UpdateUiService extends ScheduledService<String> {
   private Series<Double, Double> motor4Series;
   private TextArea commandOutputTextArea;
   
+  private static UpdateUiService instance;
+  
   /**
    * Create a new UI Update service.
    * @param client
@@ -38,11 +42,21 @@ public class UpdateUiService extends ScheduledService<String> {
    * @param nodes
    *    the list of UI Nodes to be updated.
    */
-  public UpdateUiService(OnyxClient client,Future<?> videoFuture, Node... nodes) {
+  private UpdateUiService(OnyxClient client,Future<?> videoFuture, Node... nodes) {
     this.client = client;
     this.nodes = nodes;
     this.vlcdrFuture = videoFuture;
     init();
+  }
+  
+  public static UpdateUiService start(OnyxClient client,Future<?> videoFuture, Node... nodes) {
+	  if (instance == null) {
+		  instance = new UpdateUiService(client, videoFuture, nodes);
+		  instance.setExecutor(Main.COORDINATOR);
+		  instance.setPeriod(Duration.seconds(0.25));
+		  instance.start();
+	  }
+	  return instance;
   }
   
   /**

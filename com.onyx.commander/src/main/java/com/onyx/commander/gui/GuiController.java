@@ -1,5 +1,10 @@
 package com.onyx.commander.gui;
 
+import java.util.concurrent.Future;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.onyx.commander.communication.OnyxClient;
 import com.onyx.commander.main.Main;
 import com.onyx.common.commands.CommandUtils;
@@ -20,12 +25,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
-import javafx.util.Duration;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.Future;
 
 /**
  * Gui Controller class.
@@ -156,8 +155,6 @@ public final class GuiController implements EventHandler<WindowEvent> {
    */
   private Future<?> vlcdrFuture;
 
-  private UpdateUiService uiUpdateService;
-
   /**
    * IP Regex.
    */
@@ -183,13 +180,10 @@ public final class GuiController implements EventHandler<WindowEvent> {
       LOGGER.debug("Connecting to " + ip);
       Main.COORDINATOR.submit(client);
       loadWebview(ip);
-      uiUpdateService = new UpdateUiService(client, vlcdrFuture, 
+      UpdateUiService.start(client, vlcdrFuture, 
           connStatusLbl,
           commandOutputTextArea,
           engineSpeedChart);
-      uiUpdateService.setExecutor(Main.COORDINATOR);
-      uiUpdateService.setPeriod(Duration.seconds(0.25));
-      uiUpdateService.start();
     } else {
       LOGGER.debug("Cannot connect non valid IP address.");
     }
