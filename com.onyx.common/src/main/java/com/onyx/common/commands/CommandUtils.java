@@ -15,7 +15,7 @@ public class CommandUtils {
       cmd = data[0];
       args = data[1].split(",");
     } else {
-      cmd = cmdString;  
+      cmd = cmdString;
     }
     switch(CommandType.valueOf(cmd)) {
       case CLOSE:

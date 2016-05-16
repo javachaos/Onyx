@@ -413,7 +413,7 @@ public abstract class Device implements IDevice {
    * @return
    *    the name of this Device.
    */
-  private String getName() {
+  protected String getName() {
     return name;
   }
 
