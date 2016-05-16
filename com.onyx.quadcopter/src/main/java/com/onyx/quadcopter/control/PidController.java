@@ -57,13 +57,6 @@ public class PidController extends Device {
    */
   public PidController() {
     super(DeviceId.PID);
-    mxPid = new Pid(GAIN_P_X, GAIN_I_X, GAIN_D_X);
-    myPid = new Pid(GAIN_P_Y, GAIN_I_Y, GAIN_D_Y);
-    mzPid = new Pid(GAIN_P_Z, GAIN_I_Z, GAIN_D_Z);
-    mxPid.setSamplePeriod((Constants.CONTROLLER_PERIOD * 1000));
-    mxPid.setPoint(0);
-    myPid.setPoint(0);
-    mzPid.setPoint(0);
   }
 
   /**
@@ -87,17 +80,27 @@ public class PidController extends Device {
   
   @Override
   protected void init() {
-
+    mxPid = new Pid(GAIN_P_X, GAIN_I_X, GAIN_D_X);
+    myPid = new Pid(GAIN_P_Y, GAIN_I_Y, GAIN_D_Y);
+    mzPid = new Pid(GAIN_P_Z, GAIN_I_Z, GAIN_D_Z);
+    mxPid.setSamplePeriod((Constants.CONTROLLER_PERIOD * 1000));
+    mxPid.setPoint(0);
+    myPid.setPoint(0);
+    mzPid.setPoint(0);
   }
 
   @Override
   public void shutdown() {
-
+	  started = false;
   }
 
   @Override
   protected void alternate() {
-
+	  LOGGER.debug("ESC1: " 
+         + esc1 + " ESC2: "
+	     + esc2 + " ESC3: "
+         + esc3 + " ESC4: " 
+	     + esc4);
   }
 
   @Override

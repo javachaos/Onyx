@@ -41,8 +41,8 @@ public class PidStartCommand extends Command {
     msg.setActionId(ActionId.START_MOTORS);
     msg.setReciever(DeviceId.PID);
     msg.setContent(trueFalse);
-    msg.setPriority(AclPriority.HIGH);
     msg.setSender(getSender());
+    msg.setPriority(AclPriority.MEDIUM);
     return msg;
   }
 }
