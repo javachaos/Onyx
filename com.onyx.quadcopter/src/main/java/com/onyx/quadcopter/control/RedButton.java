@@ -117,11 +117,11 @@ public class RedButton extends Device implements GpioPinListenerDigital {
           ActionId.CHANGE_DISPLAY, AclPriority.MAX);
     } else if (hdt > CALIBRATE_SEQ && hdt < SHUTDOWN_SEQ) {
       LOGGER.debug("Calibration sequence timing entered.");
-      if (StateMonitor.getState() == OnyxState.CALIBRATION) {
-        StateMonitor.landedState();
-      } else {
-        StateMonitor.calibrationState();
-      }
+//      if (StateMonitor.getState() == OnyxState.CALIBRATION) {
+//        StateMonitor.landedState();
+//      } else {
+//        StateMonitor.calibrationState();
+//      }
     } else if (hdt >= SHUTDOWN_SEQ) {
       LOGGER.debug("Initiating Shutdown Sequence...");
       sendMessage(new ShutdownCommand().getAclMessage());
