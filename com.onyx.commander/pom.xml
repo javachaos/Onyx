@@ -94,9 +94,9 @@
           <scope>compile</scope>
       </dependency>
       <dependency>
-          <groupId>com.onyx.quadcopter</groupId>
-          <artifactId>onyx</artifactId>
-          <version>0.0.1-SNAPSHOT</version>
+          <groupId>com.onyx.common</groupId>
+          <artifactId>common</artifactId>
+          <version>1.1.0-SNAPSHOT</version>
       </dependency>
       <dependency>
 	    <groupId>net.sf.jipcam</groupId>

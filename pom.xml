@@ -41,8 +41,7 @@
         <os>
           <name>linux</name>
           <family>unix</family>
-          <arch>amd64</arch>
-          <version>3.19.0-32-generic</version>
+          <arch>amd64</arch> 
         </os>
       </activation>
     </profile>
