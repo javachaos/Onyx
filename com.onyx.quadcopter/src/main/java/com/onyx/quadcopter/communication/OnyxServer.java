@@ -121,16 +121,11 @@ public class OnyxServer extends Device implements Runnable {
 	  lastMsg = c.getMessage().getContent();
 	}
 	try {
-	  if (lastMsg != null) {
-	    setDisplay("Latest Comm: " + lastMsg + System.lineSeparator()
+	    setDisplay(
+	    (lastMsg != null) ? "Latest Comm: " + lastMsg + System.lineSeparator() : ""
 	    + "IP: " 
 	    + getLocalHostLANAddress() + System.lineSeparator()
-	    + "Connected: " + Boolean.toString(ch.isActive()));
-	  } else {
-	    setDisplay("IP: " + getLocalHostLANAddress()
-	    + System.lineSeparator()
-	    + "Connected: " + Boolean.toString(ch.isActive()));
-	  }
+	    + "Active: " + Boolean.toString(ch.isActive()));
 	} catch (UnknownHostException e) {
 	  LOGGER.error(e.getMessage());
 	}
