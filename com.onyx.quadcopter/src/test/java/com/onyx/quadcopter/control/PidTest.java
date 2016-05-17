@@ -27,7 +27,7 @@ public class PidTest {
 	 */
 	private EvictingQueue<Double> lastHundred = EvictingQueue.create(100);
 	
-	@Test(timeout=5000)
+	@Test(timeout=15000)
 	public void test() {
 		Pid pid = new Pid(2,1,0.5);
 		pid.setMaxOutput(1.0);
