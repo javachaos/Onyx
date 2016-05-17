@@ -21,6 +21,7 @@ import com.onyx.quadcopter.devices.Device;
 import com.onyx.quadcopter.exceptions.OnyxException;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -65,6 +66,16 @@ public class OnyxServer extends Device implements Runnable {
 
   private OnyxServerChannelInitializer initializer;
 
+  /**
+   * Server channel.
+   */
+  private Channel ch;
+
+  /**
+   * Last Server message as a string.
+   */
+  private String lastMsg;
+
   public OnyxServer() {
     super(DeviceId.COMM_SERVER);
   }
@@ -86,7 +97,8 @@ public class OnyxServer extends Device implements Runnable {
           .childHandler(initializer)
           .option(ChannelOption.SO_BACKLOG, 128)
           .childOption(ChannelOption.SO_KEEPALIVE, true);
-      b.bind(PORT).sync().channel().closeFuture().sync();
+      ch = b.bind(PORT).sync().channel();
+      ch.closeFuture().sync();
       LOGGER.debug("CommServer Started.");
     } catch (final InterruptedException | SSLException | CertificateException e1) {
       ExceptionUtils.logError(getClass(), e1);
@@ -100,6 +112,22 @@ public class OnyxServer extends Device implements Runnable {
   @Override
   protected void update() {
     super.update();
+
+    Command c = handler.getLastCmd();
+    if (c != null && c.isValid()) {
+      lastMsg = c.getMessage().getContent();
+    }
+    try {
+      if (lastMsg != null) {
+        setDisplay("Latest Comm: " + lastMsg + System.lineSeparator() + "IP: " + getLocalHostLANAddress() + System.lineSeparator()
+        + "Connected: " + Boolean.toString(ch.isActive()));
+      } else {
+        setDisplay("IP: " + getLocalHostLANAddress() + System.lineSeparator()
+        + "Connected: " + Boolean.toString(ch.isActive()));
+      }
+    } catch (UnknownHostException e) {
+      LOGGER.error(e.getMessage());
+    }
   }
 
   @Override
@@ -129,20 +157,6 @@ public class OnyxServer extends Device implements Runnable {
 
   @Override
   protected void alternate() {
-    final Command c = handler.getLastCmd();
-    String peek = null;
-    if (c != null && c.isValid()) {
-      peek = c.getMessage().getContent();
-    }
-    if (peek != null) {
-      setDisplay("Latest Comm: " + peek);
-    }
-    
-    try {
-		setDisplay("IP: " + getLocalHostLANAddress());
-	} catch (UnknownHostException e) {
-		LOGGER.error(e.getMessage());
-	}
   }
 
   @Override
