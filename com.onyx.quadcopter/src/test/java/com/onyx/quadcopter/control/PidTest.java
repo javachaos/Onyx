@@ -2,11 +2,11 @@ package com.onyx.quadcopter.control;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.collect.EvictingQueue;
 
 public class PidTest {
 
@@ -14,27 +14,37 @@ public class PidTest {
 	 * Logger.
 	 */
 	public static final Logger LOGGER = LoggerFactory.getLogger(PidTest.class);
+
+	/**
+	 * The PID input size to test.
+	 */
+	private static final int PID_INPUT_SIZE = 10000;
+
+	private static final double SETPOINT = 0.5;
 	
-	private ArrayList<Double> lastHundred = new ArrayList<Double>(100);
+	/**
+	 * The last 100 values from the pid to compute the moving average.
+	 */
+	private EvictingQueue<Double> lastHundred = EvictingQueue.create(100);
 	
-	@Test
+	@Test(timeout=5000)
 	public void test() {
 		Pid pid = new Pid(2,1,0.5);
 		pid.setMaxOutput(1.0);
 		pid.setMinOutput(0.0);
-		pid.setPoint(0.5);
+		pid.setPoint(SETPOINT);
 		
 		int x = 0;
-		while(x < 10000) {
+		while(x < PID_INPUT_SIZE) {
 		  x++;
 		  double input = Math.random();
 		  double output = pid.compute(input);
 		  lastHundred.add(output);
 		  assertTrue(output <= 1.0 && output >= 0.0);
-		  double ma = lastHundred.stream().limit(100).mapToDouble(n -> n).average().getAsDouble();
-		  LOGGER.debug("[PID] IN: " + input + " OUT: " + output + " MA: " + ma);
-		  if (lastHundred.size() > 100) {
-			  lastHundred.clear();
+		  double ma = lastHundred.parallelStream().mapToDouble(n -> n).average().getAsDouble();
+		  if (x > PID_INPUT_SIZE / 2) {
+			LOGGER.debug("[PID] IN: " + input + " OUT: " + output + " MA: " + ma + " Set Size: " + lastHundred.size());
+		    assertTrue(Math.abs(ma - SETPOINT) < SETPOINT);
 		  }
 		}
 	}
