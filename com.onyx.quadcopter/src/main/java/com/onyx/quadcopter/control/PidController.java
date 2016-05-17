@@ -96,6 +96,11 @@ public class PidController extends Device {
 
   @Override
   protected void alternate() {
+	  if (started) {
+	      LOGGER.debug(getName() + " started!");
+	  } else {
+	      LOGGER.debug(getName() + " stopped!");
+	  }
 	  LOGGER.debug("ESC1: " 
          + esc1 + " ESC2: "
 	     + esc2 + " ESC3: "
@@ -139,13 +144,11 @@ public class PidController extends Device {
     esc4 = throttle - computedGyro[0] - computedGyro[1] + computedGyro[2];
 
     if (started) { // Flight mode started, keep rotors spinning at 1200us.
-      LOGGER.debug(getName() + " started!");
       esc1 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc1);
       esc2 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc2);
       esc3 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc3);
       esc4 = limit(Constants.MOTOR_MAX_MS, Constants.DEFAULT_ROTOR_SPEED, esc4);
     } else { // Not in flight mode so keep motors quiet at 1000us.
-      LOGGER.debug(getName() + " stopped!");
       esc1 = Constants.MOTOR_MIN_MS;
       esc2 = Constants.MOTOR_MIN_MS;
       esc3 = Constants.MOTOR_MIN_MS;
