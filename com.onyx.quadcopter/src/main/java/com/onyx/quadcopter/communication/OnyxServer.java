@@ -111,23 +111,29 @@ public class OnyxServer extends Device implements Runnable {
 
   @Override
   protected void update() {
+	if (handler == null) {
+		return;//Wait until the handler is ready.
+	}
     super.update();
-
-    Command c = handler.getLastCmd();
-    if (c != null && c.isValid()) {
-      lastMsg = c.getMessage().getContent();
-    }
-    try {
-      if (lastMsg != null) {
-        setDisplay("Latest Comm: " + lastMsg + System.lineSeparator() + "IP: " + getLocalHostLANAddress() + System.lineSeparator()
-        + "Connected: " + Boolean.toString(ch.isActive()));
-      } else {
-        setDisplay("IP: " + getLocalHostLANAddress() + System.lineSeparator()
-        + "Connected: " + Boolean.toString(ch.isActive()));
-      }
-    } catch (UnknownHostException e) {
-      LOGGER.error(e.getMessage());
-    }
+	Command c = handler.getLastCmd();
+	if (c != null && c.isValid()) {
+	  lastMsg = c.getMessage().getContent();
+	}
+	try {
+	  if (lastMsg != null) {
+	    setDisplay("Latest Comm: " + lastMsg + System.lineSeparator()
+	    + "IP: " 
+	    + getLocalHostLANAddress() + System.lineSeparator()
+	    + "Connected: " + Boolean.toString(ch.isActive()));
+	  } else {
+	    setDisplay("IP: " + getLocalHostLANAddress()
+	    + System.lineSeparator()
+	    + "Connected: " + Boolean.toString(ch.isActive()));
+	  }
+	} catch (UnknownHostException e) {
+	  LOGGER.error(e.getMessage());
+	}
+    
   }
 
   @Override
