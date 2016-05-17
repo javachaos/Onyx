@@ -111,8 +111,9 @@ public class OnyxServer extends Device implements Runnable {
 
   @Override
   protected void update() {
-	if (handler == null) {
-		return;//Wait until the handler is ready.
+	if (handler == null
+	 || ch == null) {
+		return;//Wait until the handler is ready. And channel is not null.
 	}
     super.update();
 	Command c = handler.getLastCmd();
