@@ -206,6 +206,8 @@ public abstract class Device implements IDevice {
   /**
    * Send a message to the OLED device to display a message.
    * 
+   * Avoid using NEWLINE for it causes issues with displayed text.
+   * 
    * @param text the text to send to the display.
    */
   public void setDisplay(final String text) {

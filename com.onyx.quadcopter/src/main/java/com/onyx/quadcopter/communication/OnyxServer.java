@@ -122,9 +122,8 @@ public class OnyxServer extends Device implements Runnable {
 	}
 	try {
 	    setDisplay(
-	    (lastMsg != null) ? "Latest Comm: " + lastMsg + System.lineSeparator() : ""
-	    + "IP: " 
-	    + getLocalHostLANAddress() + System.lineSeparator()
+	    (lastMsg != null) ? "Latest Comm: " + lastMsg : ""
+	    + "IP: " + getLocalHostLANAddress()
 	    + "Active: " + Boolean.toString(ch.isActive()));
 	} catch (UnknownHostException e) {
 	  LOGGER.error(e.getMessage());
