@@ -106,6 +106,7 @@ public class PidController extends Device {
 	     + esc2 + " ESC3: "
          + esc3 + " ESC4: " 
 	     + esc4);
+	  LOGGER.debug("Throttle: " + throttle);
   }
 
   @Override

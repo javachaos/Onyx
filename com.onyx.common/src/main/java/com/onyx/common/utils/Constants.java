@@ -320,55 +320,55 @@ public final class Constants {
    * P Gain for PID controller.
    */
   public static final float PID_GAIN_P_X =
-      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainx.p", 0);
+      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainx.p", 2f);
 
   /**
    * I Gain for PID controller.
    */
   public static final float PID_GAIN_I_X =
-      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainx.i", 0);
+      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainx.i", 0.5f);
 
   /**
    * D Gain for PID controller.
    */
   public static final float PID_GAIN_D_X =
-      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainx.d", 0);
+      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainx.d", 1f);
 
   /**
    * P Gain for PID controller.
    */
   public static final float PID_GAIN_P_Y =
-      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainy.p", 0);
+      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainy.p", 2f);
 
   /**
    * I Gain for PID controller.
    */
   public static final float PID_GAIN_I_Y =
-      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainy.i", 0);
+      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainy.i", 0.5f);
 
   /**
    * D Gain for PID controller.
    */
   public static final float PID_GAIN_D_Y =
-      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainy.d", 0);
+      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainy.d", 1f);
 
   /**
    * P Gain for PID controller.
    */
   public static final float PID_GAIN_P_Z =
-      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainz.p", 0);
+      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainz.p", 2f);
 
   /**
    * I Gain for PID controller.
    */
   public static final float PID_GAIN_I_Z =
-      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainz.i", 0);
+      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainz.i", 0.5f);
 
   /**
    * D Gain for PID controller.
    */
   public static final float PID_GAIN_D_Z =
-      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainz.d", 0);
+      PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainz.d", 1f);
 
   /**
    * PWM Frequency.
