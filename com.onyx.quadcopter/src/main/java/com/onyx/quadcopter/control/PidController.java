@@ -106,6 +106,11 @@ public class PidController extends Device {
 	     + esc2 + " ESC3: "
          + esc3 + " ESC4: " 
 	     + esc4);
+
+	  LOGGER.debug("GYRO_X: " 
+		         + gyro[0] + " GYRO_Y: "
+			     + gyro[1] + " GYRO_Z: "
+		         + gyro[2]);
 	  LOGGER.debug("Throttle: " + throttle);
   }
 
@@ -118,11 +123,11 @@ public class PidController extends Device {
   protected void update() {
     super.update();
     computedGyro[0] =
-        mxPid.compute((computedGyro[0] * 0.8) + ((gyro[0] / Constants.GYRO_SCALE) * 0.2));
+        mxPid.compute(gyro[0] / Constants.GYRO_SCALE);
     computedGyro[1] =
-        myPid.compute((computedGyro[1] * 0.8) + ((gyro[1] / Constants.GYRO_SCALE) * 0.2));
+        myPid.compute(gyro[1] / Constants.GYRO_SCALE);
     computedGyro[2] =
-        mzPid.compute((computedGyro[2] * 0.8) + ((gyro[2] / Constants.GYRO_SCALE) * 0.2));
+        mzPid.compute(gyro[2] / Constants.GYRO_SCALE);
 
     if (orientation[0] >= Constants.MAX_FLIGHT_INCLINE) {
       computedGyro[0] = 0;

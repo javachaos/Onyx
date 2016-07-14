@@ -17,6 +17,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -40,121 +41,76 @@ public final class GuiController implements EventHandler<WindowEvent> {
   public static final Logger LOGGER = LoggerFactory.getLogger(GuiController.class);
 
 
-  /**
-   * Main Pane.
-   */
-  @FXML
-  private TitledPane mainPane;
-
-  /**
-   * Anchor Pane.
-   */
-  @FXML
-  private AnchorPane anchorPane;
-
-  /**
-   * Connect button.
-   */
-  @FXML
-  private Button connectButton;
-
-  /**
-   * Connection status label.
-   */
-  @FXML
-  private Label connStatusLbl;
-
-  /**
-   * Username field.
-   */
   @FXML
   private TextField usernameField;
 
-  /**
-   * Password field.
-   */
-  @FXML
-  private PasswordField passField;
-
-  /**
-   * IP field.
-   */
-  @FXML
-  private TextField ipField;
-
-  /**
-   * Camera titled pane.
-   */
-  @FXML
-  private TitledPane cameraTitledPane;
-
-  /**
-   * Orientation Label.
-   */
-  @FXML
-  private Label orientationLbl;
-
-  /**
-   * Horizontal speed label.
-   */
-  @FXML
-  private Label hspeedLbl;
-
-  /**
-   * Vertical speed label.
-   */
-  @FXML
-  private Label vspeedLbl;
-
-  /**
-   * Log text area.
-   */
   @FXML
   private TextArea logTextArea;
 
-  /**
-   * Enter command button.
-   */
   @FXML
-  private Button enterCommandButton;
+  private Button stopPidBtn;
 
-  /**
-   * Command text field.
-   */
-  @FXML
-  private TextField commandTextField;
-
-  /**
-   * Command output TextArea.
-   */
   @FXML
   private TextArea commandOutputTextArea;
 
-  /**
-   * Onyx Client.
-   */
-  private OnyxClient client;
+  @FXML
+  private Slider throttleSlider;
 
-  /**
-   * Camera VBox.
-   */
+  @FXML
+  private Label connStatusLbl;
+
+  @FXML
+  private TextField ipField;
+
   @FXML
   private VBox cameraVBox;
 
-  /**
-   * Camera Image View.
-   */
+  @FXML
+  private Button connectButton;
+
+  @FXML
+  private Button enterCommandButton;
+
+  @FXML
+  private PasswordField passField;
+
   @FXML
   private ImageView cameraImageView;
 
   @FXML
-  private LineChart<Double, Double> engineSpeedChart;
+  private AnchorPane anchorPane;
+
+  @FXML
+  private Label throttleLbl;
+
+  @FXML
+  private LineChart<?, ?> engineSpeedChart;
+
+  @FXML
+  private Button startPidBtn;
+
+  @FXML
+  private Label pidStatusLbl;
+
+  @FXML
+  private TitledPane mainPane;
+
+  @FXML
+  private TitledPane cameraTitledPane;
+
+  @FXML
+  private TextField commandTextField;
 
   /**
    * VLC Direct rendering future.
    */
   private Future<?> vlcdrFuture;
 
+  /**
+   * Onyx Client.
+   */
+  private OnyxClient client;
+  
   /**
    * IP Regex.
    */
@@ -240,12 +196,16 @@ public final class GuiController implements EventHandler<WindowEvent> {
         + " was not injected: check your FXML file 'commander.fxml'.";
     assert cameraImageView != null : "fx:id=\"cameraImageView\""
         + " was not injected: check your FXML file 'commander.fxml'.";
-    assert orientationLbl != null : "fx:id=\"orientationLbl\""
+    assert stopPidBtn != null : "fx:id=\"stopPidBtn\""
         + " was not injected: check your FXML file 'commander.fxml'.";
-    assert hspeedLbl != null : "fx:id=\"hspeedLbl\""
+    assert startPidBtn != null : "fx:id=\"startPidBtn\""
         + " was not injected: check your FXML file 'commander.fxml'.";
-    assert vspeedLbl != null : "fx:id=\"vspeedLbl\""
+    assert pidStatusLbl != null : "fx:id=\"pidStatusLbl\""
         + " was not injected: check your FXML file 'commander.fxml'.";
+    assert throttleLbl != null : "fx:id=\"throttleLbl\""
+            + " was not injected: check your FXML file 'commander.fxml'.";
+    assert throttleSlider != null : "fx:id=\"throttleSlider\""
+            + " was not injected: check your FXML file 'commander.fxml'.";
     assert logTextArea != null : "fx:id=\"logTextArea\""
         + " was not injected: check your FXML file 'commander.fxml'.";
     assert enterCommandButton != null : "fx:id=\"enterCommandButton\""

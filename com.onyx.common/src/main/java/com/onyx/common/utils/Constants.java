@@ -371,7 +371,7 @@ public final class Constants {
       PROPERTIES.getFloatProperty("com.onyx.quadcopter.pid.gainz.d", 1f);
 
   /**
-   * PWM Frequency.
+   * PWM Frequency. In hertz.
    */
   public static final float PWM_FREQ =
       PROPERTIES.getIntegerProperty("com.onyx.quadcopter.pwm.freq", 50);

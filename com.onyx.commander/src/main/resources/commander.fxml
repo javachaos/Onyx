@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
@@ -19,7 +26,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<TitledPane fx:id="mainPane" animated="false" minHeight="400.0" minWidth="600.0" prefHeight="648.0" prefWidth="1009.0" text="Commander" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.onyx.commander.gui.GuiController">
+<TitledPane fx:id="mainPane" animated="false" minHeight="400.0" minWidth="600.0" prefHeight="648.0" prefWidth="1009.0" text="Commander" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.onyx.commander.gui.GuiController">
   <content>
     <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="402.0" prefWidth="723.0">
          <children>
@@ -43,9 +50,8 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <VBox layoutX="11.0" layoutY="178.0" prefHeight="78.0" prefWidth="188.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0">
+                              <VBox layoutX="11.0" layoutY="178.0" prefHeight="507.0" prefWidth="188.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="5.0">
                                  <children>
-                                    <Label text="Device Status: Pending..." />
                                     <TextField fx:id="usernameField" promptText="Username" text="fred" />
                                     <PasswordField fx:id="passField" promptText="Password" />
                                     <TextField fx:id="ipField" promptText="IP Address" />
@@ -60,25 +66,6 @@
                                     </VBox>
                                  </content>
                               </TitledPane>
-                              <VBox layoutX="14.0" layoutY="14.0" prefHeight="85.0" prefWidth="180.0" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="14.0">
-                                 <children>
-                                    <Label fx:id="orientationLbl" text="Orientation: ">
-                                       <padding>
-                                          <Insets bottom="10.0" />
-                                       </padding>
-                                    </Label>
-                                    <Label fx:id="hspeedLbl" text="HSpeed:">
-                                       <padding>
-                                          <Insets bottom="10.0" />
-                                       </padding>
-                                    </Label>
-                                    <Label fx:id="vspeedLbl" text="VSpeed:">
-                                       <padding>
-                                          <Insets bottom="10.0" />
-                                       </padding>
-                                    </Label>
-                                 </children>
-                              </VBox>
                            </children></AnchorPane>
                   </content>
                 </Tab>
@@ -102,14 +89,19 @@
                               <HBox AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
                                  <children>
                                     <Button fx:id="enterCommandButton" mnemonicParsing="false" onAction="#sendCommand" prefHeight="26.0" prefWidth="126.0" text="Enter" />
-                                    <TextField fx:id="commandTextField" prefHeight="26.0" prefWidth="596.0" />
+                                    <TextField fx:id="commandTextField" prefHeight="26.0" prefWidth="850.0" />
                                  </children>
                               </HBox>
-                              <TextArea fx:id="commandOutputTextArea" editable="false" layoutX="1.0" layoutY="2.0" prefHeight="239.0" prefWidth="511.0" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <TextArea fx:id="commandOutputTextArea" editable="false" layoutX="1.0" layoutY="2.0" prefHeight="327.0" prefWidth="987.0" AnchorPane.bottomAnchor="242.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <font>
                                     <Font name="FreeMono" size="13.0" />
                                  </font>
                               </TextArea>
+                              <Button fx:id="startPidBtn" layoutX="14.0" layoutY="392.0" mnemonicParsing="false" text="Start PID" />
+                              <Label fx:id="pidStatusLbl" layoutX="5.0" layoutY="334.0" text="PID Status:" />
+                              <Slider fx:id="throttleSlider" layoutX="829.0" layoutY="334.0" orientation="VERTICAL" prefHeight="140.0" prefWidth="144.0" showTickLabels="true" showTickMarks="true" />
+                              <Label fx:id="throttleLbl" layoutX="755.0" layoutY="334.0" prefHeight="15.0" prefWidth="96.0" text="Throttle: " />
+                              <Button fx:id="stopPidBtn" layoutX="106.0" layoutY="392.0" mnemonicParsing="false" text="Stop PID" />
                            </children></AnchorPane>
                   </content>
                 </Tab>
