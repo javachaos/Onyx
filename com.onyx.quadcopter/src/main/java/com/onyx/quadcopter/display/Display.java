@@ -232,7 +232,7 @@ public class Display {
       for (int i = 0; i < data.length; i += BUFFER_SIZE) {
         System.arraycopy(data, i, buff, 0, BUFFER_SIZE);
         try {
-          i2c.write(DATA_ADDRESS, buff);
+          i2c.write(DATA_ADDRESS, buff, 0, BUFFER_SIZE);
         } catch (IOException e1) {
           ExceptionUtils.logError(getClass(), e1);
         }
