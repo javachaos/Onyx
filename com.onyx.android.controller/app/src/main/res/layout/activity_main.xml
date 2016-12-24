@@ -10,8 +10,29 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.onyx.androidcontroller.MainActivity">
 
-    <TextView
+    <Button
+        android:text="@string/connect_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="connect" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textUri"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:hint="@string/ip_addr"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:selectAllOnFocus="false" />
 </RelativeLayout>
