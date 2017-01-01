@@ -1,16 +1,18 @@
 package com.onyx.quadcopter.devices;
 
+import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.onyx.common.messaging.AclMessage;
 import com.onyx.common.messaging.DeviceId;
 import com.onyx.common.utils.Constants;
 import com.onyx.common.utils.ExceptionUtils;
 import com.onyx.quadcopter.display.Display;
 import com.pi4j.io.gpio.RaspiPin;
-import com.pi4j.io.i2c.impl.I2CBusImpl;
-
-import java.io.IOException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.pi4j.io.i2c.I2CBus;
+import com.pi4j.io.i2c.I2CFactory;
+import com.pi4j.io.i2c.I2CFactory.UnsupportedBusNumberException;
 
 /**
  * Represents an OLED Device.
@@ -76,14 +78,16 @@ public class OledDevice extends Device {
   @Override
   protected void init() {
     try {
-      oled = new Display(128, 32, getController().getGpio(), I2CBusImpl.getBus(1), 0x3c,
+      oled = new Display(128, 32, getController().getGpio(), I2CFactory.getInstance(I2CBus.BUS_1), 0x3c,
           RaspiPin.GPIO_25);
       oled.begin();
       oled.dim(false);
       oled.write("OLED Initialized.");
     } catch (IOException | ReflectiveOperationException e1) {
       ExceptionUtils.logError(getClass(), e1);
-    }
+    } catch (UnsupportedBusNumberException e) {
+        ExceptionUtils.logError(getClass(), e);
+	}
   }
 
   @Override
