@@ -33,8 +33,15 @@
       <pattern>%-4relative [%thread] %highlight(%-5level) %logger{35} - [%file:%line] %msg %n</pattern>
     </encoder>
   </appender>
+      <appender name="textarea" class="com.onyx.commander.logging.StaticOutputStreamAppender">
+
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
+        </encoder>
+    </appender>
   <root level="DEBUG">
     <appender-ref ref="file"/>
+    <appender-ref ref="textarea"/>
     <appender-ref ref="console"/>
   </root>
 </configuration>
