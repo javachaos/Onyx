@@ -89,7 +89,11 @@ public class PwmControl {
    * @param percent the speed from 0 - 100.
    */
   public void setSpeed(final int percent) {
-    pwmWrite((10 * percent) + 1000);
+	  if(percent < 0 || percent > 100) {
+	      LOGGER.error("Speed is out of range. [0 - 100] expected.");
+	  } else {
+          pwmWrite((10 * percent) + 1000);
+	  }
   }
 
   /**

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">AndroidController</string>
     <string name="connect_btn">Connect</string>
+    <string name="disconnect_btn">Disconnect</string>
     <string name="ip_addr">IP Address</string>
     <string name="view_onyx">OnyxController</string>
 </resources>
