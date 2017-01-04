@@ -226,4 +226,8 @@ public final class GuiController implements EventHandler<WindowEvent> {
     }
     System.exit(0);
   }
+
+  public TextArea getLogTextArea() {
+    return logTextArea;
+  }
 }
