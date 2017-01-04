@@ -135,7 +135,7 @@
     <dependency>
        <groupId>com.pi4j</groupId>
        <artifactId>pi4j-core</artifactId>
-       <version>1.1-SNAPSHOT</version>
+       <version>1.0</version>
     </dependency>
     <dependency>
         <groupId>com.google.guava</groupId>
@@ -179,20 +179,20 @@
     </dependency>
   </dependencies>
   <repositories>
-	  <repository>
-	    <id>repo</id>
-	    <releases>
-	        <enabled>true</enabled>
-	        <checksumPolicy>ignore</checksumPolicy>
-	    </releases>
-	    <snapshots>
-	        <enabled>true</enabled>
-	    </snapshots>
-	    <url>file://${project.basedir}/libs</url>
-	</repository>
-	<repository>
-	    <id>Sonatype OSS Snapshot Repository</id>
-	    <url>http://oss.sonatype.org/content/repositories/snapshots</url>
-	</repository>
+    <repository>
+      <id>repo</id>
+      <releases>
+          <enabled>true</enabled>
+          <checksumPolicy>ignore</checksumPolicy>
+      </releases>
+      <snapshots>
+          <enabled>true</enabled>
+      </snapshots>
+      <url>file://${project.basedir}/libs</url>
+    </repository>
+    <repository>
+      <id>Sonatype OSS Snapshot Repository</id>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+    </repository>
   </repositories>
 </project>
