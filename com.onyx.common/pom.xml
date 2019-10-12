@@ -33,10 +33,10 @@
         <version>1.0.13</version>
         <scope>compile</scope>
       </dependency>
-      <dependency>
-        <groupId>io.netty</groupId>
-        <artifactId>netty-all</artifactId>
-        <version>4.1.0.CR7</version>
-      </dependency>
+        <dependency>
+          <groupId>io.netty</groupId>
+          <artifactId>netty-all</artifactId>
+          <version>[4.1.42,)</version>
+        </dependency>
   </dependencies>
 </project>
